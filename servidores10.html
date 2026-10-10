@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo — Servidores Domésticos y Recomendaciones Finales</title>
+    <style>
+        /* =============================================
+           VARIABLES
+           ============================================= */
+        :root {
+            --color-primary: #0f2a4a;
+            --color-primary-light: #1a3f6b;
+            --color-secondary: #2d6a9f;
+            --color-accent: #f47c20;
+            --color-accent-hover: #d96a15;
+            --color-background: #f4f6f9;
+            --color-surface: #ffffff;
+            --color-surface-alt: #eef2f7;
+            --color-text: #1e2a36;
+            --color-text-light: #4a5a6a;
+            --color-text-muted: #6b7c8e;
+            --color-border: #d8e0e9;
+            --color-success: #1e8a4a;
+            --color-success-bg: #e6f5ec;
+            --color-error: #c0392b;
+            --color-error-bg: #fdecea;
+            --color-warning: #b8860b;
+            --color-warning-bg: #fef9e7;
+            --shadow-sm: 0 1px 3px rgba(15, 42, 74, 0.08);
+            --shadow-md: 0 4px 12px rgba(15, 42, 74, 0.1);
+            --shadow-lg: 0 8px 28px rgba(15, 42, 74, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            --transition: 0.25s ease;
+        }
+
+        /* =============================================
+           RESET
+           ============================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* =============================================
+           BASE
+           ============================================= */
+        h1, h2, h3, h4 {
+            line-height: 1.25;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h1 { font-size: 1.6rem; }
+        h2 { font-size: 1.5rem; }
+        h3 { font-size: 1.2rem; }
+        h4 { font-size: 1.05rem; }
+
+        p { margin-bottom: 0.85rem; }
+
+        a {
+            color: var(--color-secondary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        .section {
+            padding: 2.5rem 0;
+        }
+
+        .section-title {
+            font-size: 1.55rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-subtitle {
+            color: var(--color-text-light);
+            margin-bottom: 1.75rem;
+            font-size: 0.98rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.7rem;
+            border-radius: 50px;
+            margin-bottom: 0.6rem;
+        }
+
+        /* =============================================
+           HEADER
+           ============================================= */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 60%, #1e4d7a 100%);
+            color: #fff;
+            padding: 3rem 0 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(244, 124, 32, 0.18) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header h1 .accent {
+            color: var(--color-accent);
+        }
+
+        .header-subtitle {
+            font-size: clamp(1rem, 2.2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            font-weight: 400;
+            max-width: 680px;
+        }
+
+        .header-description {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+            max-width: 720px;
+            line-height: 1.7;
+        }
+
+        .header-tag {
+            display: inline-block;
+            background: rgba(244, 124, 32, 0.2);
+            border: 1px solid rgba(244, 124, 32, 0.5);
+            color: #ffb87a;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        /* =============================================
+           NAVEGACIÓN
+           ============================================= */
+        .nav {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+            gap: 0.25rem;
+            padding: 0.5rem 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-list li {
+            flex-shrink: 0;
+        }
+
+        .nav-list a {
+            display: block;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-list a:hover,
+        .nav-list a:focus {
+            background: var(--color-surface-alt);
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        /* =============================================
+           TARJETAS
+           ============================================= */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: var(--color-surface-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.85rem;
+            font-size: 1.3rem;
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--color-text-light);
+            margin-bottom: 0;
+        }
+
+        .card-accent {
+            border-left: 4px solid var(--color-accent);
+        }
+
+        /* =============================================
+           BLOQUES DE CONTENIDO
+           ============================================= */
+        .content-block {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .content-block h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .content-block h4 {
+            font-size: 1rem;
+            margin: 1.1rem 0 0.4rem;
+            color: var(--color-secondary);
+        }
+
+        .content-block p,
+        .content-block li {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+        }
+
+        .content-block ul,
+        .content-block ol {
+            padding-left: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .content-block li {
+            margin-bottom: 0.35rem;
+        }
+
+        .highlight-box {
+            background: var(--color-surface-alt);
+            border-left: 4px solid var(--color-secondary);
+            padding: 1rem 1.25rem;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin: 1rem 0;
+            font-size: 0.93rem;
+            color: var(--color-text);
+        }
+
+        .highlight-box.warning {
+            background: var(--color-warning-bg);
+            border-left-color: var(--color-warning);
+        }
+
+        .highlight-box.success {
+            background: var(--color-success-bg);
+            border-left-color: var(--color-success);
+        }
+
+        .highlight-box.accent {
+            background: #fff5eb;
+            border-left-color: var(--color-accent);
+        }
+
+        .pill {
+            display: inline-block;
+            background: var(--color-surface-alt);
+            color: var(--color-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.15rem 0.65rem;
+            border-radius: 50px;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .pill-accent {
+            background: #fff0e0;
+            color: var(--color-accent);
+        }
+
+        /* =============================================
+           GLOSARIO
+           ============================================= */
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .glossary-item {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.15rem;
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .glossary-item:hover {
+            border-color: var(--color-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .glossary-item dt {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .glossary-item dd {
+            font-size: 0.88rem;
+            color: var(--color-text-light);
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        /* =============================================
+           ACTIVIDADES / EXPLORA
+           ============================================= */
+        .activity-box {
+            background: linear-gradient(135deg, #fff8f2 0%, #fff 100%);
+            border: 1.5px dashed var(--color-accent);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .activity-box h4 {
+            color: var(--color-accent);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .activity-box p,
+        .activity-box li {
+            font-size: 0.92rem;
+            color: var(--color-text-light);
+        }
+
+        .activity-box ol,
+        .activity-box ul {
+            padding-left: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reflection-box {
+            background: var(--color-surface-alt);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            border: 1px solid var(--color-border);
+        }
+
+        .reflection-box h4 {
+            color: var(--color-primary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reflection-box p {
+            font-size: 0.92rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        /* =============================================
+           RETO
+           ============================================= */
+        .challenge-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 1rem 0;
+        }
+
+        .challenge-section h2,
+        .challenge-section h3 {
+            color: #fff;
+        }
+
+        .challenge-section p,
+        .challenge-section li {
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.95rem;
+        }
+
+        .challenge-section ul,
+        .challenge-section ol {
+            padding-left: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .challenge-section li {
+            margin-bottom: 0.4rem;
+        }
+
+        .challenge-section .highlight-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--color-accent);
+            color: #fff;
+        }
+
+        .challenge-section .highlight-box strong {
+            color: #ffb87a;
+        }
+
+        /* =============================================
+           QUIZ
+           ============================================= */
+        .quiz-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quiz-counter {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .quiz-score {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-surface-alt);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #f9a04a);
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--color-surface-alt);
+            border: 1.5px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1rem;
+            font-size: 0.93rem;
+            color: var(--color-text);
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--color-secondary);
+            background: #e8eff7;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .option-btn.correct {
+            background: var(--color-success-bg);
+            border-color: var(--color-success);
+            color: var(--color-success);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background: var(--color-error-bg);
+            border-color: var(--color-error);
+            color: var(--color-error);
+            font-weight: 600;
+        }
+
+        .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--color-surface);
+            border: 1.5px solid var(--color-border);
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .option-btn.correct .option-letter {
+            background: var(--color-success);
+            color: #fff;
+            border-color: var(--color-success);
+        }
+
+        .option-btn.incorrect .option-letter {
+            background: var(--color-error);
+            color: #fff;
+            border-color: var(--color-error);
+        }
+
+        .feedback-box {
+            border-radius: var(--radius-sm);
+            padding: 0.9rem 1.1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+            line-height: 1.55;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            background: var(--color-success-bg);
+            border-left: 4px solid var(--color-success);
+            color: #145c32;
+        }
+
+        .feedback-box.incorrect {
+            background: var(--color-error-bg);
+            border-left: 4px solid var(--color-error);
+            color: #8b2318;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            font-weight: 700;
+            transition: all var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(244, 124, 32, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(244, 124, 32, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--color-surface-alt);
+            color: var(--color-primary);
+            border: 1.5px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-border);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        .result-box {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-percent {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .result-message {
+            font-size: 1rem;
+            color: var(--color-text);
+            max-width: 420px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+
+        /* =============================================
+           CIERRE REFLEXIVO
+           ============================================= */
+        .metacognition {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .metacognition h3 {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .metacognition-list {
+            list-style: none;
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .metacognition-list li {
+            background: var(--color-surface-alt);
+            border-radius: var(--radius-sm);
+            padding: 0.9rem 1.1rem;
+            font-size: 0.93rem;
+            color: var(--color-text-light);
+            border-left: 3px solid var(--color-secondary);
+            display: flex;
+            gap: 0.6rem;
+            align-items: flex-start;
+        }
+
+        .metacognition-list li .icon {
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        /* =============================================
+           FOOTER
+           ============================================= */
+        .footer {
+            background: var(--color-primary);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .footer .heart {
+            color: var(--color-accent);
+        }
+
+        .footer .credit {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* =============================================
+           ANIMACIONES
+           ============================================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease both;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.1s; }
+        .fade-in-delay-2 { animation-delay: 0.2s; }
+        .fade-in-delay-3 { animation-delay: 0.3s; }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 768px) {
+            .header {
+                padding: 2rem 0 1.75rem;
+            }
+
+            .section {
+                padding: 1.75rem 0;
+            }
+
+            .content-block {
+                padding: 1.15rem 1.25rem;
+            }
+
+            .challenge-section {
+                padding: 1.5rem;
+            }
+
+            .quiz-container {
+                padding: 1.25rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .nav-list a {
+                font-size: 0.8rem;
+                padding: 0.45rem 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .glossary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .quiz-actions {
+                justify-content: stretch;
+            }
+
+            .quiz-actions .btn {
+                flex: 1;
+            }
+
+            .result-score {
+                font-size: 2.4rem;
+            }
+        }
+
+        /* =============================================
+           ACCESIBILIDAD — REDUCED MOTION
+           ============================================= */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* =============================================
+           UTILIDADES
+           ============================================= */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+
+    <!-- =============================================
+         HEADER
+         ============================================= -->
+    <header class="header" id="inicio">
+        <div class="container header-content">
+            <span class="header-tag">Capítulo 10 · Glosario y recomendaciones finales</span>
+            <h1>Bucle <span class="accent">Creativo</span></h1>
+            <p class="header-subtitle">Servidores domésticos: conceptos, seguridad y mantenimiento</p>
+            <p class="header-description">
+                Un taller interactivo para consolidar los conceptos esenciales sobre servidores, redes,
+                servicios, seguridad y buenas prácticas. Aprende a elegir, configurar y mantener tu primer
+                servidor doméstico con criterios técnicos y responsabilidad.
+            </p>
+        </div>
+    </header>
+
+    <!-- =============================================
+         NAVEGACIÓN
+         ============================================= -->
+    <nav class="nav" aria-label="Navegación del taller">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="#objetivo">Objetivo</a></li>
+                <li><a href="#activacion">Activación</a></li>
+                <li><a href="#desarrollo">Desarrollo</a></li>
+                <li><a href="#glosario">Glosario</a></li>
+                <li><a href="#reto">Reto</a></li>
+                <li><a href="#evaluacion">Evaluación</a></li>
+                <li><a href="#reflexion">Reflexión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+
+        <!-- =============================================
+             OBJETIVO DE APRENDIZAJE
+             ============================================= -->
+        <section class="section" id="objetivo">
+            <div class="container">
+                <span class="section-badge">Objetivo de aprendizaje</span>
+                <h2 class="section-title">¿Qué vas a lograr?</h2>
+                <div class="content-block fade-in">
+                    <p>
+                        <strong>Comprender y aplicar</strong> los conceptos fundamentales sobre servidores domésticos,
+                        redes, servicios, seguridad y mantenimiento, <strong>analizando</strong> situaciones reales y
+                        <strong>tomando decisiones</strong> fundamentadas sobre hardware, software y configuración,
+                        <strong>desarrollando</strong> actitudes de responsabilidad, perseverancia y ética digital,
+                        <strong>mediante</strong> la exploración guiada, el análisis de casos y la resolución de retos
+                        prácticos, <strong>para</strong> diseñar y mantener un servidor doméstico seguro, funcional y
+                        sostenible que responda a necesidades reales de tu entorno.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             ACTIVACIÓN
+             ============================================= -->
+        <section class="section" id="activacion">
+            <div class="container">
+                <span class="section-badge">Activación</span>
+                <h2 class="section-title">Un computador antiguo en el armario</h2>
+                <div class="content-block fade-in">
+                    <p>
+                        Imagina que en tu casa hay un computador de escritorio que ya nadie usa. Tiene varios años,
+                        pero todavía enciende. Un día piensas: <em>«¿y si lo convierto en algo útil?»</em>. Quieres
+                        compartir archivos con tu familia, alojar una página web para tu emprendimiento escolar o
+                        guardar las fotos del colegio sin depender de servicios en la nube que a veces cobran o
+                        cambian sus condiciones.
+                    </p>
+                    <p>
+                        Pero al buscar información te encuentras con decenas de términos: IP, DNS, puerto, router,
+                        firewall, backup, VPN, contenedor, máquina virtual… Y surgen las dudas:
+                    </p>
+                    <div class="highlight-box accent">
+                        <strong>¿Por dónde empiezo?</strong> ¿Qué hardware necesito? ¿Cómo evito exponer mis datos?
+                        ¿Cuánto consume eléctricamente? ¿Qué errores debo evitar para no perder información?
+                    </div>
+                    <p>
+                        Este taller te acompañará paso a paso para que puedas responder estas preguntas con criterio
+                        técnico y conciencia de las implicaciones de seguridad y mantenimiento.
+                    </p>
+                    <div class="reflection-box">
+                        <h4>💭 Piensa y responde</h4>
+                        <p>
+                            Antes de continuar, reflexiona: ¿qué servicio concreto te gustaría ofrecer con un
+                            servidor doméstico? ¿Qué datos o recursos compartirías? ¿Qué riesgos crees que existen?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             DESARROLLO
+             ============================================= -->
+        <section class="section" id="desarrollo">
+            <div class="container">
+                <span class="section-badge">Desarrollo</span>
+                <h2 class="section-title">Conceptos fundamentales</h2>
+                <p class="section-subtitle">
+                    Explora los niveles de aprendizaje: fundamentos, comprensión, aplicación, análisis y transferencia.
+                </p>
+
+                <!-- NIVEL 1: FUNDAMENTOS -->
+                <article class="content-block fade-in">
+                    <h3>🧱 Nivel 1 — Fundamentos: ¿qué es un servidor?</h3>
+                    <p>
+                        Un <strong>servidor</strong> es un ordenador o programa que proporciona servicios, datos o
+                        recursos a otros dispositivos llamados <strong>clientes</strong>. Por ejemplo, cuando abres
+                        una página web, tu navegador actúa como cliente y solicita información a un servidor web.
+                    </p>
+
+                    <h4>Hardware y software</h4>
+                    <p>
+                        El <strong>hardware</strong> son los componentes físicos: procesador, memoria RAM, discos,
+                        tarjeta de red. El <strong>software</strong> son los programas y aplicaciones que se ejecutan,
+                        incluido el <strong>sistema operativo</strong> (Windows, Linux) que administra los recursos.
+                    </p>
+
+                    <h4>Servidor dedicado y centro de datos</h4>
+                    <p>
+                        Un <strong>servidor dedicado</strong> es un equipo o instancia destinada principalmente a
+                        ejecutar servicios de servidor, no a usarse como ordenador personal. Un
+                        <strong>centro de datos</strong> es una instalación que alberga numerosos sistemas
+                        informáticos, equipos de red, almacenamiento y sistemas de alimentación y refrigeración.
+                    </p>
+
+                    <div class="highlight-box">
+                        <strong>Analogía:</strong> un servidor es como una biblioteca. Los clientes (lectores) solicitan
+                        libros (datos o servicios) y la biblioteca los proporciona. El hardware son los estantes y el
+                        edificio; el software es el sistema de catalogación y préstamo.
+                    </div>
+
+                    <div class="activity-box">
+                        <h4>🔍 Explora</h4>
+                        <p>
+                            Identifica en tu entorno tres dispositivos que actúen como clientes (teléfono, laptop,
+                            tablet) y piensa qué servicio consumen de un servidor (web, correo, video, archivos).
+                            Anota tus observaciones.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- NIVEL 2: COMPRENSIÓN -->
+                <article class="content-block fade-in">
+                    <h3>🔗 Nivel 2 — Comprensión: redes y conectividad</h3>
+                    <p>
+                        Para que un servidor funcione, necesita comunicarse. Aquí entran los conceptos de red.
+                    </p>
+
+                    <h4>Red local (LAN)</h4>
+                    <p>
+                        Una <strong>red local (LAN)</strong> conecta dispositivos dentro de un área limitada: una
+                        vivienda, una oficina o un centro educativo. Es el entorno típico de un servidor doméstico.
+                    </p>
+
+                    <h4>Dirección IP</h4>
+                    <p>
+                        Una <strong>dirección IP</strong> es una dirección numérica que identifica una interfaz de red
+                        y dirige comunicaciones. IPv4 usa formatos como <code>192.168.1.20</code>; IPv6 usa un formato
+                        diferente. Existen <strong>IP privadas</strong> (usadas dentro de redes privadas, con rangos
+                        como 10.x, 172.16–172.31, 192.168.x) y <strong>IP públicas</strong> (identifican una conexión
+                        en Internet).
+                    </p>
+
+                    <h4>DNS y dominio</h4>
+                    <p>
+                        El <strong>DNS</strong> es el sistema que permite encontrar direcciones IP a partir de nombres
+                        de dominio como <code>ejemplo.com</code>. Un <strong>dominio</strong> es el nombre legible que
+                        identifica un servicio o sitio en Internet.
+                    </p>
+
+                    <h4>Puerto, router, Ethernet, Wi-Fi y VPN</h4>
+                    <ul>
+                        <li><strong>Puerto:</strong> número que identifica un punto de comunicación de una aplicación o servicio. Los servidores web suelen usar los puertos TCP 80 y 443.</li>
+                        <li><strong>Router:</strong> dispositivo que dirige el tráfico entre redes. En casa conecta la red local con Internet.</li>
+                        <li><strong>Ethernet:</strong> tecnología de red cableada que proporciona una conexión estable entre un servidor y el router o un conmutador.</li>
+                        <li><strong>Wi-Fi:</strong> tecnología de red inalámbrica que permite conectar dispositivos sin cable.</li>
+                        <li><strong>VPN:</strong> red privada virtual que crea una conexión protegida a través de otra red. Útil para acceder de forma más segura a servicios de una red doméstica.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>Analogía:</strong> la dirección IP es como la dirección de una casa; el puerto es como
+                        el número de apartamento; el DNS es como la guía telefónica que traduce nombres a direcciones;
+                        el router es como el portero que dirige a cada visitante a la casa correcta.
+                    </div>
+
+                    <div class="reflection-box">
+                        <h4>💭 Piensa y responde</h4>
+                        <p>
+                            Si tu router tiene la IP pública <code>190.15.20.30</code> y tu servidor tiene la IP
+                            privada <code>192.168.1.50</code>, ¿qué crees que ocurre cuando alguien desde Internet
+                            intenta acceder a tu servidor? ¿Qué papel juega el router?
+                        </p>
+                    </div>
+                </article>
+
+                <!-- NIVEL 3: APLICACIÓN -->
+                <article class="content-block fade-in">
+                    <h3>⚙️ Nivel 3 — Aplicación: servicios y recursos</h3>
+                    <p>
+                        Los servidores ofrecen servicios concretos. Estos son los más relevantes para un servidor
+                        doméstico.
+                    </p>
+
+                    <h4>Servicios y aplicaciones</h4>
+                    <ul>
+                        <li><strong>Servidor web:</strong> entrega páginas y otros recursos mediante protocolos como HTTP y HTTPS. HTTPS protege la comunicación mediante cifrado TLS.</li>
+                        <li><strong>Base de datos:</strong> sistema que permite almacenar, organizar, consultar y modificar información estructurada.</li>
+                        <li><strong>Servidor multimedia:</strong> organiza y distribuye contenido audiovisual a dispositivos clientes.</li>
+                        <li><strong>Servidor de archivos:</strong> permite almacenar y compartir archivos entre usuarios y dispositivos.</li>
+                        <li><strong>Contenedor:</strong> entorno aislado que ejecuta una aplicación con sus dependencias utilizando funciones del sistema operativo. Docker es una herramienta conocida.</li>
+                        <li><strong>Máquina virtual:</strong> ordenador simulado por software que ejecuta su propio sistema operativo dentro de otro sistema anfitrión.</li>
+                        <li><strong>Virtualización:</strong> tecnología que permite ejecutar varias máquinas virtuales en un mismo equipo físico.</li>
+                        <li><strong>Interfaz web:</strong> pantalla de administración o aplicación accesible mediante navegador.</li>
+                        <li><strong>Transcodificación:</strong> conversión de un archivo multimedia a otro formato, resolución o tasa de bits para facilitar su reproducción.</li>
+                    </ul>
+
+                    <h4>Recursos y rendimiento</h4>
+                    <ul>
+                        <li><strong>CPU o procesador:</strong> ejecuta instrucciones y realiza cálculos. Su capacidad influye en el rendimiento.</li>
+                        <li><strong>RAM:</strong> memoria de trabajo del sistema operativo y las aplicaciones.</li>
+                        <li><strong>SSD:</strong> unidad basada en memoria flash, con tiempos de acceso y velocidades superiores a los discos duros tradicionales.</li>
+                        <li><strong>HDD:</strong> disco duro mecánico, con gran capacidad a coste relativamente bajo.</li>
+                        <li><strong>Ancho de banda:</strong> capacidad de una conexión para transportar datos por unidad de tiempo (Mbps o Gbps).</li>
+                        <li><strong>Latencia:</strong> tiempo que tarda una comunicación en viajar entre dos puntos y recibir respuesta. Una latencia baja es importante para juegos y aplicaciones interactivas.</li>
+                        <li><strong>Uptime:</strong> tiempo durante el que un sistema o servicio permanece funcionando y disponible.</li>
+                    </ul>
+
+                    <div class="activity-box">
+                        <h4>🔍 Explora</h4>
+                        <p>
+                            Para el servicio que imaginaste al inicio del taller, haz una lista de los recursos que
+                            necesitarías: ¿cuánta RAM? ¿qué tipo de almacenamiento (SSD o HDD)? ¿qué ancho de banda?
+                            ¿qué latencia sería aceptable? Justifica brevemente.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- NIVEL 4: ANÁLISIS -->
+                <article class="content-block fade-in">
+                    <h3>🛡️ Nivel 4 — Análisis: seguridad y mantenimiento</h3>
+                    <p>
+                        La seguridad no es un añadido final: es parte del funcionamiento normal de cualquier servidor.
+                    </p>
+
+                    <h4>Conceptos de seguridad</h4>
+                    <ul>
+                        <li><strong>Cortafuegos (firewall):</strong> sistema que filtra las conexiones de red según reglas definidas para permitir o bloquear tráfico.</li>
+                        <li><strong>Autenticación:</strong> proceso mediante el cual un sistema comprueba la identidad de un usuario o dispositivo.</li>
+                        <li><strong>Autorización:</strong> proceso que determina qué acciones puede realizar un usuario una vez identificado.</li>
+                        <li><strong>Permisos:</strong> reglas que determinan quién puede leer, modificar, ejecutar o administrar recursos.</li>
+                        <li><strong>Actualización de seguridad:</strong> modificación de software que corrige vulnerabilidades u otros problemas.</li>
+                        <li><strong>Copia de seguridad (backup):</strong> copia de los datos que permite recuperarlos si los originales se pierden, dañan o eliminan.</li>
+                        <li><strong>Restauración:</strong> proceso de recuperar archivos o sistemas a partir de una copia de seguridad.</li>
+                        <li><strong>Cifrado:</strong> técnica que transforma la información para que solo pueda leerse con los medios de descifrado adecuados.</li>
+                        <li><strong>CGNAT:</strong> mecanismo mediante el cual un proveedor de Internet comparte una dirección IPv4 pública entre varios clientes. Puede impedir que una red doméstica reciba conexiones entrantes mediante redirección de puertos convencional.</li>
+                    </ul>
+
+                    <h4>Recomendaciones finales de seguridad</h4>
+                    <ol>
+                        <li>Mantén el sistema actualizado (sistema operativo y aplicaciones).</li>
+                        <li>Utiliza contraseñas únicas y robustas. Activa la autenticación multifactor cuando esté disponible.</li>
+                        <li>Limita los accesos. Crea cuentas específicas y concede solo los permisos necesarios.</li>
+                        <li>Configura el cortafuegos. Permite únicamente los puertos y conexiones que necesites.</li>
+                        <li>No expongas servicios sin necesidad. Para acceder desde fuera de casa, considera primero una VPN bien configurada.</li>
+                        <li>Protege las copias de seguridad. Mantén al menos una copia independiente del equipo principal y prueba que puedes restaurarla.</li>
+                        <li>Supervisa el almacenamiento. Comprueba periódicamente el espacio disponible y el estado de los discos.</li>
+                        <li>Documenta los cambios. Anota las configuraciones importantes para poder solucionar problemas y reconstruir el sistema.</li>
+                        <li>Planifica las actualizaciones y reinicios. Ten en cuenta que pueden provocar interrupciones temporales.</li>
+                        <li>Respeta la privacidad y los derechos de uso. Protege los datos de otras personas y utiliza el contenido multimedia de acuerdo con las licencias y la legislación aplicable.</li>
+                    </ol>
+
+                    <div class="highlight-box warning">
+                        <strong>Errores frecuentes al comenzar:</strong>
+                        <ul>
+                            <li>Instalar demasiados programas antes de aprender a administrar uno.</li>
+                            <li>Usar el usuario administrador para todas las tareas cotidianas.</li>
+                            <li>Compartir carpetas sin revisar permisos.</li>
+                            <li>Abrir puertos del router sin comprender qué servicio queda expuesto.</li>
+                            <li>Confiar en una única copia de seguridad almacenada en el mismo disco.</li>
+                            <li>Ignorar los registros de errores y las advertencias de almacenamiento.</li>
+                            <li>Instalar programas de procedencia desconocida.</li>
+                            <li>No probar las restauraciones de las copias de seguridad.</li>
+                            <li>Pensar que tener un servidor encendido equivale a tener un servicio siempre disponible.</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box success">
+                        <strong>Regla fundamental:</strong> primero consigue que el servidor funcione de forma segura
+                        en tu red local; después, cuando comprendas su configuración, estudia cómo permitir accesos
+                        externos si realmente los necesitas.
+                    </div>
+
+                    <div class="reflection-box">
+                        <h4>💭 Piensa y responde</h4>
+                        <p>
+                            ¿Por qué es peligroso abrir puertos del router sin comprender qué servicio queda expuesto?
+                            ¿Qué diferencia hay entre autenticación y autorización? Da un ejemplo de cada una.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- NIVEL 5: TRANSFERENCIA -->
+                <article class="content-block fade-in">
+                    <h3>🚀 Nivel 5 — Transferencia: elegir tu primer servidor</h3>
+                    <p>
+                        No existe un servidor perfecto para todos. La elección depende de los servicios que quieras
+                        ofrecer, tu presupuesto y el tiempo que puedas dedicar a mantenerlo.
+                    </p>
+
+                    <div class="card-grid mt-2">
+                        <div class="card card-accent">
+                            <div class="card-icon">🖥️</div>
+                            <h3>Aprovechar un ordenador antiguo</h3>
+                            <p>
+                                Empieza con un servicio ligero: compartir archivos o alojar una página web de prueba.
+                                Antes de reutilizarlo, comprueba su estado, el almacenamiento disponible y el consumo
+                                eléctrico.
+                            </p>
+                        </div>
+                        <div class="card card-accent">
+                            <div class="card-icon">⚡</div>
+                            <h3>Servidor doméstico de bajo consumo</h3>
+                            <p>
+                                Considera un mini-PC eficiente, especialmente si planeas mantener varios servicios
+                                funcionando durante muchas horas al día. Prioriza la eficiencia energética.
+                            </p>
+                        </div>
+                        <div class="card card-accent">
+                            <div class="card-icon">🐧</div>
+                            <h3>Aprender administración de sistemas</h3>
+                            <p>
+                                Instala Linux en un equipo de pruebas o en una máquina virtual. Practica con usuarios,
+                                permisos, servicios, redes y registros antes de administrar un equipo importante.
+                            </p>
+                        </div>
+                        <div class="card card-accent">
+                            <div class="card-icon">💾</div>
+                            <h3>Guardar información importante</h3>
+                            <p>
+                                Prioriza la fiabilidad del almacenamiento, las copias de seguridad independientes y la
+                                facilidad de recuperación. Un servidor no sustituye por sí solo a un sistema de respaldo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-3">Consumo eléctrico</h4>
+                    <p>
+                        Si vas a dejar el ordenador encendido durante muchas horas, conviene estimar su consumo.
+                        La fórmula básica es:
+                    </p>
+                    <div class="highlight-box">
+                        <strong>Energía (kWh) = (Potencia (W) × Horas) / 1000</strong>
+                    </div>
+                    <p>
+                        Por ejemplo, si un servidor consume una media de 40 W y permanece encendido 24 horas al día:
+                        <br>
+                        <code>(40 × 24) / 1000 = 0,96 kWh/día</code>
+                        <br>
+                        En 30 días serían aproximadamente <strong>28,8 kWh</strong>. El coste se calcula multiplicando
+                        los kWh consumidos por el precio que pagas por cada kWh.
+                    </p>
+                    <p>
+                        La potencia real varía según la carga del procesador, los discos, la fuente de alimentación
+                        y los periféricos. Un medidor de consumo ayuda a obtener una estimación más realista.
+                    </p>
+
+                    <h4>Rutina de mantenimiento recomendada</h4>
+                    <ul>
+                        <li><strong>Semanal:</strong> comprobar que los servicios principales funcionan y que los archivos importantes están disponibles.</li>
+                        <li><strong>Semanal:</strong> revisar alertas de almacenamiento, errores repetidos o fallos en copias de seguridad.</li>
+                        <li><strong>Mensual:</strong> instalar actualizaciones planificadas y revisar aplicaciones que ya no utilizas.</li>
+                        <li><strong>Mensual:</strong> comprobar espacio en disco, uso de RAM y carga del procesador.</li>
+                        <li><strong>Mensual:</strong> probar la restauración de algunos archivos desde una copia de seguridad.</li>
+                        <li><strong>Cada 3–6 meses:</strong> revisar ventilación, limpiar polvo con el equipo apagado y comprobar cables.</li>
+                        <li><strong>Cada 3–6 meses:</strong> revisar cuentas, permisos, servicios publicados y reglas del cortafuegos.</li>
+                    </ul>
+                    <p>
+                        La frecuencia exacta dependerá de la importancia del servicio, la exposición a Internet y la
+                        cantidad de datos almacenados. Un servidor que presta servicios a otras personas necesita una
+                        supervisión más rigurosa que uno usado únicamente para aprender.
+                    </p>
+
+                    <h4>Ruta de aprendizaje recomendada</h4>
+                    <ol>
+                        <li><strong>Fundamentos:</strong> identificar la IP del servidor, iniciar servicios y acceder desde otro dispositivo de la red.</li>
+                        <li><strong>Administración básica:</strong> practicar con usuarios, permisos, actualizaciones, registros, espacio en disco y reinicios controlados.</li>
+                        <li><strong>Automatización:</strong> programar copias de seguridad, gestionar servicios y utilizar contenedores con Docker.</li>
+                        <li><strong>Acceso remoto seguro:</strong> estudiar VPN, certificados TLS, autenticación multifactor y las implicaciones de publicar servicios en Internet.</li>
+                        <li><strong>Supervisión y recuperación:</strong> interpretar registros, controlar consumo de recursos, detectar fallos y recuperar el servicio tras un incidente.</li>
+                    </ol>
+
+                    <div class="activity-box">
+                        <h4>🔍 Explora</h4>
+                        <p>
+                            Elige uno de los cuatro escenarios de elección de servidor. Haz una lista de tres decisiones
+                            concretas que tomarías (hardware, sistema operativo, servicios) y justifica cada una con
+                            base en lo aprendido.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- =============================================
+             GLOSARIO
+             ============================================= -->
+        <section class="section" id="glosario">
+            <div class="container">
+                <span class="section-badge">Glosario</span>
+                <h2 class="section-title">Términos esenciales</h2>
+                <p class="section-subtitle">
+                    Consulta rápida de los conceptos más importantes del capítulo.
+                </p>
+
+                <div class="glossary-grid">
+                    <dl class="glossary-item">
+                        <dt>Servidor</dt>
+                        <dd>Ordenador o programa que proporciona servicios, datos o recursos a otros dispositivos, llamados clientes.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Cliente</dt>
+                        <dd>Dispositivo o programa que solicita un servicio a un servidor. Un navegador web es un cliente cuando solicita una página.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Hardware</dt>
+                        <dd>Componentes físicos de un equipo: procesador, memoria RAM, discos, tarjeta de red.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Software</dt>
+                        <dd>Programas y aplicaciones que se ejecutan en un ordenador, incluidos el sistema operativo y los servicios del servidor.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Sistema operativo</dt>
+                        <dd>Software que administra los recursos del equipo y permite ejecutar aplicaciones. Ejemplos: Windows y Linux.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Servidor dedicado</dt>
+                        <dd>Equipo o instancia destinada principalmente a ejecutar servicios de servidor, no como ordenador personal general.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Centro de datos</dt>
+                        <dd>Instalación que alberga numerosos sistemas informáticos, equipos de red, almacenamiento y sistemas de alimentación y refrigeración.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Red local (LAN)</dt>
+                        <dd>Red que conecta dispositivos dentro de un área limitada: vivienda, oficina o centro educativo.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Dirección IP</dt>
+                        <dd>Dirección numérica que identifica una interfaz de red y dirige comunicaciones. IPv4 usa formatos como 192.168.1.20; IPv6 usa otro formato.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>IP privada</dt>
+                        <dd>Dirección usada dentro de redes privadas. Rangos IPv4 habituales: 10.x, 172.16–172.31, 192.168.x.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>IP pública</dt>
+                        <dd>Dirección que identifica una conexión o interfaz en Internet. El router suele gestionar la conexión pública en una red doméstica.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>DNS</dt>
+                        <dd>Sistema que permite encontrar direcciones IP a partir de nombres de dominio, como ejemplo.com.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Dominio</dt>
+                        <dd>Nombre legible que identifica un servicio o sitio en Internet, por ejemplo ejemplo.com.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Puerto</dt>
+                        <dd>Número que identifica un punto de comunicación de una aplicación o servicio. Los servidores web suelen usar TCP 80 y 443.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Router</dt>
+                        <dd>Dispositivo que dirige el tráfico entre redes. En casa conecta la red local con Internet.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Ethernet</dt>
+                        <dd>Tecnología de red cableada que proporciona conexión estable entre un servidor y el router o un conmutador.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Wi-Fi</dt>
+                        <dd>Tecnología de red inalámbrica que permite conectar dispositivos sin cable de red.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>VPN</dt>
+                        <dd>Red privada virtual que crea una conexión protegida a través de otra red. Útil para acceder de forma más segura a servicios domésticos.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Servidor web</dt>
+                        <dd>Servicio que entrega páginas y otros recursos mediante protocolos como HTTP y HTTPS.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>HTTP y HTTPS</dt>
+                        <dd>Protocolos para transferir recursos web. HTTPS protege la comunicación mediante cifrado TLS.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Base de datos</dt>
+                        <dd>Sistema que permite almacenar, organizar, consultar y modificar información estructurada.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Servidor multimedia</dt>
+                        <dd>Aplicación que organiza y distribuye contenido audiovisual a dispositivos clientes.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Servidor de archivos</dt>
+                        <dd>Servicio que permite almacenar y compartir archivos entre usuarios y dispositivos.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Contenedor</dt>
+                        <dd>Entorno aislado que ejecuta una aplicación con sus dependencias usando funciones del sistema operativo. Docker es una herramienta conocida.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Máquina virtual</dt>
+                        <dd>Ordenador simulado por software que ejecuta su propio sistema operativo dentro de otro sistema anfitrión.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Virtualización</dt>
+                        <dd>Tecnología que permite ejecutar varias máquinas virtuales en un mismo equipo físico.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Interfaz web</dt>
+                        <dd>Pantalla de administración o aplicación accesible mediante navegador.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Transcodificación</dt>
+                        <dd>Conversión de un archivo multimedia a otro formato, resolución o tasa de bits para facilitar su reproducción.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>CPU o procesador</dt>
+                        <dd>Componente que ejecuta instrucciones y realiza cálculos. Su capacidad influye en el rendimiento del servidor.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>RAM</dt>
+                        <dd>Memoria de trabajo que utilizan el sistema operativo y las aplicaciones mientras se ejecutan.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>SSD</dt>
+                        <dd>Unidad de almacenamiento basada en memoria flash, con tiempos de acceso y velocidades superiores a los discos duros tradicionales.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>HDD</dt>
+                        <dd>Disco duro mecánico que puede ofrecer gran capacidad de almacenamiento a coste relativamente bajo.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Ancho de banda</dt>
+                        <dd>Capacidad de una conexión para transportar datos por unidad de tiempo, normalmente en Mbps o Gbps.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Latencia</dt>
+                        <dd>Tiempo que tarda una comunicación en viajar entre dos puntos y recibir respuesta. Una latencia baja es importante para juegos y aplicaciones interactivas.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Uptime</dt>
+                        <dd>Tiempo durante el que un sistema o servicio permanece funcionando y disponible.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Cortafuegos (firewall)</dt>
+                        <dd>Sistema que filtra las conexiones de red según reglas definidas para permitir o bloquear tráfico.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Autenticación</dt>
+                        <dd>Proceso mediante el cual un sistema comprueba la identidad de un usuario o dispositivo.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Autorización</dt>
+                        <dd>Proceso que determina qué acciones puede realizar un usuario una vez identificado.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Permisos</dt>
+                        <dd>Reglas que determinan quién puede leer, modificar, ejecutar o administrar recursos.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Actualización de seguridad</dt>
+                        <dd>Modificación de software que corrige vulnerabilidades u otros problemas que pueden comprometer el sistema.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Copia de seguridad (backup)</dt>
+                        <dd>Copia de los datos que permite recuperarlos si los originales se pierden, dañan o eliminan.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Restauración</dt>
+                        <dd>Proceso de recuperar archivos o sistemas a partir de una copia de seguridad.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>Cifrado</dt>
+                        <dd>Técnica que transforma la información para que solo pueda leerse con los medios de descifrado adecuados.</dd>
+                    </dl>
+                    <dl class="glossary-item">
+                        <dt>CGNAT</dt>
+                        <dd>Mecanismo por el cual un proveedor de Internet comparte una IPv4 pública entre varios clientes. Puede impedir conexiones entrantes mediante redirección de puertos convencional.</dd>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             RETO INTEGRADOR
+             ============================================= -->
+        <section class="section" id="reto">
+            <div class="container">
+                <span class="section-badge">Reto integrador</span>
+                <h2 class="section-title">Diseña tu servidor doméstico seguro</h2>
+                <p class="section-subtitle">
+                    Aplica todo lo aprendido en un desafío auténtico.
+                </p>
+
+                <div class="challenge-section fade-in">
+                    <h3>📋 Contexto</h3>
+                    <p>
+                        Tu institución educativa quiere montar un pequeño servidor doméstico para compartir recursos
+                        educativos (documentos, videos, presentaciones) entre estudiantes y docentes. Te han pedido
+                        que diseñes una propuesta técnica que sea segura, funcional y sostenible. El servidor estará
+                        en la sala de computación y se conectará a la red local del colegio.
+                    </p>
+
+                    <h3>🎯 Objetivo</h3>
+                    <p>
+                        Diseñar una propuesta completa que incluya:
+                    </p>
+                    <ul>
+                        <li>Selección del hardware (reutilizar un equipo existente o mini-PC de bajo consumo).</li>
+                        <li>Sistema operativo y servicios a implementar (servidor de archivos, servidor web, etc.).</li>
+                        <li>Configuración de red (IP privada, puertos, firewall, VPN si es necesaria).</li>
+                        <li>Plan de seguridad (autenticación, autorización, permisos, actualizaciones).</li>
+                        <li>Plan de copias de seguridad y restauración.</li>
+                        <li>Estimación del consumo eléctrico y rutina de mantenimiento.</li>
+                    </ul>
+
+                    <h3>📌 ¿Qué debes lograr?</h3>
+                    <ul>
+                        <li>Una propuesta escrita (puede ser un documento, presentación o esquema visual) que cubra todos los puntos anteriores.</li>
+                        <li>Justificación técnica de cada decisión, usando los conceptos del taller.</li>
+                        <li>Identificación de al menos tres errores frecuentes que evitarás y cómo lo harás.</li>
+                        <li>Una reflexión sobre las implicaciones éticas y de privacidad del proyecto.</li>
+                    </ul>
+
+                    <h3>⚠️ Restricciones</h3>
+                    <ul>
+                        <li>No puedes asumir acceso a Internet permanente ni servicios en la nube de pago.</li>
+                        <li>El presupuesto es limitado: prioriza reutilizar hardware existente.</li>
+                        <li>Debes garantizar que el servidor no exponga datos de estudiantes sin autorización.</li>
+                        <li>El consumo eléctrico debe ser razonable para un centro educativo.</li>
+                    </ul>
+
+                    <h3>✅ Criterios de éxito</h3>
+                    <ul>
+                        <li><strong>Comprensión:</strong> los conceptos técnicos se usan correctamente.</li>
+                        <li><strong>Aplicación:</strong> las decisiones se conectan con los servicios y recursos disponibles.</li>
+                        <li><strong>Funcionalidad:</strong> la propuesta es viable en un entorno real.</li>
+                        <li><strong>Creatividad:</strong> se proponen soluciones propias y adaptadas al contexto.</li>
+                        <li><strong>Calidad técnica:</strong> se respetan las buenas prácticas de seguridad y mantenimiento.</li>
+                        <li><strong>Argumentación:</strong> cada decisión está justificada.</li>
+                        <li><strong>Ética:</strong> se consideran la privacidad y los derechos de uso.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong>Pista:</strong> recuerda la regla fundamental: primero asegura el funcionamiento
+                        seguro en la red local; luego evalúa si realmente necesitas acceso externo.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             EVALUACIÓN LÚDICA
+             ============================================= -->
+        <section class="section" id="evaluacion">
+            <div class="container">
+                <span class="section-badge">Evaluación lúdica</span>
+                <h2 class="section-title">Pon a prueba tus conocimientos</h2>
+                <p class="section-subtitle">
+                    Cinco preguntas para consolidar lo aprendido. Recibirás retroalimentación inmediata.
+                </p>
+
+                <div class="quiz-container" id="quiz-container">
+                    <div class="quiz-header">
+                        <span class="quiz-counter" id="quiz-counter">Pregunta 1 de 5</span>
+                        <span class="quiz-score" id="quiz-score">Puntuación: 0</span>
+                    </div>
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5" aria-label="Progreso del cuestionario">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+
+                    <div id="question-area">
+                        <p class="question-text" id="question-text"></p>
+                        <ul class="options-list" id="options-list"></ul>
+                        <div class="feedback-box" id="feedback-box" role="alert"></div>
+                        <div class="quiz-actions">
+                            <button class="btn btn-primary" id="next-btn" disabled>Siguiente pregunta →</button>
+                        </div>
+                    </div>
+
+                    <div class="result-box" id="result-box">
+                        <div class="result-score" id="result-score">0/5</div>
+                        <div class="result-percent" id="result-percent">0%</div>
+                        <p class="result-message" id="result-message"></p>
+                        <button class="btn btn-primary" id="restart-btn">🔄 Reiniciar cuestionario</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             CIERRE REFLEXIVO
+             ============================================= -->
+        <section class="section" id="reflexion">
+            <div class="container">
+                <span class="section-badge">Cierre reflexivo</span>
+                <h2 class="section-title">Antes de terminar...</h2>
+                <p class="section-subtitle">
+                    Tómate un momento para reflexionar sobre tu aprendizaje.
+                </p>
+
+                <div class="metacognition fade-in">
+                    <h3>🧠 Metacognición</h3>
+                    <ul class="metacognition-list">
+                        <li>
+                            <span class="icon">✅</span>
+                            <span><strong>¿Qué aprendí?</strong> Escribe los tres conceptos más importantes que descubriste o comprendiste mejor durante el taller.</span>
+                        </li>
+                        <li>
+                            <span class="icon">🛠️</span>
+                            <span><strong>¿Qué puedo aplicar?</strong> ¿Cómo usarías lo aprendido en un proyecto real de tu colegio, tu casa o tu emprendimiento?</span>
+                        </li>
+                        <li>
+                            <span class="icon">📚</span>
+                            <span><strong>¿Qué necesito seguir practicando?</strong> Identifica un tema del taller que aún te resulte confuso o que quieras profundizar.</span>
+                        </li>
+                        <li>
+                            <span class="icon">🚀</span>
+                            <span><strong>¿Cómo lo usaría en un proyecto real?</strong> Imagina que mañana debes montar un servidor doméstico. ¿Cuál sería tu primer paso y por qué?</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =============================================
+         FOOTER
+         ============================================= -->
+    <footer class="footer">
+        <div class="container">
+            <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+            <p class="credit">Diseñado por: Edwin Méndez J.</p>
+        </div>
+    </footer>
+
+    <!-- =============================================
+         JAVASCRIPT
+         ============================================= -->
+    <script>
+        (function () {
+            'use strict';
+
+            /* =============================================
+               DATOS DEL CUESTIONARIO
+               ============================================= */
+            const preguntas = [
+                {
+                    pregunta: "¿Cuál es la función principal de un servidor en una red?",
+                    opciones: [
+                        "Almacenar únicamente archivos personales sin compartirlos.",
+                        "Proporcionar servicios, datos o recursos a otros dispositivos llamados clientes.",
+                        "Reemplazar al router en la conexión a Internet.",
+                        "Ejecutar exclusivamente videojuegos en línea."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Un servidor proporciona servicios, datos o recursos a los clientes. No se limita a almacenar archivos ni reemplaza al router; su función es ofrecer recursos de forma centralizada."
+                },
+                {
+                    pregunta: "Un estudiante configura un servidor doméstico con IP privada 192.168.1.50 y quiere que sus compañeros accedan desde Internet. ¿Qué elemento debe configurar para permitir el acceso entrante?",
+                    opciones: [
+                        "Cambiar la IP privada por una IP pública directamente en el servidor.",
+                        "Configurar una redirección de puertos en el router (si el proveedor lo permite).",
+                        "Desactivar el firewall por completo.",
+                        "Instalar un segundo sistema operativo."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Para recibir conexiones entrantes desde Internet, se debe configurar una redirección de puertos en el router. Cambiar la IP privada por una pública no es viable en una red doméstica, y desactivar el firewall es una mala práctica de seguridad."
+                },
+                {
+                    pregunta: "Analiza la siguiente situación: un servidor doméstico se apaga de repente y pierde datos porque solo tenía una copia de seguridad en el mismo disco. ¿Qué error frecuente se cometió?",
+                    opciones: [
+                        "Usar un sistema operativo Linux en lugar de Windows.",
+                        "Confiar en una única copia de seguridad almacenada en el mismo disco.",
+                        "Tener el servidor encendido las 24 horas.",
+                        "Usar un router en lugar de un switch."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "El error fue confiar en una única copia de seguridad en el mismo disco. Si el disco falla, se pierden los datos originales y la copia. Se recomienda mantener al menos una copia independiente y probar la restauración."
+                },
+                {
+                    pregunta: "Un mini-PC consume 40 W en promedio y se mantiene encendido 24 horas al día durante 30 días. ¿Cuál es el consumo aproximado de energía en kWh?",
+                    opciones: [
+                        "0,96 kWh",
+                        "28,8 kWh",
+                        "288 kWh",
+                        "2,88 kWh"
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Aplicando la fórmula: (40 W × 24 h × 30 días) / 1000 = 28,8 kWh. Es importante estimar el consumo para planificar el coste eléctrico y elegir equipos eficientes."
+                },
+                {
+                    pregunta: "Un docente quiere que los estudiantes accedan a un servidor de archivos del colegio desde sus casas, pero le preocupa la seguridad. ¿Qué recomendación del taller debería seguir primero?",
+                    opciones: [
+                        "Abrir todos los puertos del router para facilitar el acceso.",
+                        "Considerar primero una VPN bien configurada y no exponer servicios sin necesidad.",
+                        "Compartir la contraseña del administrador con todos los estudiantes.",
+                        "Desactivar las actualizaciones de seguridad para evitar reinicios."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "La recomendación del taller es no exponer servicios sin necesidad y considerar primero una VPN bien configurada para acceder a servicios domésticos desde fuera. Abrir puertos sin control, compartir credenciales o desactivar actualizaciones son prácticas inseguras."
+                }
+            ];
+
+            /* =============================================
+               ESTADO DEL CUESTIONARIO
+               ============================================= */
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = null;
+            let bloqueado = false;
+
+            /* =============================================
+               REFERENCIAS DEL DOM
+               ============================================= */
+            const questionText = document.getElementById('question-text');
+            const optionsList = document.getElementById('options-list');
+            const feedbackBox = document.getElementById('feedback-box');
+            const nextBtn = document.getElementById('next-btn');
+            const quizCounter = document.getElementById('quiz-counter');
+            const quizScore = document.getElementById('quiz-score');
+            const progressFill = document.getElementById('progress-fill');
+            const questionArea = document.getElementById('question-area');
+            const resultBox = document.getElementById('result-box');
+            const resultScore = document.getElementById('result-score');
+            const resultPercent = document.getElementById('result-percent');
+            const resultMessage = document.getElementById('result-message');
+            const restartBtn = document.getElementById('restart-btn');
+            const progressBar = document.querySelector('.progress-bar');
+
+            /* =============================================
+               FUNCIONES DEL CUESTIONARIO
+               ============================================= */
+
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = null;
+                bloqueado = false;
+
+                questionArea.style.display = 'block';
+                resultBox.classList.remove('show');
+                feedbackBox.classList.remove('show');
+                feedbackBox.className = 'feedback-box';
+                nextBtn.disabled = true;
+                nextBtn.textContent = 'Siguiente pregunta →';
+
+                actualizarMarcadores();
+                mostrarPregunta();
+            }
+
+            function actualizarMarcadores() {
+                quizCounter.textContent = 'Pregunta ' + (indiceActual + 1) + ' de ' + preguntas.length;
+                quizScore.textContent = 'Puntuación: ' + puntuacion;
+                const progreso = (indiceActual / preguntas.length) * 100;
+                progressFill.style.width = progreso + '%';
+                progressBar.setAttribute('aria-valuenow', indiceActual);
+            }
+
+            function mostrarPregunta() {
+                const preguntaActual = preguntas[indiceActual];
+                questionText.textContent = preguntaActual.pregunta;
+                optionsList.innerHTML = '';
+                feedbackBox.classList.remove('show');
+                feedbackBox.className = 'feedback-box';
+                nextBtn.disabled = true;
+                respuestaSeleccionada = null;
+                bloqueado = false;
+
+                const letras = ['A', 'B', 'C', 'D'];
+
+                preguntaActual.opciones.forEach(function (opcion, index) {
+                    const li = document.createElement('li');
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.type = 'button';
+                    btn.setAttribute('aria-label', 'Opción ' + letras[index] + ': ' + opcion);
+
+                    const spanLetra = document.createElement('span');
+                    spanLetra.className = 'option-letter';
+                    spanLetra.textContent = letras[index];
+
+                    const spanTexto = document.createElement('span');
+                    spanTexto.textContent = opcion;
+
+                    btn.appendChild(spanLetra);
+                    btn.appendChild(spanTexto);
+                    btn.addEventListener('click', function () {
+                        seleccionarRespuesta(index, btn);
+                    });
+
+                    li.appendChild(btn);
+                    optionsList.appendChild(li);
+                });
+            }
+
+            function seleccionarRespuesta(index, btn) {
+                if (bloqueado) return;
+
+                bloqueado = true;
+                respuestaSeleccionada = index;
+                const preguntaActual = preguntas[indiceActual];
+                const esCorrecta = index === preguntaActual.correcta;
+
+                // Bloquear todas las opciones
+                const todosBotones = optionsList.querySelectorAll('.option-btn');
+                todosBotones.forEach(function (boton) {
+                    boton.disabled = true;
+                });
+
+                // Marcar la opción seleccionada
+                if (esCorrecta) {
+                    btn.classList.add('correct');
+                    puntuacion++;
+                    quizScore.textContent = 'Puntuación: ' + puntuacion;
+                } else {
+                    btn.classList.add('incorrect');
+                    // Mostrar la correcta
+                    todosBotones[preguntaActual.correcta].classList.add('correct');
+                }
+
+                // Mostrar retroalimentación
+                feedbackBox.className = 'feedback-box show ' + (esCorrecta ? 'correct' : 'incorrect');
+                feedbackBox.innerHTML = '<strong>' + (esCorrecta ? '✅ ¡Correcto!' : '❌ Incorrecto.') + '</strong> ' + preguntaActual.retroalimentacion;
+
+                // Habilitar botón siguiente
+                nextBtn.disabled = false;
+                nextBtn.focus();
+            }
+
+            function siguientePregunta() {
+                if (nextBtn.disabled) return;
+
+                indiceActual++;
+
+                if (indiceActual < preguntas.length) {
+                    actualizarMarcadores();
+                    mostrarPregunta();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                questionArea.style.display = 'none';
+                resultBox.classList.add('show');
+
+                const porcentaje = Math.round((puntuacion / preguntas.length) * 100);
+                resultScore.textContent = puntuacion + '/' + preguntas.length;
+                resultPercent.textContent = porcentaje + '%';
+
+                let mensaje = '';
+                if (porcentaje === 100) {
+                    mensaje = '¡Excelente! Dominas los conceptos fundamentales sobre servidores domésticos, seguridad y mantenimiento. Estás listo para diseñar tu propio servidor con criterio técnico.';
+                } else if (porcentaje >= 80) {
+                    mensaje = '¡Muy bien! Tienes una base sólida. Repasa los conceptos donde fallaste y estarás listo para aplicar lo aprendido en un proyecto real.';
+                } else if (porcentaje >= 60) {
+                    mensaje = '¡Buen intento! Comprendes lo esencial, pero conviene reforzar algunos conceptos. Revisa el glosario y las recomendaciones de seguridad.';
+                } else {
+                    mensaje = 'Es un buen momento para repasar el taller con calma. Vuelve al desarrollo, consulta el glosario y prueba de nuevo. ¡El aprendizaje es un proceso!';
+                }
+
+                resultMessage.textContent = mensaje;
+                progressFill.style.width = '100%';
+                progressBar.setAttribute('aria-valuenow', preguntas.length);
+                restartBtn.focus();
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+            }
+
+            /* =============================================
+               EVENTOS
+               ============================================= */
+            nextBtn.addEventListener('click', siguientePregunta);
+            restartBtn.addEventListener('click', reiniciarQuiz);
+
+            /* =============================================
+               INICIALIZACIÓN
+               ============================================= */
+            iniciarQuiz();
+
+        })();
+    </script>
+
+</body>
+</html>

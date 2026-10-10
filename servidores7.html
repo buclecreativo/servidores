@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bucle Creativo — Cómo convertir tu PC en un servidor</title>
+<style>
+    /* ===== Variables ===== */
+    :root {
+        --color-primary: #0d1b2a;
+        --color-secondary: #1b3a5c;
+        --color-accent: #ff6b1a;
+        --color-accent-hover: #e55a0e;
+        --color-background: #f0f4f8;
+        --color-card: #ffffff;
+        --color-text: #1e2a38;
+        --color-text-light: #4a5a6e;
+        --color-border: #dce3eb;
+        --color-success: #16a34a;
+        --color-error: #dc2626;
+        --color-warning: #d97706;
+        --shadow-sm: 0 1px 3px rgba(13, 27, 42, 0.08);
+        --shadow-md: 0 4px 12px rgba(13, 27, 42, 0.10);
+        --shadow-lg: 0 8px 24px rgba(13, 27, 42, 0.14);
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --transition: 0.25s ease;
+        --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    /* ===== Reset ===== */
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 80px;
+    }
+
+    /* ===== Base ===== */
+    body {
+        font-family: var(--font-main);
+        background-color: var(--color-background);
+        color: var(--color-text);
+        line-height: 1.7;
+        font-size: 1rem;
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+        line-height: 1.25;
+        color: var(--color-primary);
+    }
+
+    p { margin-bottom: 0.85rem; }
+
+    a {
+        color: var(--color-accent);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    a:hover, a:focus {
+        text-decoration: underline;
+    }
+
+    /* ===== Header ===== */
+    header {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: #fff;
+        padding: 3rem 1.5rem 2.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255, 107, 26, 0.12) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    header h1 {
+        font-size: clamp(2rem, 6vw, 3.2rem);
+        color: #fff;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.4rem;
+    }
+
+    header h1 span {
+        color: var(--color-accent);
+    }
+
+    .subtitle {
+        font-size: clamp(1rem, 3vw, 1.35rem);
+        color: rgba(255, 255, 255, 0.92);
+        max-width: 780px;
+        margin: 0 auto 0.8rem;
+        font-weight: 400;
+    }
+
+    .header-desc {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.75);
+        max-width: 650px;
+        margin: 0 auto;
+        font-weight: 300;
+    }
+
+    /* ===== Navegación ===== */
+    nav {
+        background: var(--color-card);
+        border-bottom: 1px solid var(--color-border);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .nav-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem;
+        padding: 0.5rem 1rem;
+    }
+
+    nav a {
+        color: var(--color-text-light);
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.45rem 0.85rem;
+        border-radius: var(--radius-sm);
+        transition: background var(--transition), color var(--transition);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    nav a:hover, nav a:focus {
+        background: var(--color-accent);
+        color: #fff;
+        text-decoration: none;
+        outline: none;
+    }
+
+    nav a:focus-visible {
+        outline: 3px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    /* ===== Main ===== */
+    main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.5rem 1.25rem 3rem;
+    }
+
+    section {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid var(--color-accent);
+        display: inline-block;
+    }
+
+    /* ===== Tarjetas ===== */
+    .card {
+        background: var(--color-card);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--color-border);
+        transition: transform var(--transition), box-shadow var(--transition);
+        margin-bottom: 1.25rem;
+    }
+
+    .card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-sm);
+        background: linear-gradient(135deg, var(--color-accent), #ff8f4d);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .card p {
+        font-size: 0.92rem;
+        color: var(--color-text-light);
+        margin-bottom: 0.4rem;
+    }
+
+    .card .tag {
+        display: inline-block;
+        background: rgba(255, 107, 26, 0.1);
+        color: var(--color-accent);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        margin-top: 0.3rem;
+    }
+
+    /* ===== Elementos de contenido ===== */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(255, 107, 26, 0.06), rgba(255, 107, 26, 0.02));
+        border-left: 4px solid var(--color-accent);
+        padding: 1rem 1.25rem;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        margin: 1rem 0;
+    }
+
+    .highlight-box strong {
+        color: var(--color-accent);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .info-item {
+        background: var(--color-background);
+        border-radius: var(--radius-sm);
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--color-border);
+    }
+
+    .info-item h4 {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--color-accent);
+        margin-bottom: 0.25rem;
+    }
+
+    .info-item p {
+        font-size: 0.9rem;
+        margin-bottom: 0;
+        color: var(--color-text-light);
+    }
+
+    .analogy {
+        background: #eef4fb;
+        border-radius: var(--radius-sm);
+        padding: 0.9rem 1.1rem;
+        margin: 0.75rem 0;
+        font-size: 0.92rem;
+        border-left: 4px solid var(--color-secondary);
+    }
+
+    .analogy::before {
+        content: '💡 Analogía: ';
+        font-weight: 700;
+        color: var(--color-secondary);
+    }
+
+    .warning-box {
+        background: #fef3c7;
+        border-left: 4px solid var(--color-warning);
+        padding: 0.9rem 1.1rem;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        margin: 0.75rem 0;
+        font-size: 0.92rem;
+    }
+
+    .warning-box::before {
+        content: '⚠️ ';
+    }
+
+    .reflection-box {
+        background: #e0f2fe;
+        border-left: 4px solid #0284c7;
+        padding: 0.9rem 1.1rem;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        margin: 0.75rem 0;
+        font-size: 0.92rem;
+    }
+
+    .reflection-box::before {
+        content: '🤔 Piensa y responde: ';
+        font-weight: 700;
+        color: #0284c7;
+    }
+
+    .explore-box {
+        background: #f0fdf4;
+        border-left: 4px solid var(--color-success);
+        padding: 0.9rem 1.1rem;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        margin: 0.75rem 0;
+        font-size: 0.92rem;
+    }
+
+    .explore-box::before {
+        content: '🔬 Explora: ';
+        font-weight: 700;
+        color: var(--color-success);
+    }
+
+    /* ===== Tablas ===== */
+    .table-wrapper {
+        overflow-x: auto;
+        margin: 1rem 0;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-border);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 500px;
+    }
+
+    thead {
+        background: var(--color-primary);
+        color: #fff;
+    }
+
+    th, td {
+        padding: 0.7rem 0.9rem;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    tbody tr:hover {
+        background: rgba(255, 107, 26, 0.04);
+    }
+
+    /* ===== Código ===== */
+    .code-block {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-sm);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        overflow-x: auto;
+        margin: 0.75rem 0;
+        line-height: 1.6;
+        border: 1px solid #1e293b;
+    }
+
+    .code-block .kw { color: #c084fc; }
+    .code-block .str { color: #86efac; }
+    .code-block .cm { color: #64748b; font-style: italic; }
+    .code-block .fn { color: #60a5fa; }
+    .code-block .num { color: #fbbf24; }
+
+    code.inline {
+        background: #e2e8f0;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--color-primary);
+    }
+
+    /* ===== Listas ===== */
+    .checklist {
+        list-style: none;
+        padding: 0;
+    }
+
+    .checklist li {
+        padding: 0.5rem 0 0.5rem 2rem;
+        position: relative;
+        font-size: 0.92rem;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .checklist li::before {
+        content: '✓';
+        position: absolute;
+        left: 0.4rem;
+        color: var(--color-success);
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    /* ===== Reto ===== */
+    .challenge-card {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: #fff;
+        border-radius: var(--radius-lg);
+        padding: 2rem 1.75rem;
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .challenge-card::before {
+        content: '';
+        position: absolute;
+        top: -30%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 107, 26, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .challenge-card h3 {
+        color: #fff;
+        font-size: 1.35rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .challenge-card p {
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 0.95rem;
+    }
+
+    .challenge-card ul {
+        margin: 0.75rem 0 0.75rem 1.25rem;
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 0.92rem;
+    }
+
+    .challenge-card ul li {
+        margin-bottom: 0.35rem;
+    }
+
+    .challenge-card .badge {
+        display: inline-block;
+        background: var(--color-accent);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===== Quiz ===== */
+    .quiz-container {
+        background: var(--color-card);
+        border-radius: var(--radius-lg);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--color-border);
+    }
+
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .quiz-counter {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--color-text-light);
+        background: var(--color-background);
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+    }
+
+    .quiz-score {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--color-accent);
+        background: rgba(255, 107, 26, 0.1);
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: var(--color-background);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-accent), #ff8f4d);
+        border-radius: 10px;
+        transition: width 0.4s ease;
+        width: 0%;
+    }
+
+    .question-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-primary);
+        margin-bottom: 1rem;
+    }
+
+    .options-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .option-btn {
+        width: 100%;
+        text-align: left;
+        padding: 0.85rem 1.1rem;
+        border-radius: var(--radius-sm);
+        border: 2px solid var(--color-border);
+        background: var(--color-card);
+        color: var(--color-text);
+        font-size: 0.95rem;
+        font-family: var(--font-main);
+        cursor: pointer;
+        transition: border-color var(--transition), background var(--transition), transform var(--transition);
+        font-weight: 500;
+        line-height: 1.5;
+    }
+
+    .option-btn:hover:not(:disabled) {
+        border-color: var(--color-accent);
+        background: rgba(255, 107, 26, 0.04);
+        transform: translateX(4px);
+    }
+
+    .option-btn:focus-visible {
+        outline: 3px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    .option-btn:disabled {
+        cursor: default;
+        opacity: 0.85;
+    }
+
+    .option-btn.correct {
+        border-color: var(--color-success);
+        background: rgba(22, 163, 74, 0.08);
+        color: #166534;
+    }
+
+    .option-btn.incorrect {
+        border-color: var(--color-error);
+        background: rgba(220, 38, 38, 0.06);
+        color: #991b1b;
+    }
+
+    .option-btn.reveal-correct {
+        border-color: var(--color-success);
+        background: rgba(22, 163, 74, 0.06);
+    }
+
+    .feedback-box {
+        margin-top: 1rem;
+        padding: 0.9rem 1.1rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.92rem;
+        display: none;
+    }
+
+    .feedback-box.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-box.correct-fb {
+        background: #dcfce7;
+        border-left: 4px solid var(--color-success);
+        color: #166534;
+    }
+
+    .feedback-box.incorrect-fb {
+        background: #fee2e2;
+        border-left: 4px solid var(--color-error);
+        color: #991b1b;
+    }
+
+    .quiz-actions {
+        margin-top: 1.25rem;
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.7rem 1.4rem;
+        border-radius: var(--radius-sm);
+        border: none;
+        font-family: var(--font-main);
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+        text-decoration: none;
+    }
+
+    .btn:focus-visible {
+        outline: 3px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    .btn-primary {
+        background: var(--color-accent);
+        color: #fff;
+    }
+    .btn-primary:hover {
+        background: var(--color-accent-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background: var(--color-background);
+        color: var(--color-text);
+        border: 2px solid var(--color-border);
+    }
+    .btn-secondary:hover {
+        background: var(--color-border);
+        text-decoration: none;
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .result-screen {
+        text-align: center;
+        display: none;
+    }
+
+    .result-screen.show {
+        display: block;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .result-icon {
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-score {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--color-accent);
+        margin-bottom: 0.25rem;
+    }
+
+    .result-message {
+        font-size: 1rem;
+        color: var(--color-text-light);
+        max-width: 500px;
+        margin: 0 auto 1.25rem;
+    }
+
+    /* ===== Reflexión ===== */
+    .reflection-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .reflection-item {
+        background: var(--color-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: 1.1rem;
+        border-top: 4px solid var(--color-accent);
+    }
+
+    .reflection-item h4 {
+        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+        color: var(--color-accent);
+    }
+
+    .reflection-item p {
+        font-size: 0.88rem;
+        color: var(--color-text-light);
+        margin-bottom: 0;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+        background: var(--color-primary);
+        color: rgba(255, 255, 255, 0.85);
+        text-align: center;
+        padding: 1.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    footer p {
+        margin-bottom: 0.25rem;
+    }
+
+    /* ===== Animaciones ===== */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+        header { padding: 2rem 1rem 1.8rem; }
+        main { padding: 1rem 0.85rem 2rem; }
+        .card { padding: 1.15rem; }
+        .challenge-card { padding: 1.5rem 1.25rem; }
+        .quiz-container { padding: 1.25rem; }
+        .nav-container { gap: 0.15rem; }
+        nav a { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+        .option-btn { font-size: 0.9rem; padding: 0.75rem 0.95rem; }
+    }
+
+    @media (max-width: 480px) {
+        header h1 { font-size: 1.7rem; }
+        .subtitle { font-size: 0.95rem; }
+        .section-title { font-size: 1.25rem; }
+        .quiz-header { flex-direction: column; align-items: flex-start; }
+        .quiz-actions { flex-direction: column; }
+        .btn { width: 100%; }
+    }
+
+    /* ===== Accesibilidad ===== */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <h1>Bucle <span>Creativo</span></h1>
+    <p class="subtitle">Cómo convertir tu PC en un servidor doméstico</p>
+    <p class="header-desc">Un taller interactivo para aprender a transformar un ordenador común en un servidor útil para tu casa, tu colegio o tu emprendimiento.</p>
+</header>
+
+<!-- ===== NAVEGACIÓN ===== -->
+<nav aria-label="Navegación del taller">
+    <div class="nav-container">
+        <a href="#objetivo">Objetivo</a>
+        <a href="#activacion">Activación</a>
+        <a href="#desarrollo">Desarrollo</a>
+        <a href="#reto">Reto</a>
+        <a href="#evaluacion">Evaluación</a>
+        <a href="#reflexion">Reflexión</a>
+    </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+    <!-- ===== OBJETIVO ===== -->
+    <section id="objetivo" aria-labelledby="titulo-objetivo">
+        <h2 id="titulo-objetivo" class="section-title">🎯 Objetivo de aprendizaje</h2>
+        <div class="card">
+            <p>Comprender y aplicar los fundamentos, procedimientos y buenas prácticas para convertir un ordenador personal en un servidor doméstico funcional, identificando los tipos de servidores, los requisitos de hardware, la configuración de red local, la instalación de servicios y las medidas de seguridad básicas, desarrollando pensamiento crítico, responsabilidad digital y la capacidad de resolver problemas técnicos en contextos reales, para aprovechar los recursos tecnológicos disponibles y crear soluciones que beneficien el aprendizaje, la colaboración y los proyectos personales o comunitarios.</p>
+        </div>
+    </section>
+
+    <!-- ===== ACTIVACIÓN ===== -->
+    <section id="activacion" aria-labelledby="titulo-activacion">
+        <h2 id="titulo-activacion" class="section-title">🚀 Activación</h2>
+        <div class="card">
+            <p>Imagina que tienes un computador antiguo en casa que ya no usas para estudiar ni para jugar. Está ahí, acumulando polvo, mientras tú pagas servicios en la nube para guardar tus fotos, ver películas o respaldar tus tareas. ¿Y si ese equipo pudiera volver a ser útil? ¿Y si pudieras convertirlo en un servidor que guarde tus archivos, reproduzca música en tu televisor o aloje la página web de tu emprendimiento escolar?</p>
+            <p>No necesitas comprar un servidor profesional. Un PC convencional puede ser suficiente, especialmente si el objetivo es aprender, experimentar o dar servicio a una red doméstica. Pero antes de empezar, hay decisiones importantes: ¿qué tipo de servidor quieres montar? ¿Tu hardware es suficiente? ¿Qué sistema operativo elegir? ¿Cómo preparar la red? ¿Cómo protegerlo?</p>
+            <div class="highlight-box">
+                <strong>Pregunta guía:</strong> ¿Cómo puedo transformar un computador que ya tengo en una herramienta útil para mi casa, mi colegio o mi emprendimiento, sin gastar dinero en equipos profesionales?
+            </div>
+            <div class="reflection-box">
+                ¿Qué servicio te gustaría ofrecer con tu propio servidor? ¿Compartir archivos con tu familia, ver películas en el televisor, alojar una página web o respaldar tus tareas?
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DESARROLLO ===== -->
+    <section id="desarrollo" aria-labelledby="titulo-desarrollo">
+        <h2 id="titulo-desarrollo" class="section-title">📚 Desarrollo del contenido</h2>
+
+        <!-- NIVEL 1: FUNDAMENTOS -->
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">1</div>
+            <h3>Nivel 1 — Fundamentos: ¿Qué es un servidor doméstico?</h3>
+            <p><strong>¿Qué es?</strong> Un servidor es un ordenador que ofrece servicios a otros dispositivos de la red. Convertir un PC en servidor es una forma práctica de aprovechar un equipo que ya tenemos en casa. En lugar de utilizarlo únicamente para navegar por Internet, estudiar o trabajar, podemos configurarlo para que ofrezca servicios a otros dispositivos de nuestra red.</p>
+            <p><strong>¿Cómo funciona?</strong> El servidor recibe peticiones de otros dispositivos (clientes), las procesa y devuelve una respuesta. Por ejemplo, cuando un móvil solicita una página web, el servidor la envía; cuando un televisor pide una película, el servidor la reproduce.</p>
+            <div class="analogy">Un servidor doméstico es como un bibliotecario en tu casa: guarda libros (archivos), los organiza y los presta a quien los solicite, siempre que esté disponible y tenga permiso.</div>
+            <p><strong>Tipos de servidores que puedes montar:</strong></p>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>📁 Servidor de archivos</h4>
+                    <p>Permite guardar documentos, fotos y vídeos en un único ordenador y acceder a ellos desde otros equipos de la red.</p>
+                    <span class="tag">Samba, File Browser</span>
+                </div>
+                <div class="card">
+                    <h4>🎬 Servidor multimedia</h4>
+                    <p>Organiza películas, series, música y fotografías para reproducirlas en televisores, móviles y otros dispositivos.</p>
+                    <span class="tag">Jellyfin, Plex</span>
+                </div>
+                <div class="card">
+                    <h4>🌐 Servidor web</h4>
+                    <p>Aloja páginas web y aplicaciones a las que se accede mediante un navegador.</p>
+                    <span class="tag">Apache, Nginx, XAMPP</span>
+                </div>
+                <div class="card">
+                    <h4>🏠 Servidor doméstico multiuso</h4>
+                    <p>Ejecuta varias aplicaciones desde un mismo ordenador: gestor de archivos, bloqueador de anuncios, multimedia y automatización.</p>
+                    <span class="tag">Docker, CasaOS</span>
+                </div>
+            </div>
+            <div class="explore-box">
+                Investiga en tu casa qué dispositivos podrían conectarse a un servidor doméstico: televisores, móviles, tablets, laptops, consolas. ¿Cuántos serían?
+            </div>
+        </article>
+
+        <!-- NIVEL 2: COMPRENSIÓN -->
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">2</div>
+            <h3>Nivel 2 — Comprensión: Requisitos y sistema operativo</h3>
+            <p><strong>¿Qué necesitas?</strong> Antes de instalar programas, revisa las características del ordenador. Estos valores son orientativos; los requisitos reales dependen del servicio, del número de usuarios y de tareas exigentes como la transcodificación de vídeo.</p>
+            <div class="table-wrapper">
+                <table>
+                    <caption class="sr-only">Requisitos de hardware recomendados para un servidor doméstico</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Componente</th>
+                            <th scope="col">Recomendación inicial</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Procesador</td><td>Un procesador de varios núcleos, aunque no necesitas uno de gama alta para servicios sencillos.</td></tr>
+                        <tr><td>Memoria RAM</td><td>4 GB pueden bastar para una tarea ligera; 8 GB o más ofrecen mayor margen para varios servicios.</td></tr>
+                        <tr><td>Almacenamiento</td><td>Un SSD facilita el funcionamiento del sistema; para archivos multimedia puedes añadir un disco de mayor capacidad.</td></tr>
+                        <tr><td>Red</td><td>Ethernet por cable suele ofrecer una conexión más estable que Wi-Fi.</td></tr>
+                        <tr><td>Refrigeración</td><td>El equipo debe poder funcionar durante periodos prolongados sin sobrecalentarse.</td></tr>
+                        <tr><td>Alimentación</td><td>Conviene revisar el estado del cargador o la fuente de alimentación y el consumo eléctrico.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="warning-box">
+                <strong>¿Puedo utilizar mi PC habitual?</strong> Sí, pero ten en cuenta: si lo apagas, los servicios dejarán de estar disponibles; reiniciar el equipo o instalar actualizaciones puede interrumpir las conexiones; algunos programas de servidor pueden consumir memoria y procesador; los archivos y servicios estarán expuestos a riesgos adicionales si no configuras correctamente la seguridad.
+            </div>
+            <p><strong>Elegir el sistema operativo:</strong> Puedes utilizar el sistema operativo que ya tienes o instalar uno diseñado para ofrecer servicios de forma continua.</p>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🪟 Windows</h4>
+                    <p>Adecuado si quieres empezar sin cambiar de entorno. Puedes instalar aplicaciones como Jellyfin, Plex, XAMPP o Docker Desktop, según la compatibilidad y los requisitos de cada programa.</p>
+                </div>
+                <div class="card">
+                    <h4>🐧 Linux (Ubuntu Server o Debian)</h4>
+                    <p>Una opción flexible para servidores web, archivos, contenedores y otros servicios. Es especialmente útil para aprender administración de servidores.</p>
+                </div>
+                <div class="card">
+                    <h4>🏡 CasaOS</h4>
+                    <p>Una plataforma orientada al uso doméstico que facilita la administración de aplicaciones desde una interfaz web. Debes tener en cuenta el sistema base compatible y las instrucciones de instalación de su versión actual.</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <strong>Consejo:</strong> Si solo quieres probar un servicio, comienza con el sistema operativo que ya conoces. Si tu objetivo es aprender a administrar un servidor dedicado, considera Linux.
+            </div>
+            <div class="reflection-box">
+                ¿Qué sistema operativo crees que se adapta mejor a tu nivel de experiencia y a tus objetivos? ¿Por qué?
+            </div>
+        </article>
+
+        <!-- NIVEL 3: APLICACIÓN -->
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">3</div>
+            <h3>Nivel 3 — Aplicación: Preparar la red e instalar el primer servicio</h3>
+            <p><strong>Preparar la red local</strong></p>
+            <p><strong>Paso 1. Conecta el ordenador:</strong> Conecta el PC al router mediante Ethernet si es posible. También puedes usar Wi-Fi, aunque la estabilidad puede ser menor.</p>
+            <p><strong>Paso 2. Averigua la dirección IP local:</strong> La dirección IP permite identificar el equipo dentro de la red. Una dirección privada podría tener un aspecto como 192.168.1.50 o 192.168.0.25.</p>
+            <p>En Windows:</p>
+            <ol>
+                <li>Abre el menú Inicio.</li>
+                <li>Busca <code class="inline">cmd</code> y abre el símbolo del sistema.</li>
+                <li>Escribe <code class="inline">ipconfig</code>.</li>
+                <li>Busca la dirección IPv4 del adaptador que estás utilizando.</li>
+            </ol>
+            <p>En Linux, puedes abrir un terminal y ejecutar:</p>
+            <div class="code-block">hostname -I</div>
+            <p>La dirección que aparezca dependerá de la configuración de tu red.</p>
+            <p><strong>Paso 3. Evita que la IP cambie inesperadamente:</strong> Para un servidor doméstico es útil configurar una reserva DHCP en el router. Esto permite que el router asigne al PC la misma dirección IP de forma habitual. La reserva suele configurarse en la sección de red local o DHCP del router. El nombre exacto del menú depende del fabricante. También es posible configurar una dirección IP estática en el propio ordenador, pero debes hacerlo correctamente para evitar conflictos con otros dispositivos.</p>
+
+            <p><strong>Instalar el primer servicio (ejemplo: servidor web sencillo)</strong></p>
+            <p>La idea es que el PC muestre una página cuando otro dispositivo de la misma red acceda a él. Los pasos exactos dependen del programa y del sistema operativo, pero el proceso general es parecido.</p>
+            <p><strong>Paso 1. Instala el programa:</strong> Elige una herramienta compatible con tu sistema operativo:</p>
+            <ul>
+                <li><strong>XAMPP:</strong> útil para aprender desarrollo web con Apache, PHP y MariaDB.</li>
+                <li><strong>Apache o Nginx:</strong> apropiados para configurar un servidor web de forma más específica.</li>
+                <li><strong>Jellyfin:</strong> para organizar y reproducir archivos multimedia.</li>
+                <li><strong>Samba:</strong> para compartir carpetas con otros equipos de la red.</li>
+                <li><strong>Docker:</strong> para ejecutar aplicaciones en contenedores y mantenerlas más aisladas entre sí.</li>
+            </ul>
+            <div class="warning-box">
+                Descarga el programa desde su página oficial o desde el repositorio recomendado para tu sistema. Evita instaladores de procedencia desconocida.
+            </div>
+            <p><strong>Paso 2. Configura el servicio:</strong> Durante la configuración, revisa:</p>
+            <ul>
+                <li>En qué puerto escucha la aplicación.</li>
+                <li>Qué carpetas puede leer o modificar.</li>
+                <li>Qué usuarios tienen permiso para entrar.</li>
+                <li>Si el servicio se inicia automáticamente al arrancar el ordenador.</li>
+                <li>Si requiere contraseña o algún otro método de autenticación.</li>
+            </ul>
+            <p>Por ejemplo, un servidor web suele utilizar el puerto TCP 80 para HTTP o el 443 para HTTPS. Otros servicios usan puertos diferentes.</p>
+            <p><strong>Paso 3. Inicia el servicio:</strong> Abre el programa o utiliza el mecanismo de administración de tu sistema operativo para iniciarlo. Comprueba que no muestre errores y que esté escuchando en el puerto esperado. En una aplicación con interfaz gráfica puede haber un botón como Start, Iniciar o Run. En Linux, el procedimiento depende del paquete instalado y del sistema de servicios que utilice.</p>
+            <p><strong>Paso 4. Prueba desde el propio PC:</strong> Abre un navegador en el ordenador servidor y escribe una dirección de prueba, por ejemplo:</p>
+            <div class="code-block">http://localhost</div>
+            <p>Si la aplicación utiliza un puerto distinto, debes indicarlo. Por ejemplo:</p>
+            <div class="code-block">http://localhost:8080</div>
+            <p>Si aparece la página esperada, el servicio responde desde el propio ordenador. Esto todavía no garantiza que otros dispositivos puedan acceder a él.</p>
+
+            <p><strong>Acceder al servidor desde otro dispositivo</strong></p>
+            <p>Una vez que el servicio funciona localmente, prueba el acceso desde otro dispositivo conectado a la misma red, como un móvil, un portátil o una tableta.</p>
+            <ol>
+                <li>Averigua la IP local del PC servidor.</li>
+                <li>Conecta el otro dispositivo a la misma red.</li>
+                <li>Abre un navegador o la aplicación cliente correspondiente.</li>
+                <li>Introduce la IP del servidor y, si es necesario, su puerto.</li>
+            </ol>
+            <p>Por ejemplo, si la IP del PC es 192.168.1.50 y el servidor web utiliza el puerto 8080, la dirección sería:</p>
+            <div class="code-block">http://192.168.1.50:8080</div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h4>Móvil o portátil</h4>
+                    <p>Solicita una página o un archivo</p>
+                </div>
+                <div class="info-item">
+                    <h4>Router de casa</h4>
+                    <p>Comunica los dispositivos de la red</p>
+                </div>
+                <div class="info-item">
+                    <h4>PC servidor</h4>
+                    <p>Recibe la petición y devuelve una respuesta</p>
+                </div>
+            </div>
+            <p><em>Esquema simplificado de una conexión dentro de la red doméstica.</em></p>
+            <div class="warning-box">
+                <strong>Si funciona en el propio PC pero no desde otro dispositivo, revisa:</strong> que ambos estén conectados a la red correcta; que hayas utilizado la IP local correcta, no localhost; que el servicio acepte conexiones desde la red y no solo desde el propio ordenador; que el cortafuegos permita las conexiones necesarias; que el router no tenga activado el aislamiento entre clientes Wi-Fi. No desactives permanentemente el cortafuegos para solucionar el problema. Es preferible crear una regla limitada al servicio y a la red que realmente necesitas.
+            </div>
+            <div class="explore-box">
+                Si tienes acceso a un router en casa, investiga cómo se entra a la configuración (normalmente escribiendo 192.168.1.1 en el navegador) y busca la sección DHCP. No cambies nada todavía, solo observa.
+            </div>
+        </article>
+
+        <!-- NIVEL 4: ANÁLISIS -->
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">4</div>
+            <h3>Nivel 4 — Análisis: Compartir archivos, disponibilidad y acceso remoto</h3>
+            <p><strong>Compartir archivos con otros dispositivos</strong></p>
+            <p>Si tu objetivo principal es disponer de una carpeta común, puedes configurar un servidor de archivos.</p>
+            <p><strong>Opción A. Utilizar Samba:</strong> Samba permite compartir carpetas mediante protocolos compatibles con muchos equipos Windows y otros sistemas. El proceso general es:</p>
+            <ol>
+                <li>Instalar Samba en un sistema compatible.</li>
+                <li>Crear una carpeta específica para los archivos compartidos.</li>
+                <li>Configurar los permisos de lectura y escritura.</li>
+                <li>Crear usuarios o credenciales cuando corresponda.</li>
+                <li>Permitir el tráfico necesario en el cortafuegos.</li>
+                <li>Probar el acceso desde otro equipo de la red.</li>
+            </ol>
+            <div class="warning-box">
+                No compartas toda la unidad del sistema ni tu carpeta personal completa. Es mejor crear una carpeta exclusiva para el servidor y conceder únicamente los permisos necesarios.
+            </div>
+            <p><strong>Opción B. Utilizar File Browser:</strong> File Browser ofrece una interfaz web para explorar y administrar archivos. Según su configuración, puedes acceder mediante el navegador y gestionar las carpetas autorizadas. Es una opción cómoda para principiantes, pero la interfaz web debe protegerse con autenticación y permisos adecuados, sobre todo si existe la posibilidad de acceder desde fuera de casa.</p>
+
+            <p><strong>Hacer que el servidor esté disponible al encender el PC</strong></p>
+            <p>Si quieres que el servicio se encuentre disponible después de reiniciar el equipo, configura su inicio automático cuando la aplicación lo permita. Además, conviene revisar:</p>
+            <ul>
+                <li><strong>Suspensión e hibernación:</strong> el ordenador puede dejar de responder si entra en estos estados.</li>
+                <li><strong>Actualizaciones:</strong> pueden requerir reinicios y causar interrupciones.</li>
+                <li><strong>Reinicio tras un corte eléctrico:</strong> algunos equipos permiten configurar en la BIOS/UEFI que vuelvan a encenderse cuando se restaura la alimentación.</li>
+                <li><strong>Copias de seguridad:</strong> los datos importantes deben tener otra copia independiente.</li>
+                <li><strong>Temperatura y ventilación:</strong> comprueba que el PC pueda funcionar durante periodos prolongados.</li>
+            </ul>
+            <p>No es obligatorio mantener el ordenador encendido las 24 horas. Si solo necesitas el servicio de vez en cuando, puedes iniciarlo cuando lo vayas a utilizar.</p>
+
+            <p><strong>Acceder al servidor desde fuera de casa</strong></p>
+            <p>Hasta ahora hemos utilizado el servidor dentro de la red local. Si quieres acceder a él desde otra ubicación, por ejemplo desde el trabajo o durante un viaje, necesitarás una solución de acceso remoto. Hay varias alternativas:</p>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>🔒 Opción 1. VPN</h4>
+                    <p>Una red privada virtual, como WireGuard o una solución basada en Tailscale, permite conectar tus dispositivos de forma privada a tu red o al propio servidor. Suele ser una buena opción para acceder a servicios personales sin publicarlos directamente en Internet.</p>
+                </div>
+                <div class="card">
+                    <h4>🌍 Opción 2. Publicar un servicio web</h4>
+                    <p>Puedes hacer que una página o aplicación sea accesible desde Internet mediante un dominio, HTTPS y una configuración de red adecuada. Es importante proteger el servicio antes de exponerlo.</p>
+                </div>
+                <div class="card">
+                    <h4>🔀 Opción 3. Redirección de puertos</h4>
+                    <p>Algunos routers permiten dirigir conexiones entrantes desde un puerto público hacia un equipo de la red local. Esta opción requiere especial cuidado, ya que puede exponer el servicio directamente a intentos de acceso desde Internet.</p>
+                </div>
+            </div>
+            <div class="highlight-box">
+                <strong>¿Por qué no basta con conocer la IP local?</strong> Una dirección como 192.168.1.50 normalmente solo es válida dentro de tu red privada. Para acceder desde Internet, entran en juego la dirección IP pública, el router, las reglas de cortafuegos y, en algunos casos, las restricciones del proveedor de Internet. Algunas conexiones utilizan CGNAT, que puede impedir la redirección de puertos convencional. En ese caso, una VPN con conexión intermediada o un servicio de acceso remoto compatible puede ser más sencillo.
+            </div>
+            <div class="warning-box">
+                <strong>Importante:</strong> no publiques directamente en Internet paneles de administración, escritorios remotos ni servicios de archivos sin una configuración de seguridad adecuada. Para comenzar, mantén el servidor dentro de tu red local.
+            </div>
+
+            <p><strong>Seguridad básica del servidor</strong></p>
+            <p>Un servidor puede almacenar documentos personales y ofrecer acceso a otros dispositivos. Por eso, la seguridad debe formar parte de la configuración desde el principio.</p>
+            <ul class="checklist">
+                <li>Cambiar las contraseñas predeterminadas y utilizar contraseñas robustas y únicas.</li>
+                <li>Instalar actualizaciones del sistema operativo y de las aplicaciones.</li>
+                <li>Activar el cortafuegos y permitir solo los puertos necesarios.</li>
+                <li>Crear cuentas individuales y asignar los permisos mínimos necesarios.</li>
+                <li>No compartir carpetas completas del sistema ni conceder permisos de administrador sin necesidad.</li>
+                <li>Realizar copias de seguridad en otro disco o dispositivo.</li>
+                <li>Evitar publicar servicios en Internet hasta comprender cómo protegerlos.</li>
+                <li>Comprobar periódicamente los registros y el estado del almacenamiento.</li>
+            </ul>
+            <p>Esta lista no sustituye una auditoría de seguridad, pero ayuda a evitar errores comunes durante los primeros pasos.</p>
+
+            <p><strong>Problemas frecuentes y cómo resolverlos</strong></p>
+            <div class="table-wrapper">
+                <table>
+                    <caption class="sr-only">Problemas frecuentes en servidores domésticos</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Problema</th>
+                            <th scope="col">Posible causa</th>
+                            <th scope="col">Qué comprobar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>La página no abre en el propio PC</td><td>El servicio no está iniciado o el puerto es incorrecto</td><td>Estado del programa, dirección y puerto</td></tr>
+                        <tr><td>Funciona en el PC, pero no en el móvil</td><td>Cortafuegos o aislamiento de red</td><td>IP local, reglas del cortafuegos y conexión Wi-Fi</td></tr>
+                        <tr><td>El servidor deja de funcionar al cabo de un tiempo</td><td>Suspensión, apagado o fallo del servicio</td><td>Configuración de energía y registros</td></tr>
+                        <tr><td>No se puede acceder desde Internet</td><td>CGNAT, router o reglas de red</td><td>Tipo de conexión y configuración de acceso remoto</td></tr>
+                        <tr><td>Los vídeos se reproducen lentamente</td><td>Recursos insuficientes o conexión limitada</td><td>Procesador, transcodificación, almacenamiento y ancho de banda</td></tr>
+                        <tr><td>No se pueden guardar archivos</td><td>Permisos incorrectos o disco lleno</td><td>Permisos de la carpeta y espacio disponible</td></tr>
+                        <tr><td>El servicio deja de estar disponible después de reiniciar</td><td>No está configurado para iniciarse automáticamente</td><td>Opciones de inicio del servicio</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="reflection-box">
+                Cuando algo falle, modifica una sola cosa cada vez y vuelve a probar. ¿Por qué crees que esta estrategia es más efectiva que cambiar varias cosas a la vez?
+            </div>
+        </article>
+
+        <!-- NIVEL 5: TRANSFERENCIA -->
+        <article class="card">
+            <div class="card-icon" aria-hidden="true">5</div>
+            <h3>Nivel 5 — Transferencia: Práctica guiada y resumen</h3>
+            <p><strong>Práctica guiada: crea tu primer servidor doméstico</strong></p>
+            <p>El siguiente ejercicio sirve para poner en práctica lo aprendido sin necesidad de abrir puertos en el router ni publicar el ordenador en Internet.</p>
+            <div class="highlight-box">
+                <strong>Proyecto:</strong> un servidor accesible desde tu red local<br>
+                <strong>Nivel:</strong> principiante · Una computadora y un segundo dispositivo
+            </div>
+            <ol>
+                <li>Elige un ordenador que puedas utilizar para realizar pruebas.</li>
+                <li>Decide si vas a utilizar Windows o Linux.</li>
+                <li>Instala un programa compatible, como XAMPP para una prueba web o Samba para compartir archivos.</li>
+                <li>Inicia el servicio y comprueba que funciona desde el propio PC.</li>
+                <li>Identifica la IP local del ordenador.</li>
+                <li>Desde otro dispositivo conectado a la misma red, intenta acceder al servicio.</li>
+                <li>Comprueba los permisos y el cortafuegos; corrige cualquier problema sin desactivar las protecciones de forma permanente.</li>
+                <li>Documenta la IP, el puerto, el nombre del programa y los pasos necesarios para iniciar el servicio.</li>
+            </ol>
+            <p><strong>Objetivo:</strong> conseguir que otro dispositivo utilice un servicio alojado en tu PC de forma controlada.</p>
+
+            <p><strong>Resumen del capítulo</strong></p>
+            <p>Convertir un PC en un servidor consiste en instalar y configurar un programa que ofrece un servicio a otros dispositivos. Para hacerlo correctamente:</p>
+            <ul>
+                <li>Define primero para qué quieres utilizar el servidor.</li>
+                <li>Comprueba que el hardware sea suficiente.</li>
+                <li>Elige un sistema operativo y un programa adecuados.</li>
+                <li>Prepara la red y averigua la IP local.</li>
+                <li>Instala, inicia y prueba el servicio desde el propio ordenador.</li>
+                <li>Verifica el acceso desde otro dispositivo de la red.</li>
+                <li>Configura el inicio automático si necesitas que esté disponible continuamente.</li>
+                <li>Aplica medidas de seguridad y mantén copias de respaldo.</li>
+                <li>Utiliza una solución de acceso remoto segura si necesitas conectarte desde fuera de casa.</li>
+            </ul>
+            <div class="highlight-box">
+                El mejor comienzo es sencillo: monta un único servicio, haz que funcione dentro de tu red local y aprende a administrarlo antes de añadir más aplicaciones o permitir conexiones desde Internet.
+            </div>
+        </article>
+    </section>
+
+    <!-- ===== RETO INTEGRADOR ===== -->
+    <section id="reto" aria-labelledby="titulo-reto">
+        <h2 id="titulo-reto" class="section-title">🏆 Reto integrador</h2>
+        <div class="challenge-card">
+            <span class="badge">Desafío final</span>
+            <h3>Diseña el servidor doméstico para tu comunidad educativa</h3>
+            <p>Imagina que tu colegio quiere aprovechar computadores antiguos para crear un servidor que beneficie a los estudiantes y docentes. Te han pedido que diseñes una propuesta completa para montar un servidor doméstico multiuso.</p>
+            <p><strong>Contexto:</strong> El colegio tiene 3 computadores de escritorio con 4 GB de RAM, disco duro de 500 GB y procesador de doble núcleo. Quieren ofrecer un servicio de archivos para compartir materiales educativos y un servidor multimedia para ver documentales en clases. Además, quieren que algunos docentes puedan acceder desde sus casas para subir tareas.</p>
+            <p><strong>¿Qué debes lograr?</strong> Entrega una propuesta escrita (puede ser en un documento o presentación) que incluya:</p>
+            <ul>
+                <li><strong>Tipo de servidor:</strong> justifica si será de archivos, multimedia, web o multiuso.</li>
+                <li><strong>Sistema operativo:</strong> elige Windows, Linux o CasaOS y explica por qué.</li>
+                <li><strong>Programas:</strong> menciona al menos dos herramientas compatibles y para qué servirían.</li>
+                <li><strong>Hardware:</strong> indica si los computadores del colegio son suficientes o si recomendarías mejoras.</li>
+                <li><strong>Red:</strong> explica cómo se conectarían los dispositivos y cómo evitarías que la IP cambie.</li>
+                <li><strong>Seguridad:</strong> incluye al menos 5 medidas de la lista de comprobación.</li>
+                <li><strong>Acceso remoto:</strong> propone una solución segura para que los docentes accedan desde casa.</li>
+                <li><strong>Plan de prueba:</strong> describe cómo verificarías que el servidor funciona correctamente desde otro dispositivo.</li>
+            </ul>
+            <p><strong>Restricciones:</strong> No puedes asumir que el colegio comprará equipos profesionales. Debes trabajar con los recursos existentes. No debes recomendar publicar servicios directamente en Internet sin protección.</p>
+            <p><strong>Criterios de éxito:</strong></p>
+            <ul>
+                <li>Comprensión: demuestras que entiendes los conceptos de servidor, red, seguridad y acceso remoto.</li>
+                <li>Aplicación: usas correctamente los programas y procedimientos aprendidos.</li>
+                <li>Funcionalidad: tu propuesta es viable con los recursos dados.</li>
+                <li>Creatividad: propones soluciones propias y adaptadas al contexto del colegio.</li>
+                <li>Calidad técnica: justificas cada decisión con argumentos técnicos.</li>
+                <li>Argumentación: explicas por qué elegiste cada opción.</li>
+                <li>Buenas prácticas: incluyes medidas de seguridad y copias de respaldo.</li>
+            </ul>
+            <div class="reflection-box" style="border-left-color: var(--color-accent); background: rgba(255,255,255,0.1); color: #fff;">
+                ¿Qué decisión fue la más difícil de tomar? ¿Por qué?
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== EVALUACIÓN LÚDICA ===== -->
+    <section id="evaluacion" aria-labelledby="titulo-evaluacion">
+        <h2 id="titulo-evaluacion" class="section-title">🎮 Evaluación lúdica</h2>
+        <div class="quiz-container" id="quizContainer">
+            <div id="quizStart">
+                <p style="font-size:1.05rem; margin-bottom:1rem;">Pon a prueba lo que aprendiste con este cuestionario de 5 preguntas. Cada respuesta tiene retroalimentación inmediata.</p>
+                <button class="btn btn-primary" id="btnStartQuiz" type="button">Comenzar cuestionario</button>
+            </div>
+
+            <div id="quizBody" style="display:none;">
+                <div class="quiz-header">
+                    <span class="quiz-counter" id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz-score" id="quizScore">Puntuación: 0</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso del cuestionario">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="question-text" id="questionText"></p>
+                <ul class="options-list" id="optionsList"></ul>
+                <div class="feedback-box" id="feedbackBox"></div>
+                <div class="quiz-actions">
+                    <button class="btn btn-primary" id="btnNext" type="button" disabled>Siguiente pregunta</button>
+                </div>
+            </div>
+
+            <div class="result-screen" id="resultScreen">
+                <div class="result-icon" id="resultIcon">🏅</div>
+                <div class="result-score" id="resultScore"></div>
+                <p class="result-message" id="resultMessage"></p>
+                <button class="btn btn-primary" id="btnRestart" type="button">Reiniciar cuestionario</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CIERRE REFLEXIVO ===== -->
+    <section id="reflexion" aria-labelledby="titulo-reflexion">
+        <h2 id="titulo-reflexion" class="section-title">🪞 Cierre reflexivo</h2>
+        <div class="card">
+            <p><strong>Antes de terminar...</strong> Tómate un momento para pensar en tu proceso de aprendizaje. No hay respuestas correctas o incorrectas, solo tu propia reflexión.</p>
+            <div class="reflection-grid">
+                <div class="reflection-item">
+                    <h4>¿Qué aprendí?</h4>
+                    <p>Escribe mentalmente o en tu cuaderno los conceptos más importantes que descubriste en este taller.</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>¿Qué puedo aplicar?</h4>
+                    <p>¿Cómo podrías usar un servidor doméstico en tu casa, tu colegio o tu emprendimiento?</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>¿Qué necesito seguir practicando?</h4>
+                    <p>¿Qué tema te resultó más difícil? ¿Qué te gustaría investigar más a fondo?</p>
+                </div>
+                <div class="reflection-item">
+                    <h4>¿Cómo lo usaría en un proyecto real?</h4>
+                    <p>Imagina un proyecto concreto donde un servidor doméstico resuelva un problema real.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+    <p>Diseñado por: Edwin Méndez J.</p>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+(function() {
+    'use strict';
+
+    // ===== Datos del cuestionario =====
+    const preguntas = [
+        {
+            pregunta: "¿Cuál de los siguientes NO es un tipo de servidor doméstico mencionado en el documento?",
+            opciones: [
+                "Servidor de archivos",
+                "Servidor multimedia",
+                "Servidor de bases de datos Oracle",
+                "Servidor web"
+            ],
+            correcta: 2,
+            explicacion: "El documento menciona servidores de archivos, multimedia, web, de juegos, de copias de seguridad y domésticos multiuso. No se menciona un servidor de bases de datos Oracle como tipo de servidor doméstico."
+        },
+        {
+            pregunta: "Un estudiante quiere compartir sus apuntes con sus compañeros desde su PC. ¿Qué programa le recomendarías según el documento?",
+            opciones: [
+                "Jellyfin, porque organiza multimedia",
+                "Samba, porque permite compartir carpetas en la red",
+                "XAMPP, porque instala Apache y PHP",
+                "Docker, porque ejecuta contenedores"
+            ],
+            correcta: 1,
+            explicacion: "Samba permite compartir carpetas mediante protocolos compatibles con muchos equipos, ideal para un servidor de archivos. Jellyfin es para multimedia, XAMPP para desarrollo web y Docker para contenedores."
+        },
+        {
+            pregunta: "El servidor web funciona en el propio PC con http://localhost:8080, pero desde el móvil no carga. ¿Cuál es la causa más probable?",
+            opciones: [
+                "El móvil no tiene instalado el mismo programa",
+                "Se debe usar localhost en el móvil también",
+                "El cortafuegos del PC o el aislamiento de red impiden la conexión",
+                "El servidor web solo funciona en Linux"
+            ],
+            correcta: 2,
+            explicacion: "Si funciona localmente pero no desde otro dispositivo, las causas habituales son el cortafuegos o el aislamiento entre clientes Wi-Fi. No se debe usar localhost desde otro dispositivo; se usa la IP local del servidor (ej. 192.168.1.50)."
+        },
+        {
+            pregunta: "Un docente quiere acceder a su servidor de archivos desde su casa sin exponerlo directamente a Internet. ¿Qué opción del documento es la más recomendada?",
+            opciones: [
+                "Redirección de puertos en el router",
+                "Publicar el servicio web con dominio y HTTPS",
+                "Usar una VPN como WireGuard o Tailscale",
+                "Desactivar el cortafuegos para permitir el acceso"
+            ],
+            correcta: 2,
+            explicacion: "La VPN (como WireGuard o Tailscale) permite conectar dispositivos de forma privada a la red o al servidor sin publicarlo directamente en Internet. La redirección de puertos expone el servicio; publicar un servicio web requiere protección adicional; desactivar el cortafuegos es una mala práctica."
+        },
+        {
+            pregunta: "Un compañero dice: 'Voy a publicar mi servidor de archivos directamente en Internet para acceder desde cualquier lugar'. ¿Qué le recomendarías basándote en el documento?",
+            opciones: [
+                "Que lo haga, es la forma más rápida y sencilla",
+                "Que primero compre un servidor profesional",
+                "Que mantenga el servidor en la red local hasta comprender cómo protegerlo",
+                "Que use solo Windows porque es más seguro"
+            ],
+            correcta: 2,
+            explicacion: "El documento recomienda mantener el servidor dentro de la red local hasta comprender cómo protegerlo. No se deben publicar directamente paneles de administración, escritorios remotos ni servicios de archivos sin seguridad adecuada. La seguridad debe formar parte de la configuración desde el principio."
+        }
+    ];
+
+    // ===== Estado del quiz =====
+    let indiceActual = 0;
+    let puntuacion = 0;
+    let respondida = false;
+
+    // ===== Referencias DOM =====
+    const quizStart = document.getElementById('quizStart');
+    const quizBody = document.getElementById('quizBody');
+    const resultScreen = document.getElementById('resultScreen');
+    const btnStartQuiz = document.getElementById('btnStartQuiz');
+    const btnNext = document.getElementById('btnNext');
+    const btnRestart = document.getElementById('btnRestart');
+    const quizCounter = document.getElementById('quizCounter');
+    const quizScore = document.getElementById('quizScore');
+    const progressFill = document.getElementById('progressFill');
+    const questionText = document.getElementById('questionText');
+    const optionsList = document.getElementById('optionsList');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const resultIcon = document.getElementById('resultIcon');
+    const resultScore = document.getElementById('resultScore');
+    const resultMessage = document.getElementById('resultMessage');
+
+    // ===== Funciones =====
+    function iniciarQuiz() {
+        indiceActual = 0;
+        puntuacion = 0;
+        respondida = false;
+        quizStart.style.display = 'none';
+        quizBody.style.display = 'block';
+        resultScreen.classList.remove('show');
+        resultScreen.style.display = 'none';
+        mostrarPregunta();
+    }
+
+    function mostrarPregunta() {
+        respondida = false;
+        btnNext.disabled = true;
+        feedbackBox.classList.remove('show');
+        feedbackBox.className = 'feedback-box';
+        btnNext.textContent = 'Siguiente pregunta';
+
+        const pregunta = preguntas[indiceActual];
+        quizCounter.textContent = `Pregunta ${indiceActual + 1} de ${preguntas.length}`;
+        quizScore.textContent = `Puntuación: ${puntuacion}`;
+
+        const progreso = (indiceActual / preguntas.length) * 100;
+        progressFill.style.width = progreso + '%';
+        progressFill.parentElement.setAttribute('aria-valuenow', Math.round(progreso));
+
+        questionText.textContent = pregunta.pregunta;
+
+        optionsList.innerHTML = '';
+        pregunta.opciones.forEach((opcion, index) => {
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'option-btn';
+            btn.textContent = opcion;
+            btn.dataset.index = index;
+            btn.addEventListener('click', () => seleccionarRespuesta(index));
+            li.appendChild(btn);
+            optionsList.appendChild(li);
+        });
+    }
+
+    function seleccionarRespuesta(indiceSeleccionado) {
+        if (respondida) return;
+        respondida = true;
+
+        const pregunta = preguntas[indiceActual];
+        const botones = optionsList.querySelectorAll('.option-btn');
+
+        botones.forEach((btn, i) => {
+            btn.disabled = true;
+            if (i === pregunta.correcta) {
+                btn.classList.add('correct');
+            }
+            if (i === indiceSeleccionado && i !== pregunta.correcta) {
+                btn.classList.add('incorrect');
+            }
+        });
+
+        if (indiceSeleccionado === pregunta.correcta) {
+            puntuacion++;
+            feedbackBox.className = 'feedback-box correct-fb show';
+            feedbackBox.innerHTML = `<strong>✅ ¡Correcto!</strong> ${pregunta.explicacion}`;
+        } else {
+            feedbackBox.className = 'feedback-box incorrect-fb show';
+            feedbackBox.innerHTML = `<strong>❌ Incorrecto.</strong> La respuesta correcta es: <em>${pregunta.opciones[pregunta.correcta]}</em>.<br>${pregunta.explicacion}`;
+        }
+
+        quizScore.textContent = `Puntuación: ${puntuacion}`;
+        btnNext.disabled = false;
+    }
+
+    function siguientePregunta() {
+        indiceActual++;
+        if (indiceActual < preguntas.length) {
+            mostrarPregunta();
+        } else {
+            mostrarResultado();
+        }
+    }
+
+    function mostrarResultado() {
+        quizBody.style.display = 'none';
+        resultScreen.style.display = 'block';
+        resultScreen.classList.add('show');
+
+        const porcentaje = Math.round((puntuacion / preguntas.length) * 100);
+        resultScore.textContent = `${puntuacion} / ${preguntas.length} (${porcentaje}%)`;
+
+        if (porcentaje === 100) {
+            resultIcon.textContent = '🏆';
+            resultMessage.textContent = '¡Excelente! Dominas los conceptos de servidores domésticos. Estás listo para montar tu propio servidor.';
+        } else if (porcentaje >= 80) {
+            resultIcon.textContent = '🌟';
+            resultMessage.textContent = '¡Muy bien! Tienes una base sólida. Repasa los detalles para convertirte en experto.';
+        } else if (porcentaje >= 60) {
+            resultIcon.textContent = '📘';
+            resultMessage.textContent = 'Buen trabajo. Te recomendamos repasar las secciones de red, seguridad y acceso remoto.';
+        } else if (porcentaje >= 40) {
+            resultIcon.textContent = '📖';
+            resultMessage.textContent = 'Vas por buen camino. Vuelve a revisar el desarrollo del contenido y practica con los ejemplos.';
+        } else {
+            resultIcon.textContent = '💪';
+            resultMessage.textContent = 'No te desanimes. Este tema tiene muchos detalles. Lee nuevamente el taller y vuelve a intentarlo.';
+        }
+    }
+
+    function reiniciarQuiz() {
+        resultScreen.classList.remove('show');
+        resultScreen.style.display = 'none';
+        quizBody.style.display = 'none';
+        quizStart.style.display = 'block';
+        indiceActual = 0;
+        puntuacion = 0;
+        respondida = false;
+    }
+
+    // ===== Event listeners =====
+    btnStartQuiz.addEventListener('click', iniciarQuiz);
+    btnNext.addEventListener('click', siguientePregunta);
+    btnRestart.addEventListener('click', reiniciarQuiz);
+
+    // ===== Navegación suave (opcional, mejora UX) =====
+    document.querySelectorAll('nav a').forEach(enlace => {
+        enlace.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const destino = document.querySelector(href);
+                if (destino) {
+                    destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+
+})();
+</script>
+
+</body>
+</html>

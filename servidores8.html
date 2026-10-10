@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Taller interactivo sobre seguridad y mantenimiento de servidores para estudiantes de bachillerato.">
+    <title>Bucle Creativo | Seguridad y Mantenimiento de Servidores</title>
+    <style>
+        /* =============================================
+           VARIABLES
+           ============================================= */
+        :root {
+            --color-primary: #0a1a2f;
+            --color-secondary: #1e3a5f;
+            --color-accent: #ff6b1a;
+            --color-accent-hover: #e05a0e;
+            --color-background: #f0f4f8;
+            --color-surface: #ffffff;
+            --color-text: #1a202c;
+            --color-text-light: #4a5568;
+            --color-text-muted: #718096;
+            --color-success: #22c55e;
+            --color-error: #ef4444;
+            --color-warning: #f59e0b;
+            --color-border: #e2e8f0;
+            --color-code-bg: #1e293b;
+            --color-code-text: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --font-main: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Consolas', 'Fira Code', 'Courier New', monospace;
+            --transition: 0.25s ease;
+            --max-width: 1100px;
+        }
+
+        /* =============================================
+           RESET
+           ============================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        img, svg {
+            max-width: 100%;
+            display: block;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.4rem;
+        }
+
+        /* =============================================
+           BASE
+           ============================================= */
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.2rem;
+        }
+
+        .section {
+            padding: 3.5rem 0;
+        }
+
+        .section-title {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.25;
+        }
+
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--color-text-light);
+            margin-bottom: 2rem;
+            max-width: 720px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-accent);
+            background: rgba(255, 107, 26, 0.1);
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            margin-bottom: 0.8rem;
+        }
+
+        /* =============================================
+           HEADER
+           ============================================= */
+        .main-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 60%, #2a4a6f 100%);
+            color: #fff;
+            padding: 3.5rem 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 107, 26, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .main-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -5%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(30, 58, 95, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-name {
+            font-size: clamp(2rem, 5.5vw, 3.2rem);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 0.4rem;
+        }
+
+        .brand-name span {
+            color: var(--color-accent);
+        }
+
+        .header-subtitle {
+            font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.92);
+            margin-bottom: 0.8rem;
+        }
+
+        .header-description {
+            font-size: 0.98rem;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 640px;
+            line-height: 1.65;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 0.4rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .badge-accent {
+            background: rgba(255, 107, 26, 0.25);
+            border-color: rgba(255, 107, 26, 0.4);
+            color: #ffb380;
+        }
+
+        /* =============================================
+           NAVEGACIÓN
+           ============================================= */
+        .main-nav {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0.2rem;
+        }
+
+        .nav-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-list li {
+            flex-shrink: 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.85rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: color var(--transition), border-color var(--transition);
+            text-decoration: none;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .nav-link:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: -2px;
+            border-radius: 4px;
+        }
+
+        /* =============================================
+           TARJETAS
+           ============================================= */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1.6rem;
+            border: 1px solid var(--color-border);
+            transition: box-shadow var(--transition), transform var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 107, 26, 0.1);
+            color: var(--color-accent);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .card p, .card li {
+            font-size: 0.92rem;
+            color: var(--color-text-light);
+            line-height: 1.65;
+        }
+
+        .card ul {
+            margin-top: 0.4rem;
+        }
+
+        .card ul li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* =============================================
+           SECCIÓN OBJETIVO
+           ============================================= */
+        .objetivo-card {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .objetivo-card::before {
+            content: '🎯';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 5rem;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .objetivo-card p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.92);
+            position: relative;
+            z-index: 1;
+        }
+
+        .objetivo-card strong {
+            color: var(--color-accent);
+        }
+
+        /* =============================================
+           ACTIVACIÓN
+           ============================================= */
+        .activacion-card {
+            background: var(--color-surface);
+            border-left: 5px solid var(--color-accent);
+            border-radius: var(--radius-md);
+            padding: 1.8rem 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .activacion-card p {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+
+        .activacion-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .pregunta-reflexion {
+            background: rgba(255, 107, 26, 0.06);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin-top: 1.2rem;
+            font-weight: 600;
+            color: var(--color-secondary);
+            font-size: 0.98rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .pregunta-reflexion::before {
+            content: '💭';
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+
+        /* =============================================
+           DESARROLLO - NIVELES
+           ============================================= */
+        .nivel-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .nivel-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .nivel-numero {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .nivel-header h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--color-primary);
+        }
+
+        .nivel-header .nivel-desc {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        /* =============================================
+           CONCEPTO DETALLE
+           ============================================= */
+        .concepto {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1.6rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .concepto h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concepto h4 .concepto-icon {
+            font-size: 1.2rem;
+        }
+
+        .concepto p {
+            font-size: 0.93rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.7rem;
+            line-height: 1.7;
+        }
+
+        .concepto p:last-child {
+            margin-bottom: 0;
+        }
+
+        .sub-bloque {
+            background: var(--color-background);
+            border-radius: var(--radius-sm);
+            padding: 0.9rem 1.1rem;
+            margin-top: 0.8rem;
+            border-left: 3px solid var(--color-secondary);
+        }
+
+        .sub-bloque strong {
+            color: var(--color-secondary);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .sub-bloque p {
+            font-size: 0.88rem;
+            margin-bottom: 0;
+        }
+
+        .sub-bloque.accent {
+            border-left-color: var(--color-accent);
+        }
+
+        .sub-bloque.accent strong {
+            color: var(--color-accent);
+        }
+
+        .sub-bloque.success {
+            border-left-color: var(--color-success);
+        }
+
+        .sub-bloque.success strong {
+            color: var(--color-success);
+        }
+
+        .sub-bloque.warning {
+            border-left-color: var(--color-warning);
+        }
+
+        .sub-bloque.warning strong {
+            color: var(--color-warning);
+        }
+
+        /* =============================================
+           CÓDIGO
+           ============================================= */
+        .code-block {
+            background: var(--color-code-bg);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin: 0.8rem 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--color-code-text);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .code-block .comentario {
+            color: #6b7b8d;
+        }
+
+        .code-block .comando {
+            color: #7dd3fc;
+        }
+
+        .code-block .string {
+            color: #a5d6a7;
+        }
+
+        .code-block .keyword {
+            color: #c792ea;
+        }
+
+        .code-inline {
+            background: var(--color-code-bg);
+            color: #7dd3fc;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+        }
+
+        /* =============================================
+           RETO
+           ============================================= */
+        .reto-card {
+            background: linear-gradient(135deg, #0f2a4a 0%, #1e3a5f 50%, #2a4a6f 100%);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reto-card::before {
+            content: '⚡';
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            font-size: 6rem;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .reto-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.6rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto-card h3 span {
+            color: var(--color-accent);
+        }
+
+        .reto-card > p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.98rem;
+            margin-bottom: 1.2rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto-contexto {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            border-left: 3px solid var(--color-accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto-contexto p {
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.92rem;
+            margin-bottom: 0;
+        }
+
+        .reto-objetivos {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1.2rem;
+        }
+
+        .reto-objetivos h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-accent);
+        }
+
+        .reto-objetivos ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reto-objetivos ul li {
+            padding: 0.35rem 0 0.35rem 1.6rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+
+        .reto-objetivos ul li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .reto-criterios {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .criterio-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(255, 107, 26, 0.2);
+            color: #ffb380;
+            border: 1px solid rgba(255, 107, 26, 0.3);
+        }
+
+        /* =============================================
+           QUIZ
+           ============================================= */
+        .quiz-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .quiz-counter {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-text-muted);
+        }
+
+        .quiz-score {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #ff9a56);
+            border-radius: 999px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .pregunta-texto {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .opciones {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .opcion {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.9rem 1.1rem;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--color-border);
+            background: var(--color-surface);
+            text-align: left;
+            font-size: 0.93rem;
+            color: var(--color-text);
+            transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+            width: 100%;
+            line-height: 1.5;
+        }
+
+        .opcion:hover:not(:disabled) {
+            border-color: var(--color-accent);
+            background: rgba(255, 107, 26, 0.03);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .opcion:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .opcion:disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .opcion .opcion-letra {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .opcion.seleccionada .opcion-letra {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .opcion.correcta {
+            border-color: var(--color-success);
+            background: rgba(34, 197, 94, 0.07);
+        }
+
+        .opcion.correcta .opcion-letra {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        .opcion.incorrecta {
+            border-color: var(--color-error);
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        .opcion.incorrecta .opcion-letra {
+            background: var(--color-error);
+            color: #fff;
+        }
+
+        .retroalimentacion {
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .retroalimentacion.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .retroalimentacion.correcta {
+            background: rgba(34, 197, 94, 0.08);
+            border-left: 4px solid var(--color-success);
+            color: #166534;
+        }
+
+        .retroalimentacion.incorrecta {
+            background: rgba(239, 68, 68, 0.07);
+            border-left: 4px solid var(--color-error);
+            color: #991b1b;
+        }
+
+        .retroalimentacion strong {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+            text-decoration: none;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255, 107, 26, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(255, 107, 26, 0.4);
+            text-decoration: none;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: #fff;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #162d4a;
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background: rgba(255, 107, 26, 0.06);
+            text-decoration: none;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .resultado-final {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+        }
+
+        .resultado-final.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .resultado-puntuacion {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--color-accent);
+            line-height: 1.1;
+        }
+
+        .resultado-porcentaje {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .resultado-mensaje {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            max-width: 480px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* =============================================
+           CIERRE REFLEXIVO
+           ============================================= */
+        .reflexion-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .reflexion-card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .reflexion-preguntas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .reflexion-item {
+            background: var(--color-background);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.1rem;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .reflexion-item p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            font-weight: 500;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .reflexion-item p strong {
+            color: var(--color-secondary);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* =============================================
+           FOOTER
+           ============================================= */
+        .main-footer {
+            background: var(--color-primary);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 2rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .main-footer p {
+            margin-bottom: 0.4rem;
+        }
+
+        .main-footer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer-highlight {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* =============================================
+           ANIMACIONES
+           ============================================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease both;
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 768px) {
+            .section {
+                padding: 2.5rem 0;
+            }
+
+            .main-header {
+                padding: 2.5rem 0 2rem;
+            }
+
+            .objetivo-card {
+                padding: 1.6rem 1.3rem;
+            }
+
+            .reto-card {
+                padding: 1.6rem 1.3rem;
+            }
+
+            .quiz-container {
+                padding: 1.3rem;
+            }
+
+            .concepto {
+                padding: 1.2rem 1.1rem;
+            }
+
+            .card {
+                padding: 1.2rem 1.1rem;
+            }
+
+            .nav-link {
+                padding: 0.7rem 0.8rem;
+                font-size: 0.78rem;
+            }
+
+            .reflexion-card {
+                padding: 1.4rem;
+            }
+
+            .activacion-card {
+                padding: 1.3rem 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.9rem;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .quiz-footer {
+                flex-direction: column;
+            }
+
+            .quiz-footer .btn {
+                width: 100%;
+            }
+
+            .header-badges {
+                gap: 0.4rem;
+            }
+
+            .badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+            }
+        }
+
+        /* =============================================
+           ACCESIBILIDAD
+           ============================================= */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- =============================================
+         ENCABEZADO
+         ============================================= -->
+    <header class="main-header" id="inicio">
+        <div class="container header-content">
+            <h1 class="brand-name">Bucle <span>Creativo</span></h1>
+            <p class="header-subtitle">Seguridad y mantenimiento de servidores</p>
+            <p class="header-description">
+                Un taller interactivo para aprender a proteger, actualizar, respaldar y mantener en funcionamiento
+                un servidor, ya sea en casa o en un pequeño emprendimiento. Aprenderás haciendo: analizando casos,
+                tomando decisiones y resolviendo problemas reales.
+            </p>
+            <div class="header-badges">
+                <span class="badge">🔐 Seguridad</span>
+                <span class="badge">🔄 Actualizaciones</span>
+                <span class="badge">💾 Copias de seguridad</span>
+                <span class="badge badge-accent">🖥️ Mantenimiento</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- =============================================
+         NAVEGACIÓN
+         ============================================= -->
+    <nav class="main-nav" aria-label="Navegación principal del taller">
+        <div class="container">
+            <ul class="nav-list">
+                <li><a href="#objetivo" class="nav-link">Objetivo</a></li>
+                <li><a href="#activacion" class="nav-link">Activación</a></li>
+                <li><a href="#desarrollo" class="nav-link">Desarrollo</a></li>
+                <li><a href="#reto" class="nav-link">Reto</a></li>
+                <li><a href="#evaluacion" class="nav-link">Evaluación</a></li>
+                <li><a href="#reflexion" class="nav-link">Reflexión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- =============================================
+             OBJETIVO DE APRENDIZAJE
+             ============================================= -->
+        <section class="section" id="objetivo">
+            <div class="container">
+                <span class="section-label">Objetivo de aprendizaje</span>
+                <div class="objetivo-card">
+                    <p>
+                        <strong>Diseñar y aplicar un plan básico de seguridad y mantenimiento para un servidor</strong>,
+                        identificando los riesgos más comunes, configurando medidas de protección como contraseñas
+                        robustas, cuentas con permisos limitados, cortafuegos y copias de seguridad, y utilizando
+                        herramientas de supervisión y diagnóstico para garantizar su disponibilidad y la integridad de
+                        los datos, <strong>con responsabilidad, pensamiento crítico y una actitud proactiva</strong> frente
+                        a la gestión de infraestructuras tecnológicas en contextos educativos, personales o de pequeños
+                        emprendimientos.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             ACTIVACIÓN
+             ============================================= -->
+        <section class="section" id="activacion">
+            <div class="container">
+                <span class="section-label">Activación</span>
+                <h2 class="section-title">Un servidor encendido no siempre está funcionando bien</h2>
+                <p class="section-subtitle">
+                    Conecta lo que ya sabes con una situación real antes de entrar en materia técnica.
+                </p>
+
+                <div class="activacion-card">
+                    <p>
+                        Imagina que en tu colegio han montado un pequeño servidor para compartir apuntes, fotos del
+                        evento estudiantil y un sistema de reservas de la sala de cómputo. Todo funcionaba perfecto
+                        hasta que un día el servidor dejó de responder. Nadie sabía por qué: ¿se llenó el disco?
+                        ¿alguien borró archivos importantes? ¿un virus? ¿se sobrecalentó?
+                    </p>
+                    <p>
+                        Lo peor no fue la caída: <strong>no existía ninguna copia de seguridad</strong> y se perdió
+                        el trabajo de meses. La persona encargada había instalado el programa y comprobado que
+                        funcionaba, pero nunca pensó en protegerlo, actualizarlo ni respaldarlo.
+                    </p>
+                    <p>
+                        Este taller te enseñará exactamente lo que faltó en esa historia: las prácticas esenciales
+                        para que un servidor no solo encienda, sino que <strong>funcione, esté protegido y pueda
+                        recuperarse</strong> ante cualquier problema.
+                    </p>
+                    <div class="pregunta-reflexion">
+                        ¿Qué habrías hecho tú para evitar esa pérdida? ¿Por dónde empezarías?
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             DESARROLLO
+             ============================================= -->
+        <section class="section" id="desarrollo">
+            <div class="container">
+                <span class="section-label">Desarrollo del contenido</span>
+                <h2 class="section-title">Aprende progresivamente</h2>
+                <p class="section-subtitle">
+                    Recorre los cinco niveles: desde los fundamentos hasta la transferencia a situaciones nuevas.
+                </p>
+
+                <!-- =============================================
+                     NIVEL 1 — FUNDAMENTOS
+                     ============================================= -->
+                <div class="nivel-section">
+                    <div class="nivel-header">
+                        <span class="nivel-numero">1</span>
+                        <div>
+                            <h3>Fundamentos: proteger el acceso</h3>
+                            <span class="nivel-desc">Conceptos básicos y conocimientos previos</span>
+                        </div>
+                    </div>
+
+                    <div class="card-grid">
+                        <!-- Contraseñas seguras -->
+                        <article class="card">
+                            <div class="card-icon">🔑</div>
+                            <h3>Contraseñas seguras</h3>
+                            <p>
+                                Las cuentas de usuario deben tener contraseñas difíciles de adivinar y diferentes
+                                de las utilizadas en otros servicios.
+                            </p>
+                            <h4>Una buena contraseña debería:</h4>
+                            <ul>
+                                <li>Ser suficientemente larga.</li>
+                                <li>Evitar nombres, fechas de nacimiento y palabras demasiado comunes.</li>
+                                <li>No reutilizarse en otros servicios.</li>
+                                <li>Guardarse en un gestor de contraseñas fiable, cuando sea posible.</li>
+                            </ul>
+                            <div class="sub-bloque accent">
+                                <strong>💡 Recomendación</strong>
+                                <p>
+                                    Si una aplicación permite activar la autenticación multifactor, considérala
+                                    especialmente para las cuentas administrativas y los servicios accesibles desde Internet.
+                                </p>
+                            </div>
+                            <div class="sub-bloque warning">
+                                <strong>⚠️ Error frecuente</strong>
+                                <p>
+                                    Usar la misma contraseña para el correo, las redes sociales y el servidor.
+                                    Si una se filtra, todas quedan comprometidas.
+                                </p>
+                            </div>
+                            <div class="sub-bloque">
+                                <strong>🧠 Piensa y responde</strong>
+                                <p>¿Tu contraseña actual resistiría un ataque de fuerza bruta? ¿Por qué?</p>
+                            </div>
+                        </article>
+
+                        <!-- Cuentas con permisos limitados -->
+                        <article class="card">
+                            <div class="card-icon">👥</div>
+                            <h3>Cuentas con permisos limitados</h3>
+                            <p>
+                                No todas las personas necesitan tener permisos de administrador. Si alguien solo debe
+                                consultar archivos, no debería poder modificar la configuración del sistema ni instalar programas.
+                            </p>
+                            <h4>Ejemplo en un servidor doméstico:</h4>
+                            <ul>
+                                <li>Una cuenta administrativa para configurar el sistema.</li>
+                                <li>Una cuenta para acceder a documentos compartidos.</li>
+                                <li>Una cuenta para aplicaciones que gestionen archivos específicos.</li>
+                            </ul>
+                            <div class="sub-bloque success">
+                                <strong>✅ Buena práctica</strong>
+                                <p>
+                                    Esta separación reduce las consecuencias de un error o de una cuenta comprometida.
+                                    Aplica el principio de <strong>mínimo privilegio</strong>.
+                                </p>
+                            </div>
+                            <div class="sub-bloque">
+                                <strong>🧠 Piensa y responde</strong>
+                                <p>¿Por qué es peligroso que todos usen la cuenta de administrador?</p>
+                            </div>
+                        </article>
+
+                        <!-- Desactivar servicios innecesarios -->
+                        <article class="card">
+                            <div class="card-icon">🚫</div>
+                            <h3>Desactivar servicios que no necesitas</h3>
+                            <p>
+                                Cada servicio activo puede añadir una posible vía de acceso al sistema. Si instalaste
+                                una aplicación para una prueba y ya no la usas, deténla o desinstálala.
+                            </p>
+                            <div class="sub-bloque warning">
+                                <strong>⚠️ Evita</strong>
+                                <p>
+                                    Dejar activos servicios de administración remota, paneles de control o cuentas
+                                    de prueba que no necesites.
+                                </p>
+                            </div>
+                            <div class="sub-bloque">
+                                <strong>🔎 Explora</strong>
+                                <p>
+                                    Revisa en tu computadora qué programas se inician automáticamente. ¿Reconoces todos?
+                                    ¿Cuáles podrías desactivar?
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     NIVEL 2 — COMPRENSIÓN
+                     ============================================= -->
+                <div class="nivel-section">
+                    <div class="nivel-header">
+                        <span class="nivel-numero">2</span>
+                        <div>
+                            <h3>Comprensión: mantener actualizado el sistema</h3>
+                            <span class="nivel-desc">Relaciones entre conceptos y funcionamiento</span>
+                        </div>
+                    </div>
+
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">🔄</span> ¿Por qué actualizar?</h4>
+                        <p>
+                            Las actualizaciones pueden corregir errores, mejorar la estabilidad y cerrar vulnerabilidades
+                            de seguridad. No todas son iguales: algunas requieren reiniciar el equipo o pueden introducir
+                            cambios de configuración.
+                        </p>
+                        <h4>Es importante mantener al día:</h4>
+                        <ul>
+                            <li>El sistema operativo.</li>
+                            <li>Los programas que ofrecen servicios.</li>
+                            <li>Los contenedores y sus imágenes, si utilizas Docker.</li>
+                            <li>Los complementos y extensiones.</li>
+                            <li>El firmware del router y de otros dispositivos de red, cuando corresponda.</li>
+                        </ul>
+
+                        <div class="sub-bloque accent">
+                            <strong>📋 Buenas prácticas para actualizar</strong>
+                            <ol style="margin-top:0.4rem; padding-left:1.2rem;">
+                                <li>Consulta qué actualizaciones están disponibles.</li>
+                                <li>Comprueba que tienes una copia de seguridad reciente de los datos importantes.</li>
+                                <li>Instala las actualizaciones desde fuentes oficiales o repositorios fiables.</li>
+                                <li>Reinicia el equipo si es necesario.</li>
+                                <li>Comprueba que las aplicaciones funcionan correctamente.</li>
+                            </ol>
+                        </div>
+
+                        <div class="sub-bloque">
+                            <strong>🧠 Analogía</strong>
+                            <p>
+                                Actualizar un servidor es como renovar la vacuna de un deportista: no lo hace más rápido,
+                                pero lo protege de enfermedades que podrían dejarlo fuera de juego.
+                            </p>
+                        </div>
+
+                        <div class="sub-bloque warning">
+                            <strong>⚠️ Error frecuente</strong>
+                            <p>
+                                Actualizar sin copia de seguridad. Si algo falla, no tendrás forma de volver atrás.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     NIVEL 3 — APLICACIÓN
+                     ============================================= -->
+                <div class="nivel-section">
+                    <div class="nivel-header">
+                        <span class="nivel-numero">3</span>
+                        <div>
+                            <h3>Aplicación: cortafuegos y copias de seguridad</h3>
+                            <span class="nivel-desc">Ejemplos y procedimientos</span>
+                        </div>
+                    </div>
+
+                    <!-- Cortafuegos -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">🧱</span> Configurar correctamente el cortafuegos</h4>
+                        <p>
+                            El cortafuegos, también conocido como <em>firewall</em>, controla las conexiones de red
+                            que se permiten o se bloquean según las reglas configuradas. Por ejemplo, puedes permitir
+                            que otros dispositivos de tu casa accedan a un servidor de archivos y bloquear conexiones
+                            entrantes que no necesitas.
+                        </p>
+
+                        <h4>Reglas básicas:</h4>
+                        <ul>
+                            <li>Mantén activado el cortafuegos del sistema operativo.</li>
+                            <li>Permite únicamente los puertos que necesiten tus servicios.</li>
+                            <li>Limita el acceso a la red local cuando no necesites conexiones externas.</li>
+                            <li>Evita abrir puertos del router por simple curiosidad o para solucionar problemas sin identificar su causa.</li>
+                            <li>Revisa las reglas después de instalar o eliminar aplicaciones.</li>
+                        </ul>
+
+                        <div class="sub-bloque accent">
+                            <strong>💡 Importante</strong>
+                            <p>
+                                El cortafuegos del ordenador y el del router son elementos distintos. Ambos pueden
+                                contribuir a proteger tu red, pero ninguno sustituye una buena configuración de las
+                                aplicaciones y de las cuentas.
+                            </p>
+                        </div>
+
+                        <div class="sub-bloque">
+                            <strong>🖥️ Ejemplo práctico</strong>
+                            <p>
+                                Imagina que tu servidor web funciona en el puerto 8080 y solo quieres utilizarlo dentro
+                                de casa. En lugar de publicar ese puerto en Internet, configura el acceso local necesario
+                                y comprueba desde otro dispositivo que funciona. Si más adelante necesitas acceso externo,
+                                evalúa primero una VPN u otra solución segura. La exposición pública requiere revisar la
+                                autenticación, el cifrado, las actualizaciones y los registros del servicio.
+                            </p>
+                        </div>
+
+                        <div class="sub-bloque">
+                            <strong>🧠 Piensa y responde</strong>
+                            <p>
+                                ¿Qué puertos necesita tu servidor realmente? ¿Podrías cerrar alguno sin afectar
+                                su funcionamiento?
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Copias de seguridad -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">💾</span> Hacer copias de seguridad</h4>
+                        <p>
+                            Una copia de seguridad es una copia de los datos que puedes utilizar para recuperarlos
+                            si se borran, se dañan o dejan de estar disponibles. Los fallos de un disco, los errores
+                            humanos, el robo del equipo, el ransomware y los problemas durante una actualización pueden
+                            provocar pérdidas de información.
+                        </p>
+
+                        <div class="sub-bloque warning">
+                            <strong>⚠️ Recuerda</strong>
+                            <p>
+                                Tener los archivos guardados en el propio servidor <strong>no equivale</strong> a
+                                tener una copia de seguridad.
+                            </p>
+                        </div>
+
+                        <h4>¿Qué deberías respaldar?</h4>
+                        <ul>
+                            <li>Documentos, fotografías y vídeos importantes.</li>
+                            <li>Archivos de configuración de los servicios.</li>
+                            <li>Bases de datos.</li>
+                            <li>Configuración de usuarios y permisos, cuando corresponda.</li>
+                            <li>Archivos de Docker Compose y configuraciones de contenedores.</li>
+                            <li>Claves de recuperación y otros datos esenciales, guardados de forma segura.</li>
+                        </ul>
+
+                        <div class="sub-bloque accent">
+                            <strong>📐 La regla 3-2-1</strong>
+                            <p>
+                                Una pauta conocida para proteger datos importantes consiste en mantener:
+                            </p>
+                            <ul style="margin-top:0.4rem;">
+                                <li><strong>3</strong> copias de los datos: el original y dos copias adicionales.</li>
+                                <li><strong>2</strong> tipos de almacenamiento: por ejemplo, el disco interno y un disco externo.</li>
+                                <li><strong>1</strong> copia fuera del equipo o ubicación principal: puede ser una copia desconectada o guardada en otra ubicación segura.</li>
+                            </ul>
+                            <p style="margin-top:0.5rem;">
+                                Es una guía, no una garantía absoluta. Lo importante es que un fallo o ataque que afecte
+                                al servidor no destruya todas las copias. Para datos importantes, conserva al menos una
+                                copia aislada de la red o protegida de modificaciones y borrados.
+                            </p>
+                        </div>
+
+                        <h4>¿Cada cuánto hay que hacer copias?</h4>
+                        <p>La frecuencia depende de cuánto te afectaría perder los cambios recientes:</p>
+                        <ul>
+                            <li><strong>Archivos poco cambiantes:</strong> una copia semanal puede ser suficiente.</li>
+                            <li><strong>Documentos que cambian a diario:</strong> puede ser preferible una copia diaria.</li>
+                            <li><strong>Bases de datos o servicios importantes:</strong> puede ser necesario respaldar con mayor frecuencia.</li>
+                        </ul>
+                        <p style="margin-top:0.5rem;">
+                            Programa las copias automáticamente siempre que sea posible y, sobre todo, prueba
+                            periódicamente que puedes restaurarlas. Una copia que nunca se ha verificado podría estar
+                            incompleta o dañada. Estas prácticas también se recomiendan en la guía de ciberseguridad del NIST.
+                        </p>
+
+                        <div class="sub-bloque">
+                            <strong>🧠 Piensa y responde</strong>
+                            <p>
+                                ¿Tienes alguna copia de seguridad de tus trabajos escolares? ¿Cada cuánto la actualizas?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     NIVEL 4 — ANÁLISIS
+                     ============================================= -->
+                <div class="nivel-section">
+                    <div class="nivel-header">
+                        <span class="nivel-numero">4</span>
+                        <div>
+                            <h3>Análisis: supervisión, mantenimiento y detección de problemas</h3>
+                            <span class="nivel-desc">Errores, decisiones y resolución de problemas</span>
+                        </div>
+                    </div>
+
+                    <!-- Supervisar -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">📊</span> Supervisar el estado del servidor</h4>
+                        <p>
+                            El mantenimiento no consiste únicamente en actualizar programas. También es importante
+                            comprobar que el hardware y los servicios funcionan dentro de los límites esperados.
+                        </p>
+
+                        <h4>Recursos que conviene vigilar:</h4>
+                        <ul>
+                            <li><strong>Procesador (CPU):</strong> si permanece muy ocupado durante mucho tiempo, puede haber demasiadas tareas simultáneas, una aplicación bloqueada o un servicio que consume más recursos de lo esperado.</li>
+                            <li><strong>Memoria RAM:</strong> una memoria casi agotada puede provocar lentitud, errores o que el sistema cierre procesos para recuperar recursos.</li>
+                            <li><strong>Discos y espacio disponible:</strong> comprueba que quede espacio libre, que los discos no presenten errores y que los datos importantes tengan respaldo. Un disco lleno puede impedir que las aplicaciones guarden archivos o registros.</li>
+                            <li><strong>Temperatura y ventilación:</strong> vigila temperaturas anormales, ventiladores ruidosos, acumulación de polvo y apagados inesperados. Las temperaturas adecuadas dependen del modelo del procesador y del equipo.</li>
+                            <li><strong>Estado de los servicios:</strong> verifica que las aplicaciones estén activas y que respondan a las conexiones. Un PC encendido no garantiza que todos sus servicios estén funcionando.</li>
+                        </ul>
+
+                        <h4>Herramientas que puedes utilizar:</h4>
+                        <p>
+                            En <strong>Windows</strong> puedes recurrir al Administrador de tareas, al Visor de eventos
+                            y a las herramientas de diagnóstico del fabricante.
+                        </p>
+                        <p>En <strong>Linux</strong> puedes utilizar comandos como:</p>
+                        <div class="code-block">
+                            <span class="comentario"># Tiempo de funcionamiento y carga del sistema</span><br>
+                            <span class="comando">uptime</span><br><br>
+                            <span class="comentario"># Uso de memoria</span><br>
+                            <span class="comando">free -h</span><br><br>
+                            <span class="comentario"># Espacio de los sistemas de archivos</span><br>
+                            <span class="comando">df -h</span>
+                        </div>
+                        <p>
+                            Estos permiten consultar, respectivamente, el tiempo de funcionamiento y la carga del sistema,
+                            el uso de memoria y el espacio de los sistemas de archivos. Para vigilar discos, temperaturas,
+                            servicios y registros con más detalle, puedes utilizar las herramientas compatibles con tu
+                            distribución y hardware.
+                        </p>
+
+                        <div class="sub-bloque">
+                            <strong>🔎 Explora</strong>
+                            <p>
+                                Si usas Linux, abre una terminal y ejecuta <span class="code-inline">uptime</span>,
+                                <span class="code-inline">free -h</span> y <span class="code-inline">df -h</span>.
+                                ¿Qué te dicen esos números sobre tu equipo?
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mantenimiento físico -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">🧹</span> Mantenimiento físico del ordenador</h4>
+                        <p>
+                            El hardware también necesita atención, especialmente cuando el servidor permanece encendido
+                            durante muchas horas. Las tareas básicas incluyen:
+                        </p>
+                        <ul>
+                            <li>Limpiar el polvo de las entradas de aire y los ventiladores con el equipo apagado y desconectado.</li>
+                            <li>Comprobar que las rejillas de ventilación no estén obstruidas.</li>
+                            <li>Revisar cables, conectores y la fuente de alimentación.</li>
+                            <li>Escuchar si aparecen ruidos mecánicos inusuales en los discos o ventiladores.</li>
+                            <li>Mantener el equipo en un lugar seco, ventilado y alejado de fuentes de calor.</li>
+                            <li>Considerar un sistema de alimentación ininterrumpida (SAI/UPS) si necesitas proteger el equipo frente a cortes eléctricos.</li>
+                        </ul>
+                        <p>
+                            No es necesario desmontar el ordenador con frecuencia si no lo requiere. Antes de manipular
+                            componentes internos, apágalo, desconéctalo y sigue las indicaciones del fabricante.
+                        </p>
+                        <div class="sub-bloque warning">
+                            <strong>⚠️ Atención</strong>
+                            <p>
+                                Si utilizas un disco duro mecánico para almacenar datos importantes, presta atención a
+                                los errores y a los avisos de salud del disco. Sin embargo, recuerda que los indicadores
+                                de diagnóstico no pueden garantizar que una unidad no vaya a fallar.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Registros -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">📋</span> Registros y detección de problemas</h4>
+                        <p>
+                            Los registros, también llamados <em>logs</em>, guardan información sobre lo que sucede en
+                            el sistema y en sus aplicaciones. Pueden ayudar a descubrir por qué un servicio se detuvo,
+                            si una aplicación no pudo acceder a un archivo o si se produjeron numerosos intentos de
+                            inicio de sesión.
+                        </p>
+
+                        <h4>Conviene revisar los registros cuando:</h4>
+                        <ul>
+                            <li>Un servicio deja de responder.</li>
+                            <li>El ordenador se reinicia inesperadamente.</li>
+                            <li>Aparecen errores al acceder a los archivos.</li>
+                            <li>El uso de CPU o memoria aumenta sin una explicación clara.</li>
+                            <li>Detectas conexiones o intentos de acceso que no reconoces.</li>
+                        </ul>
+
+                        <div class="sub-bloque accent">
+                            <strong>💡 Importante</strong>
+                            <p>
+                                No todos los mensajes de error indican un ataque. Busca patrones, compara la hora de los
+                                eventos y consulta la documentación del programa antes de sacar conclusiones.
+                            </p>
+                        </div>
+                        <div class="sub-bloque warning">
+                            <strong>⚠️ Si sospechas de un acceso no autorizado</strong>
+                            <p>
+                                Evita borrar los registros o reinstalar inmediatamente sin evaluar la situación. Si hay
+                                datos sensibles, puede ser necesario aislar el equipo de la red y buscar asistencia
+                                especializada.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Qué hacer si falla -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">🛠️</span> ¿Qué hacer si el servidor deja de funcionar?</h4>
+                        <p>
+                            Tener un procedimiento básico ayuda a resolver problemas sin perder información.
+                        </p>
+
+                        <h4>Procedimiento de diagnóstico:</h4>
+                        <ol style="padding-left:1.2rem;">
+                            <li><strong>Comprueba la alimentación.</strong> Verifica que el equipo esté encendido y que los cables estén conectados.</li>
+                            <li><strong>Comprueba la red.</strong> Revisa la conexión Ethernet o Wi-Fi y confirma que la IP del servidor no haya cambiado.</li>
+                            <li><strong>Comprueba el servicio.</strong> Verifica que la aplicación esté iniciada y que escuche en el puerto esperado.</li>
+                            <li><strong>Consulta los registros.</strong> Busca errores que coincidan con el momento en que comenzó el problema.</li>
+                            <li><strong>Comprueba los recursos.</strong> Revisa la memoria, el espacio en disco, la temperatura y la carga del procesador.</li>
+                            <li><strong>Recupera una versión anterior si es necesario.</strong> Si una actualización o un cambio de configuración causó el fallo, utiliza un procedimiento de recuperación conocido y una copia de seguridad verificada.</li>
+                        </ol>
+
+                        <div class="sub-bloque warning">
+                            <strong>⚠️ Señales de fallo físico</strong>
+                            <p>
+                                Si el equipo presenta señales como olor a quemado, chispas o ruidos mecánicos graves,
+                                apágalo y desconéctalo de forma segura si puedes hacerlo. No sigas reiniciándolo
+                                repetidamente para intentar que funcione.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- =============================================
+                     NIVEL 5 — TRANSFERENCIA
+                     ============================================= -->
+                <div class="nivel-section">
+                    <div class="nivel-header">
+                        <span class="nivel-numero">5</span>
+                        <div>
+                            <h3>Transferencia: plan de mantenimiento</h3>
+                            <span class="nivel-desc">Aplicación del conocimiento a situaciones nuevas</span>
+                        </div>
+                    </div>
+
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">📅</span> Plan de mantenimiento recomendado</h4>
+                        <p>
+                            No todos los servidores necesitan el mismo nivel de atención. Para un servidor doméstico,
+                            puedes empezar con un calendario sencillo y adaptarlo a la importancia de los datos.
+                        </p>
+
+                        <div class="card-grid" style="margin-top:1rem;">
+                            <div class="card">
+                                <div class="card-icon">📆</div>
+                                <h3>Semanal</h3>
+                                <h4>Revisión rápida</h4>
+                                <p>
+                                    Comprueba que los servicios funcionen, que haya espacio libre y que las copias
+                                    de seguridad se hayan completado.
+                                </p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🗓️</div>
+                                <h3>Mensual</h3>
+                                <h4>Actualizaciones y revisión</h4>
+                                <p>
+                                    Revisa las actualizaciones pendientes, los registros de errores, los usuarios
+                                    autorizados y el estado general de los discos.
+                                </p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">📅</div>
+                                <h3>Trimestral</h3>
+                                <h4>Pruebas de recuperación y seguridad</h4>
+                                <p>
+                                    Prueba una restauración de archivos, comprueba las reglas del cortafuegos y
+                                    elimina cuentas o servicios que ya no necesites.
+                                </p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🔧</div>
+                                <h3>Según necesidad</h3>
+                                <h4>Mantenimiento físico</h4>
+                                <p>
+                                    Limpia el polvo, revisa la ventilación y comprueba cables y componentes
+                                    cuando corresponda.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="sub-bloque accent" style="margin-top:1rem;">
+                            <strong>💡 Importante</strong>
+                            <p>
+                                Este calendario es orientativo. Las actualizaciones de seguridad importantes deben
+                                evaluarse e instalarse con prontitud, sin esperar necesariamente a la revisión mensual.
+                                Los datos que cambian con frecuencia también pueden necesitar copias mucho más habituales.
+                            </p>
+                        </div>
+
+                        <div class="sub-bloque">
+                            <strong>🧠 Piensa y responde</strong>
+                            <p>
+                                ¿Qué tareas del plan aplicarías a tu propio equipo? ¿Cuáles te resultan más difíciles
+                                de cumplir y por qué?
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Lista de comprobación -->
+                    <div class="concepto">
+                        <h4><span class="concepto-icon">✅</span> Lista de comprobación del servidor</h4>
+                        <p>
+                            Puedes utilizar esta lista para llevar un control de las tareas principales.
+                        </p>
+
+                        <div class="card-grid" style="margin-top:1rem;">
+                            <div class="card">
+                                <div class="card-icon">🔐</div>
+                                <h3>Seguridad</h3>
+                                <ul>
+                                    <li>Las contraseñas son seguras y no se mantienen credenciales predeterminadas.</li>
+                                    <li>Las cuentas tienen solo los permisos que necesitan.</li>
+                                    <li>El cortafuegos está activo y los puertos abiertos son necesarios.</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🔄</div>
+                                <h3>Actualizaciones</h3>
+                                <ul>
+                                    <li>El sistema operativo y las aplicaciones reciben actualizaciones.</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">💾</div>
+                                <h3>Copias</h3>
+                                <ul>
+                                    <li>Las copias de seguridad se completan correctamente.</li>
+                                    <li>Se ha probado la restauración de archivos.</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🖥️</div>
+                                <h3>Hardware</h3>
+                                <ul>
+                                    <li>Hay espacio libre y no se observan señales de sobrecalentamiento.</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">⚙️</div>
+                                <h3>Funcionamiento</h3>
+                                <ul>
+                                    <li>Los servicios principales responden correctamente.</li>
+                                    <li>Los registros no muestran errores importantes sin revisar.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             RETO INTEGRADOR
+             ============================================= -->
+        <section class="section" id="reto">
+            <div class="container">
+                <span class="section-label">Reto integrador</span>
+                <h2 class="section-title">Diseña tu propio plan de seguridad y mantenimiento</h2>
+                <p class="section-subtitle">
+                    Aplica todo lo aprendido en un escenario real. No hay una única respuesta correcta:
+                    lo importante es justificar tus decisiones.
+                </p>
+
+                <div class="reto-card">
+                    <h3>⚡ <span>Reto:</span> El servidor del emprendimiento escolar</h3>
+                    <p>
+                        Un grupo de estudiantes ha montado un pequeño emprendimiento de venta de postres en el colegio.
+                        Han instalado un servidor en una computadora antigua para:
+                    </p>
+                    <ul style="color:rgba(255,255,255,0.85); font-size:0.92rem; margin-bottom:1rem; padding-left:1.2rem;">
+                        <li>Compartir recetas y fotografías de los productos.</li>
+                        <li>Llevar un registro de pedidos en una hoja de cálculo.</li>
+                        <li>Gestionar una página web local para mostrar el menú.</li>
+                    </ul>
+                    <p>
+                        El servidor tiene Windows 10, 4 GB de RAM, un disco duro de 500 GB y está conectado por Wi-Fi.
+                        Lo usan 3 personas: la encargada de las recetas, el encargado de los pedidos y un administrador.
+                        A veces lo dejan encendido toda la noche y nunca han hecho una copia de seguridad.
+                    </p>
+
+                    <div class="reto-contexto">
+                        <p>
+                            <strong>Problema:</strong> Durante la semana de exámenes, el servidor se apagó solo.
+                            Al reiniciar, la hoja de pedidos estaba dañada y no había forma de recuperarla.
+                            El grupo necesita un plan para que esto no vuelva a ocurrir.
+                        </p>
+                    </div>
+
+                    <div class="reto-objetivos">
+                        <h4>¿Qué debes lograr?</h4>
+                        <ul>
+                            <li><strong>Diseñar un plan de seguridad</strong> que incluya contraseñas, cuentas y cortafuegos.</li>
+                            <li><strong>Definir una estrategia de copias de seguridad</strong> aplicando la regla 3-2-1.</li>
+                            <li><strong>Proponer un calendario de mantenimiento</strong> adaptado a las necesidades del emprendimiento.</li>
+                            <li><strong>Establecer un procedimiento de diagnóstico</strong> para actuar si el servidor falla.</li>
+                            <li><strong>Justificar cada decisión</strong> con argumentos técnicos y prácticos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="reto-criterios">
+                        <span class="criterio-tag">Comprensión</span>
+                        <span class="criterio-tag">Aplicación</span>
+                        <span class="criterio-tag">Funcionalidad</span>
+                        <span class="criterio-tag">Creatividad</span>
+                        <span class="criterio-tag">Calidad técnica</span>
+                        <span class="criterio-tag">Argumentación</span>
+                        <span class="criterio-tag">Buenas prácticas</span>
+                    </div>
+
+                    <div class="sub-bloque accent" style="margin-top:1.2rem; background:rgba(255,255,255,0.08); border-left-color:var(--color-accent);">
+                        <strong style="color:var(--color-accent);">💡 Pista</strong>
+                        <p style="color:rgba(255,255,255,0.85);">
+                            No necesitas una solución perfecta. Piensa en lo que realmente pueden hacer estudiantes
+                            de bachillerato con los recursos que tienen. La clave está en priorizar y justificar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             EVALUACIÓN LÚDICA
+             ============================================= -->
+        <section class="section" id="evaluacion">
+            <div class="container">
+                <span class="section-label">Evaluación lúdica</span>
+                <h2 class="section-title">Pon a prueba lo que aprendiste</h2>
+                <p class="section-subtitle">
+                    Cinco preguntas para comprobar tu comprensión. Recibirás retroalimentación inmediata.
+                </p>
+
+                <div class="quiz-container" id="quizContainer">
+                    <div class="quiz-header">
+                        <span class="quiz-counter" id="quizCounter">Pregunta 1 de 5</span>
+                        <span class="quiz-score" id="quizScore">Puntuación: 0</span>
+                    </div>
+
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso del cuestionario">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+
+                    <div id="quizContent">
+                        <p class="pregunta-texto" id="preguntaTexto"></p>
+                        <div class="opciones" id="opcionesContainer"></div>
+                        <div class="retroalimentacion" id="retroalimentacion"></div>
+                    </div>
+
+                    <div class="quiz-footer">
+                        <button class="btn btn-primary" id="btnSiguiente" disabled>Siguiente pregunta</button>
+                    </div>
+
+                    <div class="resultado-final" id="resultadoFinal">
+                        <div class="resultado-puntuacion" id="resultadoPuntuacion">0/5</div>
+                        <div class="resultado-porcentaje" id="resultadoPorcentaje">0%</div>
+                        <p class="resultado-mensaje" id="resultadoMensaje"></p>
+                        <button class="btn btn-primary" id="btnReiniciar">Reiniciar cuestionario</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             CIERRE REFLEXIVO
+             ============================================= -->
+        <section class="section" id="reflexion">
+            <div class="container">
+                <span class="section-label">Cierre reflexivo</span>
+                <h2 class="section-title">Antes de terminar...</h2>
+                <p class="section-subtitle">
+                    Tómate un momento para pensar en tu propio aprendizaje. No hay respuestas correctas o incorrectas.
+                </p>
+
+                <div class="reflexion-card">
+                    <h3>🧠 Metacognición</h3>
+                    <div class="reflexion-preguntas">
+                        <div class="reflexion-item">
+                            <p><strong>¿Qué aprendí?</strong> ¿Cuál es el concepto más importante que te llevas de este taller?</p>
+                        </div>
+                        <div class="reflexion-item">
+                            <p><strong>¿Qué puedo aplicar?</strong> ¿Cómo usarías lo aprendido en tu propio equipo o en un proyecto escolar?</p>
+                        </div>
+                        <div class="reflexion-item">
+                            <p><strong>¿Qué necesito seguir practicando?</strong> ¿Qué tema te resultó más difícil o te gustaría profundizar?</p>
+                        </div>
+                        <div class="reflexion-item">
+                            <p><strong>¿Cómo lo usaría en un proyecto real?</strong> Piensa en un emprendimiento, una página web o un juego que quieras crear.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =============================================
+         PIE DE PÁGINA
+         ============================================= -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+            <p>Diseñado por: <span class="footer-highlight">Edwin Méndez J.</span></p>
+        </div>
+    </footer>
+
+    <!-- =============================================
+         JAVASCRIPT
+         ============================================= -->
+    <script>
+        (function() {
+            'use strict';
+
+            // =============================================
+            // DATOS DEL CUESTIONARIO
+            // =============================================
+            const preguntas = [
+                {
+                    texto: "¿Por qué se dice que tener los archivos en el propio servidor no equivale a tener una copia de seguridad?",
+                    opciones: [
+                        "Porque los archivos en el servidor ocupan mucho espacio.",
+                        "Porque si el servidor falla, se daña o es atacado, los archivos originales y la copia se pierden juntos.",
+                        "Porque el servidor no puede almacenar copias de seguridad.",
+                        "Porque las copias de seguridad solo funcionan en la nube."
+                    ],
+                    correcta: 1,
+                    retroCorrecta: "Correcto. Una copia de seguridad debe estar en un lugar independiente del original. Si todo está en el mismo servidor, un solo fallo puede destruir ambos.",
+                    retroIncorrecta: "Incorrecto. La razón principal es que si el servidor falla, se daña o es atacado, tanto los archivos originales como la copia se pierden juntos. Una copia de seguridad debe ser independiente."
+                },
+                {
+                    texto: "En el contexto de la seguridad de un servidor, ¿qué significa aplicar el principio de mínimo privilegio?",
+                    opciones: [
+                        "Que todos los usuarios tengan acceso de administrador para evitar problemas.",
+                        "Que cada usuario tenga únicamente los permisos necesarios para realizar sus tareas.",
+                        "Que el servidor tenga el menor número de contraseñas posible.",
+                        "Que se eliminen todas las cuentas de usuario."
+                    ],
+                    correcta: 1,
+                    retroCorrecta: "Exacto. El principio de mínimo privilegio consiste en otorgar a cada usuario solo los permisos indispensables para su trabajo, reduciendo así el impacto de un error o de una cuenta comprometida.",
+                    retroIncorrecta: "Incorrecto. El principio de mínimo privilegio significa que cada usuario debe tener únicamente los permisos necesarios para realizar sus tareas, no más."
+                },
+                {
+                    texto: "Un servidor lleva 3 días con la CPU al 100% de uso. ¿Cuál de las siguientes es la interpretación más adecuada según el documento?",
+                    opciones: [
+                        "Es normal, todos los servidores trabajan así.",
+                        "Puede haber demasiadas tareas simultáneas, una aplicación bloqueada o un servicio consumiendo más recursos de lo esperado.",
+                        "Hay que apagar el servidor inmediatamente sin revisar nada.",
+                        "El problema se soluciona comprando más memoria RAM."
+                    ],
+                    correcta: 1,
+                    retroCorrecta: "Muy bien. El documento indica que si la CPU permanece muy ocupada durante mucho tiempo, puede haber demasiadas tareas simultáneas, una aplicación bloqueada o un servicio que consume más recursos de lo esperado. Lo correcto es investigar la causa.",
+                    retroIncorrecta: "Incorrecto. La interpretación adecuada es que puede haber demasiadas tareas simultáneas, una aplicación bloqueada o un servicio consumiendo más recursos de lo esperado. Lo primero es investigar, no apagar sin más."
+                },
+                {
+                    texto: "Tienes un servidor web en el puerto 8080 y solo necesitas usarlo dentro de tu red local. ¿Cuál es la decisión más segura según las recomendaciones del documento?",
+                    opciones: [
+                        "Abrir el puerto 8080 en el router para acceder desde cualquier lugar.",
+                        "No publicar el puerto en Internet y configurar solo el acceso local necesario.",
+                        "Desactivar el cortafuegos para que funcione sin problemas.",
+                        "Cambiar el puerto a uno más conocido como el 80."
+                    ],
+                    correcta: 1,
+                    retroCorrecta: "Correcto. Si solo necesitas acceso local, no debes publicar el puerto en Internet. Configura el acceso local necesario y, si más adelante necesitas acceso externo, evalúa primero una VPN u otra solución segura.",
+                    retroIncorrecta: "Incorrecto. La opción más segura es no publicar el puerto en Internet y limitar el acceso a la red local. Exponer el puerto innecesariamente aumenta el riesgo."
+                },
+                {
+                    texto: "El servidor de tu proyecto escolar se reinició inesperadamente. Siguiendo el procedimiento de diagnóstico del documento, ¿cuál sería el orden más lógico de acciones?",
+                    opciones: [
+                        "Reinstalar el sistema operativo, formatear el disco y empezar de cero.",
+                        "Comprobar alimentación, revisar la red, verificar el servicio, consultar registros y comprobar recursos.",
+                        "Apagar el servidor y no volver a encenderlo hasta que venga un técnico.",
+                        "Borrrar todos los registros para que no queden errores."
+                    ],
+                    correcta: 1,
+                    retroCorrecta: "Excelente. El procedimiento de diagnóstico del documento sugiere: comprobar alimentación, red, servicio, registros, recursos y, si es necesario, recuperar una versión anterior. Este orden permite identificar la causa sin perder información.",
+                    retroIncorrecta: "Incorrecto. El procedimiento recomendado es: comprobar alimentación, red, servicio, consultar registros, revisar recursos y, si es necesario, recuperar una versión anterior. No se debe reinstalar ni borrar registros sin evaluar primero."
+                }
+            ];
+
+            // =============================================
+            // ESTADO DEL QUIZ
+            // =============================================
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = null;
+            let quizTerminado = false;
+
+            // =============================================
+            // REFERENCIAS AL DOM
+            // =============================================
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScore = document.getElementById('quizScore');
+            const progressFill = document.getElementById('progressFill');
+            const preguntaTexto = document.getElementById('preguntaTexto');
+            const opcionesContainer = document.getElementById('opcionesContainer');
+            const retroalimentacion = document.getElementById('retroalimentacion');
+            const btnSiguiente = document.getElementById('btnSiguiente');
+            const resultadoFinal = document.getElementById('resultadoFinal');
+            const resultadoPuntuacion = document.getElementById('resultadoPuntuacion');
+            const resultadoPorcentaje = document.getElementById('resultadoPorcentaje');
+            const resultadoMensaje = document.getElementById('resultadoMensaje');
+            const btnReiniciar = document.getElementById('btnReiniciar');
+            const quizContent = document.getElementById('quizContent');
+
+            // =============================================
+            // FUNCIONES DEL QUIZ
+            // =============================================
+
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = null;
+                quizTerminado = false;
+
+                resultadoFinal.classList.remove('visible');
+                quizContent.style.display = 'block';
+                btnSiguiente.style.display = 'inline-flex';
+                btnSiguiente.disabled = true;
+                btnSiguiente.textContent = 'Siguiente pregunta';
+
+                actualizarMarcadores();
+                mostrarPregunta();
+            }
+
+            function actualizarMarcadores() {
+                quizCounter.textContent = `Pregunta ${indiceActual + 1} de ${preguntas.length}`;
+                quizScore.textContent = `Puntuación: ${puntuacion}`;
+                const progreso = ((indiceActual) / preguntas.length) * 100;
+                progressFill.style.width = progreso + '%';
+                progressFill.parentElement.setAttribute('aria-valuenow', Math.round(progreso));
+            }
+
+            function mostrarPregunta() {
+                const pregunta = preguntas[indiceActual];
+                respuestaSeleccionada = null;
+
+                preguntaTexto.textContent = pregunta.texto;
+                opcionesContainer.innerHTML = '';
+                retroalimentacion.className = 'retroalimentacion';
+                retroalimentacion.innerHTML = '';
+                btnSiguiente.disabled = true;
+                btnSiguiente.textContent = 'Siguiente pregunta';
+
+                const letras = ['A', 'B', 'C', 'D'];
+
+                pregunta.opciones.forEach((opcion, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'opcion';
+                    btn.type = 'button';
+                    btn.setAttribute('aria-label', `Opción ${letras[index]}: ${opcion}`);
+                    btn.innerHTML = `
+                        <span class="opcion-letra">${letras[index]}</span>
+                        <span class="opcion-texto">${opcion}</span>
+                    `;
+                    btn.addEventListener('click', () => seleccionarRespuesta(index, btn));
+                    opcionesContainer.appendChild(btn);
+                });
+
+                actualizarMarcadores();
+            }
+
+            function seleccionarRespuesta(index, btn) {
+                if (respuestaSeleccionada !== null) return;
+
+                respuestaSeleccionada = index;
+                const pregunta = preguntas[indiceActual];
+                const esCorrecta = index === pregunta.correcta;
+
+                // Deshabilitar todas las opciones
+                const todasOpciones = opcionesContainer.querySelectorAll('.opcion');
+                todasOpciones.forEach(op => op.disabled = true);
+
+                // Marcar la seleccionada
+                btn.classList.add('seleccionada');
+
+                // Mostrar correcta/incorrecta
+                if (esCorrecta) {
+                    btn.classList.add('correcta');
+                    puntuacion++;
+                } else {
+                    btn.classList.add('incorrecta');
+                    // Mostrar cuál era la correcta
+                    todasOpciones[pregunta.correcta].classList.add('correcta');
+                }
+
+                // Mostrar retroalimentación
+                retroalimentacion.className = 'retroalimentacion visible ' + (esCorrecta ? 'correcta' : 'incorrecta');
+                retroalimentacion.innerHTML = `
+                    <strong>${esCorrecta ? '✅ ¡Correcto!' : '❌ Incorrecto'}</strong>
+                    ${esCorrecta ? pregunta.retroCorrecta : pregunta.retroIncorrecta}
+                `;
+
+                // Actualizar puntuación
+                quizScore.textContent = `Puntuación: ${puntuacion}`;
+
+                // Habilitar botón siguiente
+                btnSiguiente.disabled = false;
+
+                // Si es la última pregunta, cambiar el texto del botón
+                if (indiceActual === preguntas.length - 1) {
+                    btnSiguiente.textContent = 'Ver resultados';
+                }
+            }
+
+            function siguientePregunta() {
+                if (respuestaSeleccionada === null) return;
+
+                if (indiceActual < preguntas.length - 1) {
+                    indiceActual++;
+                    mostrarPregunta();
+                    actualizarMarcadores();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizTerminado = true;
+                quizContent.style.display = 'none';
+                btnSiguiente.style.display = 'none';
+                resultadoFinal.classList.add('visible');
+
+                const total = preguntas.length;
+                const porcentaje = Math.round((puntuacion / total) * 100);
+
+                resultadoPuntuacion.textContent = `${puntuacion}/${total}`;
+                resultadoPorcentaje.textContent = `${porcentaje}%`;
+
+                let mensaje = '';
+                if (porcentaje === 100) {
+                    mensaje = '¡Excelente! Dominas completamente los conceptos de seguridad y mantenimiento de servidores. Estás listo para aplicar estos conocimientos en proyectos reales.';
+                } else if (porcentaje >= 80) {
+                    mensaje = '¡Muy bien! Tienes una comprensión sólida de los conceptos. Repasa los detalles que fallaron y estarás listo para liderar un proyecto de servidor.';
+                } else if (porcentaje >= 60) {
+                    mensaje = '¡Buen trabajo! Tienes una base importante, pero conviene reforzar algunos conceptos. Revisa el desarrollo del taller y vuelve a intentarlo.';
+                } else if (porcentaje >= 40) {
+                    mensaje = 'Vas por buen camino. Te recomendamos repasar las secciones de copias de seguridad, cortafuegos y diagnóstico. ¡La práctica hace al maestro!';
+                } else {
+                    mensaje = 'No te desanimes. Este es un tema complejo y estás empezando. Vuelve a leer el taller con calma y prueba de nuevo. Cada intento te acerca más al dominio.';
+                }
+
+                resultadoMensaje.textContent = mensaje;
+
+                progressFill.style.width = '100%';
+                progressFill.parentElement.setAttribute('aria-valuenow', '100');
+                quizCounter.textContent = `Completado`;
+                quizScore.textContent = `Puntuación final: ${puntuacion}/${total}`;
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+                // Scroll suave al inicio del quiz
+                document.getElementById('evaluacion').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // =============================================
+            // EVENTOS
+            // =============================================
+            btnSiguiente.addEventListener('click', siguientePregunta);
+            btnReiniciar.addEventListener('click', reiniciarQuiz);
+
+            // =============================================
+            // INICIALIZACIÓN
+            // =============================================
+            iniciarQuiz();
+
+        })();
+    </script>
+
+</body>
+</html>

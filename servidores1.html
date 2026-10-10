@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo — Servidores: El Corazón de la Red</title>
+    <style>
+        /* =============================================
+           VARIABLES
+           ============================================= */
+        :root {
+            --color-primary: #0a1f44;
+            --color-secondary: #1a3a6b;
+            --color-accent: #f97316;
+            --color-accent-hover: #ea580c;
+            --color-background: #f1f5f9;
+            --color-surface: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #475569;
+            --color-text-muted: #94a3b8;
+            --color-success: #10b981;
+            --color-error: #ef4444;
+            --color-border: #e2e8f0;
+            --color-code-bg: #0f172a;
+            --color-code-text: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-code: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        /* =============================================
+           RESET
+           ============================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* =============================================
+           BASE
+           ============================================= */
+        h1, h2, h3, h4 {
+            line-height: 1.3;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.75rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+        p { margin-bottom: 0.8rem; }
+        ul, ol { margin-bottom: 0.8rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.3rem; }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+        a:hover, a:focus {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        /* =============================================
+           HEADER
+           ============================================= */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            padding: 3rem 1.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(249, 115, 22, 0.08) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .header__badge {
+            display: inline-block;
+            background: rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            color: #fbbf24;
+            padding: 0.3rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .header__title span {
+            color: var(--color-accent);
+        }
+
+        .header__subtitle {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .header__description {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =============================================
+           NAVEGACIÓN
+           ============================================= */
+        .nav {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav__list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.25rem;
+            list-style: none;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .nav__link {
+            display: block;
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav__link:hover,
+        .nav__link:focus {
+            background: #f1f5f9;
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .nav__link--active {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .nav__link--active:hover,
+        .nav__link--active:focus {
+            background: var(--color-accent-hover);
+            color: #fff;
+        }
+
+        /* =============================================
+           CONTENEDOR PRINCIPAL
+           ============================================= */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .section {
+            margin-bottom: 3.5rem;
+            scroll-margin-top: 80px;
+        }
+
+        .section__header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section__icon {
+            width: 40px;
+            height: 40px;
+            background: var(--color-accent);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section__icon svg {
+            width: 22px;
+            height: 22px;
+            fill: #fff;
+        }
+
+        .section__title {
+            font-size: 1.6rem;
+            margin: 0;
+        }
+
+        .section__subtitle {
+            color: var(--color-text-light);
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+
+        /* =============================================
+           TARJETAS
+           ============================================= */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--color-border);
+            transition: box-shadow var(--transition), transform var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card--accent {
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .card--info {
+            border-left: 4px solid var(--color-secondary);
+            background: #f8fafc;
+        }
+
+        .card--warning {
+            border-left: 4px solid #f59e0b;
+            background: #fffbeb;
+        }
+
+        .card--success {
+            border-left: 4px solid var(--color-success);
+            background: #ecfdf5;
+        }
+
+        .card__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card__title svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .card__label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            margin-bottom: 0.5rem;
+        }
+
+        .card__label--blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .card__label--orange {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .card__label--green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .card__label--purple {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .card__label--red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* =============================================
+           GRID
+           ============================================= */
+        .grid {
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .grid--2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid--3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* =============================================
+           TABLA
+           ============================================= */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            margin-bottom: 1.25rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px;
+        }
+
+        .table th {
+            background: var(--color-primary);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .table tr:hover {
+            background: #f1f5f9;
+        }
+
+        /* =============================================
+           CÓDIGO
+           ============================================= */
+        .code-block {
+            background: var(--color-code-bg);
+            color: var(--color-code-text);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border: 1px solid #1e293b;
+        }
+
+        .code-block .kw { color: #c084fc; }
+        .code-block .str { color: #86efac; }
+        .code-block .num { color: #fbbf24; }
+        .code-block .cmt { color: #64748b; font-style: italic; }
+        .code-block .fn { color: #60a5fa; }
+
+        /* =============================================
+           IMÁGENES
+           ============================================= */
+        .img-card {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            background: var(--color-surface);
+            transition: box-shadow var(--transition), transform var(--transition);
+        }
+
+        .img-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .img-card__img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #e2e8f0;
+        }
+
+        .img-card__body {
+            padding: 1rem;
+        }
+
+        .img-card__title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .img-card__desc {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin: 0;
+        }
+
+        /* =============================================
+           RETO
+           ============================================= */
+        .reto {
+            background: linear-gradient(135deg, #0a1f44 0%, #1a3a6b 100%);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reto::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .reto h2 {
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto p, .reto li {
+            color: #cbd5e1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto__step {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+            transition: background var(--transition);
+        }
+
+        .reto__step:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .reto__step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--color-accent);
+            color: #fff;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .reto__step-title {
+            font-weight: 700;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .reto__step-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            margin-left: 2.2rem;
+        }
+
+        .reto__criteria {
+            list-style: none;
+            padding: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reto__criteria li {
+            padding: 0.4rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+
+        .reto__criteria li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* =============================================
+           QUIZ
+           ============================================= */
+        .quiz {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz__counter {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            background: #fff7ed;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid #fed7aa;
+        }
+
+        .quiz__score {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            background: #f1f5f9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz__progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz__progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #fbbf24);
+            border-radius: 999px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .quiz__question {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .quiz__options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz__option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.9rem 1rem;
+            background: #f8fafc;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.95rem;
+            text-align: left;
+            width: 100%;
+            font-family: inherit;
+            color: var(--color-text);
+        }
+
+        .quiz__option:hover:not(:disabled) {
+            border-color: var(--color-accent);
+            background: #fff7ed;
+        }
+
+        .quiz__option:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz__option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .quiz__option--correct {
+            border-color: var(--color-success) !important;
+            background: #ecfdf5 !important;
+        }
+
+        .quiz__option--incorrect {
+            border-color: var(--color-error) !important;
+            background: #fef2f2 !important;
+        }
+
+        .quiz__option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--color-primary);
+            color: #fff;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .quiz__option--correct .quiz__option-letter {
+            background: var(--color-success);
+        }
+
+        .quiz__option--incorrect .quiz__option-letter {
+            background: var(--color-error);
+        }
+
+        .quiz__feedback {
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz__feedback--correct {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        .quiz__feedback--incorrect {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .quiz__feedback strong {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .quiz__btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .quiz__btn:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .quiz__btn:focus-visible {
+            outline: 3px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .quiz__btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz__btn--secondary {
+            background: var(--color-primary);
+        }
+
+        .quiz__btn--secondary:hover:not(:disabled) {
+            background: var(--color-secondary);
+            box-shadow: 0 4px 12px rgba(10, 31, 68, 0.3);
+        }
+
+        .quiz__result {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+        }
+
+        .quiz__result-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz__result-text {
+            font-size: 1.1rem;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz__result-message {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* =============================================
+           REFLEXIÓN
+           ============================================= */
+        .reflection {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reflection__item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .reflection__item:last-child {
+            border-bottom: none;
+        }
+
+        .reflection__icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        .reflection__icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--color-accent);
+        }
+
+        .reflection__text {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+        }
+
+        .reflection__text strong {
+            color: var(--color-primary);
+        }
+
+        /* =============================================
+           FOOTER
+           ============================================= */
+        .footer {
+            background: var(--color-primary);
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .footer__line {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer__line:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        /* =============================================
+           ANIMACIONES
+           ============================================= */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 768px) {
+            .header__title {
+                font-size: 2rem;
+            }
+            .header__subtitle {
+                font-size: 1rem;
+            }
+            .main {
+                padding: 1.5rem 1rem 3rem;
+            }
+            .section__title {
+                font-size: 1.3rem;
+            }
+            .quiz {
+                padding: 1.25rem;
+            }
+            .reto {
+                padding: 1.25rem;
+            }
+            .nav__list {
+                gap: 0.15rem;
+                padding: 0.4rem 0.5rem;
+            }
+            .nav__link {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+            }
+            .grid--2, .grid--3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 2rem 1rem 1.5rem;
+            }
+            .header__title {
+                font-size: 1.6rem;
+            }
+            .header__badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .section__icon {
+                width: 32px;
+                height: 32px;
+            }
+            .section__icon svg {
+                width: 18px;
+                height: 18px;
+            }
+            .section__title {
+                font-size: 1.15rem;
+            }
+            .card {
+                padding: 1rem;
+            }
+            .quiz__question {
+                font-size: 1rem;
+            }
+            .quiz__option {
+                font-size: 0.85rem;
+                padding: 0.7rem 0.8rem;
+            }
+            .quiz__result-score {
+                font-size: 2.2rem;
+            }
+            .nav__link {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.5rem;
+            }
+        }
+
+        /* =============================================
+           ACCESIBILIDAD
+           ============================================= */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* =============================================
+           UTILIDADES
+           ============================================= */
+        .text-accent { color: var(--color-accent); }
+        .text-muted { color: var(--color-text-muted); }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- =============================================
+         HEADER
+         ============================================= -->
+    <header class="header" id="inicio">
+        <span class="header__badge">Taller Interactivo</span>
+        <h1 class="header__title">Bucle <span>Creativo</span></h1>
+        <p class="header__subtitle">Servidores: El Corazón de la Red</p>
+        <p class="header__description">
+            Descubre cómo los servidores hacen posible que compartas archivos, navegues por internet,
+            veas películas y juegues en línea. Aprende a identificar, comparar y aplicar sus conceptos
+            fundamentales en situaciones reales.
+        </p>
+    </header>
+
+    <!-- =============================================
+         NAVEGACIÓN
+         ============================================= -->
+    <nav class="nav" aria-label="Navegación del taller">
+        <ul class="nav__list">
+            <li><a href="#objetivo" class="nav__link">Objetivo</a></li>
+            <li><a href="#activacion" class="nav__link">Activación</a></li>
+            <li><a href="#desarrollo" class="nav__link">Desarrollo</a></li>
+            <li><a href="#reto" class="nav__link">Reto</a></li>
+            <li><a href="#evaluacion" class="nav__link">Evaluación</a></li>
+            <li><a href="#reflexion" class="nav__link">Reflexión</a></li>
+        </ul>
+    </nav>
+
+    <!-- =============================================
+         MAIN
+         ============================================= -->
+    <main class="main">
+
+        <!-- =============================================
+             OBJETIVO DE APRENDIZAJE
+             ============================================= -->
+        <section class="section" id="objetivo">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Objetivo de Aprendizaje</h2>
+                    <p class="section__subtitle">¿Qué lograrás con este taller?</p>
+                </div>
+            </div>
+            <div class="card card--accent fade-in">
+                <p style="font-size: 1.05rem; line-height: 1.8; margin: 0;">
+                    <strong>Comprender</strong> el funcionamiento, los tipos y las aplicaciones de los servidores
+                    en entornos informáticos reales, <strong>analizando</strong> sus diferencias con los ordenadores
+                    convencionales y <strong>aplicando</strong> buenas prácticas de configuración y uso responsable,
+                    mediante el estudio de casos contextualizados, la resolución de problemas y el diseño de
+                    soluciones técnicas, <strong>para</strong> desarrollar competencias digitales que te permitan
+                    tomar decisiones fundamentadas sobre infraestructura tecnológica en proyectos personales,
+                    académicos o comunitarios.
+                </p>
+            </div>
+        </section>
+
+        <!-- =============================================
+             ACTIVACIÓN
+             ============================================= -->
+        <section class="section" id="activacion">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Activación</h2>
+                    <p class="section__subtitle">Un problema cotidiano que tiene solución tecnológica</p>
+                </div>
+            </div>
+
+            <div class="card card--info fade-in">
+                <div class="card__label card__label--orange">Situación real</div>
+                <h3 style="margin-bottom: 0.75rem;">El proyecto de emprendimiento del colegio</h3>
+                <p>
+                    Imagina que junto a tus compañeros han creado un pequeño emprendimiento de postres típicos.
+                    Ya tienen clientes, una página de Instagram y hasta un logo. Pero surge un problema:
+                    cada vez que alguien quiere ver el catálogo completo con precios actualizados, tienen que
+                    pedirlo por WhatsApp y esperar a que alguien responda. Además, las fotos de los postres
+                    están dispersas en varios teléfonos y no todos tienen la versión más reciente.
+                </p>
+                <p>
+                    Un compañero propone: <em>"¿Y si tuviéramos un solo lugar donde esté todo guardado y
+                    todos pudiéramos acceder desde cualquier dispositivo?"</em>. La respuesta parece sencilla,
+                    pero implica algo más profundo: <strong>necesitan un servidor</strong>.
+                </p>
+                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: var(--radius-sm); padding: 1rem; margin-top: 1rem;">
+                    <p style="margin: 0; font-weight: 600; color: #9a3412;">
+                        🤔 ¿Qué es realmente un servidor? ¿Necesitan comprar uno? ¿Pueden usar algo que ya tienen?
+                        ¿Cómo harían para que todos accedan sin que se caiga?
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             DESARROLLO
+             ============================================= -->
+        <section class="section" id="desarrollo">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 6l8 6 8-6"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Desarrollo del Contenido</h2>
+                    <p class="section__subtitle">De los fundamentos a la transferencia</p>
+                </div>
+            </div>
+
+            <!-- NIVEL 1: FUNDAMENTOS -->
+            <article class="card fade-in" style="border-top: 4px solid var(--color-accent);">
+                <div class="card__label card__label--blue">Nivel 1 — Fundamentos</div>
+                <h3>¿Qué es un servidor?</h3>
+                <p>
+                    Un <strong>servidor</strong> es un ordenador o sistema informático que proporciona
+                    servicios, información o recursos a otros dispositivos, llamados <strong>clientes</strong>,
+                    a través de una red.
+                </p>
+                <p>
+                    Cuando visitas una página web desde tu teléfono móvil, tu navegador solicita información
+                    a un servidor. Este procesa la petición y envía los datos necesarios para mostrar la página.
+                </p>
+
+                <div style="background: #f1f5f9; border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0;">
+                    <h4 style="margin-bottom: 0.5rem;">💡 Analogía: El restaurante</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">
+                        Un servidor es como el <strong>mesero</strong> de un restaurante. Tú (el cliente) pides
+                        un plato (un recurso). El mesero va a la cocina (el servidor), donde se prepara la comida
+                        (se procesa la solicitud), y luego te la trae (envía la respuesta). No necesitas saber
+                        cómo se cocina, solo pides y recibes.
+                    </p>
+                </div>
+
+                <h4>¿Cómo funciona?</h4>
+                <p>El proceso básico sigue estos pasos:</p>
+                <ol>
+                    <li>El cliente se conecta a la red.</li>
+                    <li>Envía una solicitud al servidor.</li>
+                    <li>El servidor recibe la petición mediante el servicio correspondiente.</li>
+                    <li>El programa procesa la solicitud y comprueba los permisos necesarios.</li>
+                    <li>El servidor devuelve una respuesta al cliente.</li>
+                </ol>
+
+                <div class="card card--warning" style="margin-top: 1rem;">
+                    <div class="card__title">
+                        <svg viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+                        Error frecuente
+                    </div>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        Creer que un servidor <strong>tiene que ser</strong> un equipo enorme y costoso.
+                        En realidad, puede ser un PC convencional, una Raspberry Pi o incluso un teléfono
+                        antiguo con el software adecuado. Lo importante no es únicamente el equipo, sino
+                        <strong>el software que ejecuta y la función que desempeña</strong>.
+                    </p>
+                </div>
+            </article>
+
+            <!-- EJEMPLOS DE SERVIDORES -->
+            <article class="card fade-in">
+                <div class="card__label card__label--green">Nivel 2 — Comprensión</div>
+                <h3>Tipos de servidores y sus funciones</h3>
+                <p>
+                    Los servidores permiten compartir recursos, centralizar información y ofrecer servicios
+                    a otros dispositivos. Se utilizan tanto en hogares como en empresas, instituciones
+                    educativas y grandes centros de datos.
+                </p>
+
+                <div class="grid grid--3" style="margin-top: 1rem;">
+                    <!-- Servidor Web -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" alt="Persona trabajando en una laptop con una página web, representando un servidor web" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor Web</h4>
+                            <p class="img-card__desc">Almacena y entrega páginas web cuando una persona visita un sitio desde su navegador.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servidor de Archivos -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80" alt="Dispositivo NAS Synology, representando un servidor de archivos" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor de Archivos</h4>
+                            <p class="img-card__desc">Permite guardar documentos en un equipo central y compartirlos con otros ordenadores de la red.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servidor Multimedia -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1593784991095-a205069470b6?w=600&q=80" alt="Televisor mostrando una interfaz multimedia, representando un servidor multimedia" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor Multimedia</h4>
+                            <p class="img-card__desc">Organiza películas, música y fotografías para reproducirlas en televisores, teléfonos y otros dispositivos.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servidor de Juegos -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80" alt="Jugadores en una LAN party, representando un servidor de juegos" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor de Juegos</h4>
+                            <p class="img-card__desc">Gestiona una partida y permite que varios jugadores compartan el mismo entorno de juego.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servidor de Base de Datos -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Panel de control con gráficos y datos, representando un servidor de base de datos" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor de Base de Datos</h4>
+                            <p class="img-card__desc">Gestiona bases de datos utilizadas por aplicaciones y empresas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Servidor de Copias de Seguridad -->
+                    <div class="img-card">
+                        <img class="img-card__img" src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80" alt="Discos duros externos, representando un servidor de copias de seguridad" loading="lazy">
+                        <div class="img-card__body">
+                            <h4 class="img-card__title">Servidor de Copias de Seguridad</h4>
+                            <p class="img-card__desc">Guarda copias de los datos importantes de otros equipos.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- DIFERENCIAS -->
+            <article class="card fade-in">
+                <div class="card__label card__label--purple">Nivel 3 — Aplicación</div>
+                <h3>Diferencias entre un servidor y un ordenador convencional</h3>
+                <p>
+                    Un servidor y un ordenador convencional pueden tener componentes similares.
+                    La principal diferencia está en <strong>el uso que se les da</strong> y en
+                    <strong>la forma en que se configuran</strong>.
+                </p>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>Ordenador convencional</th>
+                                <th>Servidor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Objetivo principal</strong></td>
+                                <td>Ejecutar aplicaciones para un usuario</td>
+                                <td>Ofrecer servicios a otros dispositivos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Usuarios</strong></td>
+                                <td>Generalmente uno a la vez</td>
+                                <td>Uno o varios simultáneamente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tiempo de funcionamiento</strong></td>
+                                <td>Se enciende según la necesidad</td>
+                                <td>Puede funcionar continuamente</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Administración</strong></td>
+                                <td>Normalmente local</td>
+                                <td>Local o remota</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seguridad</strong></td>
+                                <td>Orientada al uso personal</td>
+                                <td>Debe proteger los servicios y datos compartidos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Hardware</strong></td>
+                                <td>Adaptado al uso cotidiano</td>
+                                <td>Adaptado a la carga de trabajo y disponibilidad</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card card--success" style="margin-top: 0.5rem;">
+                    <div class="card__title">
+                        <svg viewBox="0 0 24 24" fill="#10b981"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                        Recomendación
+                    </div>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        Estas diferencias <strong>no son absolutas</strong>. Un PC doméstico puede funcionar
+                        como servidor sin necesidad de comprar hardware especializado. Por otra parte, un
+                        servidor profesional puede incorporar componentes diseñados para ofrecer mayor
+                        capacidad, redundancia y fiabilidad.
+                    </p>
+                </div>
+            </article>
+
+            <!-- CLIENTE Y SERVIDOR -->
+            <article class="card fade-in">
+                <div class="card__label card__label--blue">Nivel 3 — Aplicación</div>
+                <h3>El rol dual: Cliente y Servidor</h3>
+                <p>
+                    Un mismo dispositivo puede actuar como cliente o como servidor según el contexto.
+                </p>
+                <div class="grid grid--2" style="margin-top: 0.75rem;">
+                    <div style="background: #f8fafc; border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--color-border);">
+                        <h4 style="color: var(--color-accent);">📱 Cliente</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">
+                            Un ordenador o teléfono <strong>solicita un recurso</strong>.
+                            Ejemplo: cuando navegas por Internet y editas documentos, tu equipo
+                            actúa principalmente como cliente.
+                        </p>
+                    </div>
+                    <div style="background: #f8fafc; border-radius: var(--radius-sm); padding: 1rem; border: 1px solid var(--color-border);">
+                        <h4 style="color: var(--color-accent);">🖥️ Servidor</h4>
+                        <p style="font-size: 0.9rem; margin: 0;">
+                            Si instalas un programa que permite a otros equipos acceder a los archivos
+                            almacenados en tu PC, entonces <strong>también está desempeñando la función
+                            de servidor</strong>.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- ANÁLISIS -->
+            <article class="card fade-in">
+                <div class="card__label card__label--red">Nivel 4 — Análisis</div>
+                <h3>Toma de decisiones: ¿Cuándo usar un servidor?</h3>
+                <p>
+                    No todos los proyectos necesitan un servidor dedicado. Analicemos un caso:
+                </p>
+
+                <div style="background: #f1f5f9; border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0;">
+                    <h4 style="margin-bottom: 0.5rem;">🔍 Caso: El centro de copiado del barrio</h4>
+                    <p style="font-size: 0.95rem;">
+                        Don Luis tiene un centro de copiado. Quiere que sus tres computadoras puedan acceder
+                        a los mismos archivos de diseño y facturas. Tiene un PC antiguo con Windows 10
+                        que ya no usa. ¿Debería comprar un servidor profesional o reutilizar ese PC?
+                    </p>
+                    <p style="font-size: 0.95rem; margin-bottom: 0;">
+                        <strong>Análisis:</strong> Para tres computadoras, un servidor profesional sería
+                        sobredimensionado. Un PC antiguo con software de compartición de archivos (como
+                        una carpeta compartida en red o un NAS básico) es suficiente. La clave está en
+                        <strong>identificar primero qué servicio se desea ofrecer y cuántos dispositivos
+                        lo utilizarán</strong>.
+                    </p>
+                </div>
+
+                <div class="card card--warning">
+                    <div class="card__title">
+                        <svg viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
+                        Error frecuente
+                    </div>
+                    <p style="margin: 0; font-size: 0.9rem;">
+                        <strong>No planificar la seguridad.</strong> Muchos configuran un servidor casero
+                        y olvidan proteger los datos compartidos. Un servidor debe proteger los servicios
+                        y datos compartidos, incluso en entornos pequeños. Usa contraseñas seguras,
+                        permisos adecuados y mantén el software actualizado.
+                    </p>
+                </div>
+            </article>
+
+            <!-- TRANSFERENCIA -->
+            <article class="card fade-in">
+                <div class="card__label card__label--orange">Nivel 5 — Transferencia</div>
+                <h3>Aplicación en nuevos contextos</h3>
+                <p>
+                    Los servidores están presentes en numerosas actividades diarias, muchas veces
+                    sin que lo notemos. Aquí algunos ejemplos:
+                </p>
+                <ul>
+                    <li><strong>Redes sociales:</strong> cuando subes una foto, se almacena en un servidor.</li>
+                    <li><strong>Videojuegos en línea:</strong> el servidor de juegos coordina a todos los jugadores.</li>
+                    <li><strong>Streaming:</strong> plataformas como Netflix usan servidores multimedia para transmitir películas.</li>
+                    <li><strong>Correo electrónico:</strong> los mensajes se almacenan en servidores de correo.</li>
+                    <li><strong>Comercio electrónico:</strong> las tiendas en línea usan servidores web y de base de datos.</li>
+                </ul>
+
+                <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: var(--radius-sm); padding: 1rem; margin-top: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: #9a3412;">🧠 Piensa y responde</h4>
+                    <p style="margin: 0; font-size: 0.95rem;">
+                        Si tuvieras que crear un servidor para tu curso, ¿qué servicio ofrecerías primero?
+                        ¿Compartir apuntes, alojar un blog, organizar trabajos en grupo? ¿Qué necesitarías
+                        para hacerlo realidad?
+                    </p>
+                </div>
+            </article>
+
+            <!-- EXPLORA -->
+            <article class="card card--info fade-in">
+                <div class="card__title">
+                    <svg viewBox="0 0 24 24" fill="#1a3a6b"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    Explora: Actividad práctica
+                </div>
+                <p style="margin-bottom: 0.5rem;">
+                    <strong>Identifica servidores en tu vida diaria.</strong> Durante un día, anota
+                    todas las veces que interactúas con un servidor (aunque no lo veas). Por ejemplo:
+                </p>
+                <ul style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <li>Cuando revisas tu correo electrónico.</li>
+                    <li>Cuando ves un video en YouTube.</li>
+                    <li>Cuando juegas en línea.</li>
+                    <li>Cuando usas una app de mensajería.</li>
+                </ul>
+                <p style="margin: 0; font-size: 0.9rem;">
+                    Luego, clasifícalos según el tipo de servidor que crees que están usando
+                    (web, archivos, multimedia, juegos, base de datos).
+                </p>
+            </article>
+        </section>
+
+        <!-- =============================================
+             RETO INTEGRADOR
+             ============================================= -->
+        <section class="section" id="reto">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Reto Integrador</h2>
+                    <p class="section__subtitle">Diseña la infraestructura tecnológica de tu emprendimiento</p>
+                </div>
+            </div>
+
+            <div class="reto fade-in">
+                <h2 style="margin-bottom: 0.5rem;">🎯 El desafío</h2>
+                <p style="margin-bottom: 1.5rem;">
+                    Tu grupo ha decidido formalizar el emprendimiento de postres típicos. Ahora necesitan
+                    una solución tecnológica que centralice la información y permita el acceso desde
+                    múltiples dispositivos. Debes diseñar la propuesta técnica.
+                </p>
+
+                <div class="reto__step">
+                    <span class="reto__step-number">1</span>
+                    <span class="reto__step-title">Contexto y necesidad</span>
+                    <p class="reto__step-desc">
+                        El emprendimiento tiene 4 integrantes, 3 dispositivos (2 laptops, 1 tablet),
+                        y necesita compartir: catálogo de productos, precios actualizados, fotos de postres
+                        y un registro de pedidos.
+                    </p>
+                </div>
+
+                <div class="reto__step">
+                    <span class="reto__step-number">2</span>
+                    <span class="reto__step-title">Objetivo</span>
+                    <p class="reto__step-desc">
+                        Diseñar una propuesta de servidor que cubra las necesidades del emprendimiento,
+                        justificando cada decisión técnica.
+                    </p>
+                </div>
+
+                <div class="reto__step">
+                    <span class="reto__step-number">3</span>
+                    <span class="reto__step-title">Requisitos</span>
+                    <p class="reto__step-desc">
+                        Debes entregar: (a) un diagrama simple de la red, (b) la lista de servicios que
+                        ofrecerá el servidor, (c) los recursos de hardware necesarios, (d) las medidas
+                        de seguridad básicas, y (e) una justificación de por qué elegiste esa solución
+                        y no otra.
+                    </p>
+                </div>
+
+                <div class="reto__step">
+                    <span class="reto__step-number">4</span>
+                    <span class="reto__step-title">Restricciones</span>
+                    <p class="reto__step-desc">
+                        Presupuesto limitado (puedes reutilizar equipos existentes). No puedes instalar
+                        software de pago. Debes garantizar que los datos estén seguros y disponibles
+                        cuando se necesiten.
+                    </p>
+                </div>
+
+                <div class="reto__step">
+                    <span class="reto__step-number">5</span>
+                    <span class="reto__step-title">Toma de decisiones</span>
+                    <p class="reto__step-desc">
+                        ¿Usarás un PC antiguo, una Raspberry Pi o un NAS? ¿Qué sistema operativo?
+                        ¿Cómo gestionarás los permisos de acceso? ¿Qué harás para las copias de seguridad?
+                    </p>
+                </div>
+
+                <h3 style="color: #fff; margin-top: 1.5rem; position: relative; z-index: 1;">¿Qué debes lograr?</h3>
+                <ul class="reto__criteria">
+                    <li>Identificar claramente el tipo de servidor más adecuado para el caso.</li>
+                    <li>Justificar técnicamente la elección del hardware y software.</li>
+                    <li>Proponer una configuración de red segura y funcional.</li>
+                    <li>Incluir un plan básico de copias de seguridad.</li>
+                    <li>Explicar cómo se aplicarían las buenas prácticas vistas en el taller.</li>
+                </ul>
+
+                <h3 style="color: #fff; margin-top: 1.5rem; position: relative; z-index: 1;">Criterios de éxito</h3>
+                <ul class="reto__criteria">
+                    <li><strong>Comprensión:</strong> la propuesta refleja los conceptos del taller.</li>
+                    <li><strong>Aplicación:</strong> se usan correctamente los tipos de servidores.</li>
+                    <li><strong>Funcionalidad:</strong> la solución cubre las necesidades planteadas.</li>
+                    <li><strong>Creatividad:</strong> se proponen ideas propias y viables.</li>
+                    <li><strong>Argumentación:</strong> cada decisión está justificada.</li>
+                    <li><strong>Buenas prácticas:</strong> se incluyen medidas de seguridad y respaldo.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- =============================================
+             EVALUACIÓN LÚDICA
+             ============================================= -->
+        <section class="section" id="evaluacion">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Evaluación Lúdica</h2>
+                    <p class="section__subtitle">Pon a prueba lo que aprendiste</p>
+                </div>
+            </div>
+
+            <div class="quiz fade-in" id="quizContainer">
+                <div class="quiz__header">
+                    <span class="quiz__counter" id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz__score" id="quizScore">Puntuación: 0</span>
+                </div>
+                <div class="quiz__progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del cuestionario">
+                    <div class="quiz__progress-fill" id="quizProgress"></div>
+                </div>
+
+                <div id="quizContent">
+                    <p class="quiz__question" id="quizQuestion"></p>
+                    <div class="quiz__options" id="quizOptions"></div>
+                    <div class="quiz__feedback" id="quizFeedback"></div>
+                    <button class="quiz__btn" id="quizNextBtn" disabled>
+                        Siguiente pregunta
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+
+                <div class="quiz__result" id="quizResult">
+                    <div class="quiz__result-score" id="quizResultScore">0/5</div>
+                    <p class="quiz__result-text" id="quizResultText"></p>
+                    <p class="quiz__result-message" id="quizResultMessage"></p>
+                    <button class="quiz__btn quiz__btn--secondary" id="quizRestartBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                        Reiniciar cuestionario
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================
+             CIERRE REFLEXIVO
+             ============================================= -->
+        <section class="section" id="reflexion">
+            <div class="section__header">
+                <div class="section__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                </div>
+                <div>
+                    <h2 class="section__title">Cierre Reflexivo</h2>
+                    <p class="section__subtitle">Antes de terminar...</p>
+                </div>
+            </div>
+
+            <div class="reflection fade-in">
+                <div class="reflection__item">
+                    <div class="reflection__icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <div class="reflection__text">
+                        <strong>¿Qué aprendí?</strong> Reflexiona sobre los conceptos clave: qué es un servidor,
+                        cómo funciona, qué tipos existen y en qué se diferencia de un ordenador convencional.
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <div class="reflection__text">
+                        <strong>¿Qué puedo aplicar?</strong> Piensa en situaciones de tu vida diaria o proyectos
+                        escolares donde podrías usar un servidor (compartir archivos, alojar una página, etc.).
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <div class="reflection__text">
+                        <strong>¿Qué necesito seguir practicando?</strong> Identifica los temas que te resultaron
+                        más difíciles (configuración, seguridad, tipos de servidores) y busca profundizarlos.
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <div class="reflection__text">
+                        <strong>¿Cómo utilizaría este conocimiento en un proyecto real?</strong> Piensa en tu
+                        comunidad, tu colegio o un emprendimiento familiar. ¿Qué servidor implementarías y por qué?
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =============================================
+         FOOTER
+         ============================================= -->
+    <footer class="footer">
+        <p class="footer__line">Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+        <p class="footer__line">Diseñado por: Edwin Méndez J.</p>
+    </footer>
+
+    <!-- =============================================
+         JAVASCRIPT
+         ============================================= -->
+    <script>
+        (function() {
+            'use strict';
+
+            // =============================================
+            // DATOS DEL CUESTIONARIO
+            // =============================================
+            const preguntas = [
+                {
+                    pregunta: "¿Cuál es la función principal de un servidor?",
+                    opciones: [
+                        "Ejecutar aplicaciones para un solo usuario de forma local.",
+                        "Proporcionar servicios, información o recursos a otros dispositivos a través de una red.",
+                        "Almacenar únicamente archivos personales sin necesidad de red.",
+                        "Reemplazar por completo a los ordenadores convencionales."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Un servidor se define como un sistema que proporciona servicios, información o recursos a otros dispositivos llamados clientes, a través de una red. Las demás opciones describen funciones propias de un ordenador convencional o son incorrectas."
+                },
+                {
+                    pregunta: "¿Cuál de los siguientes NO es un tipo de servidor mencionado en el taller?",
+                    opciones: [
+                        "Servidor web",
+                        "Servidor de archivos",
+                        "Servidor de diseño gráfico",
+                        "Servidor multimedia"
+                    ],
+                    correcta: 2,
+                    retroalimentacion: "El taller menciona servidores web, de archivos, multimedia, de juegos, de base de datos y de copias de seguridad. 'Servidor de diseño gráfico' no es un tipo de servidor reconocido en el contenido estudiado."
+                },
+                {
+                    pregunta: "Un estudiante quiere compartir sus apuntes con sus compañeros desde su laptop antigua. ¿Qué tipo de servidor estaría implementando principalmente?",
+                    opciones: [
+                        "Servidor de juegos",
+                        "Servidor de archivos",
+                        "Servidor multimedia",
+                        "Servidor web"
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Un servidor de archivos permite guardar documentos en un equipo central y compartirlos con otros ordenadores de la red. Es exactamente lo que el estudiante necesita para compartir apuntes."
+                },
+                {
+                    pregunta: "Analiza la siguiente situación: Un pequeño negocio tiene 3 computadoras y quiere centralizar sus facturas y diseños. Tienen un PC antiguo con Windows 10 sin usar. ¿Cuál es la decisión más adecuada?",
+                    opciones: [
+                        "Comprar un servidor profesional de alto costo.",
+                        "Reutilizar el PC antiguo configurándolo como servidor de archivos.",
+                        "No hacer nada, seguir usando memorias USB.",
+                        "Contratar un servicio de almacenamiento en la nube obligatoriamente."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Para 3 computadoras, un servidor profesional sería sobredimensionado. La opción más adecuada es reutilizar el PC antiguo configurándolo como servidor de archivos, ya que cubre la necesidad sin gastos innecesarios. Esto demuestra que lo importante no es el hardware, sino el software y la función."
+                },
+                {
+                    pregunta: "Imagina que estás diseñando la infraestructura para el emprendimiento de postres del colegio. Necesitas compartir catálogo, precios actualizados, fotos y registro de pedidos entre 4 integrantes con 3 dispositivos. ¿Cuál sería la solución más completa y segura?",
+                    opciones: [
+                        "Usar solo una memoria USB que se pasen entre compañeros.",
+                        "Crear un servidor casero con un PC reutilizado que ofrezca servicios de archivos y copias de seguridad, con permisos de acceso.",
+                        "Enviar todo por WhatsApp cada vez que haya cambios.",
+                        "Alquilar un servidor web profesional aunque no se necesite página web."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "La solución más completa y segura es crear un servidor casero con un PC reutilizado, configurando servicios de archivos y copias de seguridad, con permisos de acceso. Esto aplica los conceptos de tipos de servidores, diferencias con ordenadores convencionales, buenas prácticas de seguridad y la recomendación de no comprar hardware especializado si no es necesario."
+                }
+            ];
+
+            // =============================================
+            // ESTADO DEL CUESTIONARIO
+            // =============================================
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = null;
+            let bloqueado = false;
+
+            // =============================================
+            // REFERENCIAS DOM
+            // =============================================
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScore = document.getElementById('quizScore');
+            const quizProgress = document.getElementById('quizProgress');
+            const quizQuestion = document.getElementById('quizQuestion');
+            const quizOptions = document.getElementById('quizOptions');
+            const quizFeedback = document.getElementById('quizFeedback');
+            const quizNextBtn = document.getElementById('quizNextBtn');
+            const quizContent = document.getElementById('quizContent');
+            const quizResult = document.getElementById('quizResult');
+            const quizResultScore = document.getElementById('quizResultScore');
+            const quizResultText = document.getElementById('quizResultText');
+            const quizResultMessage = document.getElementById('quizResultMessage');
+            const quizRestartBtn = document.getElementById('quizRestartBtn');
+            const quizContainer = document.getElementById('quizContainer');
+
+            // =============================================
+            // FUNCIONES
+            // =============================================
+
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = null;
+                bloqueado = false;
+                quizContent.style.display = 'block';
+                quizResult.style.display = 'none';
+                quizNextBtn.disabled = true;
+                quizNextBtn.innerHTML = 'Siguiente pregunta <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+                mostrarPregunta();
+                actualizarProgreso();
+            }
+
+            function mostrarPregunta() {
+                const preguntaActual = preguntas[indiceActual];
+                quizQuestion.textContent = preguntaActual.pregunta;
+                quizOptions.innerHTML = '';
+                quizFeedback.style.display = 'none';
+                quizFeedback.className = 'quiz__feedback';
+                quizNextBtn.disabled = true;
+                respuestaSeleccionada = null;
+                bloqueado = false;
+
+                const letras = ['A', 'B', 'C', 'D'];
+
+                preguntaActual.opciones.forEach(function(opcion, index) {
+                    const boton = document.createElement('button');
+                    boton.className = 'quiz__option';
+                    boton.setAttribute('type', 'button');
+                    boton.setAttribute('aria-label', 'Opción ' + letras[index] + ': ' + opcion);
+                    boton.innerHTML = '<span class="quiz__option-letter">' + letras[index] + '</span><span>' + opcion + '</span>';
+                    boton.addEventListener('click', function() {
+                        seleccionarRespuesta(index, boton);
+                    });
+                    quizOptions.appendChild(boton);
+                });
+
+                quizCounter.textContent = 'Pregunta ' + (indiceActual + 1) + ' de ' + preguntas.length;
+            }
+
+            function seleccionarRespuesta(index, boton) {
+                if (bloqueado) return;
+
+                const preguntaActual = preguntas[indiceActual];
+                respuestaSeleccionada = index;
+                bloqueado = true;
+
+                // Deshabilitar todos los botones
+                const todosLosBotones = quizOptions.querySelectorAll('.quiz__option');
+                todosLosBotones.forEach(function(btn) {
+                    btn.disabled = true;
+                });
+
+                // Marcar respuesta correcta e incorrecta
+                const botonCorrecto = todosLosBotones[preguntaActual.correcta];
+                botonCorrecto.classList.add('quiz__option--correct');
+                botonCorrecto.setAttribute('aria-label', 'Respuesta correcta: ' + preguntaActual.opciones[preguntaActual.correcta]);
+
+                if (index !== preguntaActual.correcta) {
+                    boton.classList.add('quiz__option--incorrect');
+                    boton.setAttribute('aria-label', 'Respuesta incorrecta: ' + preguntaActual.opciones[index]);
+                } else {
+                    puntuacion++;
+                    quizScore.textContent = 'Puntuación: ' + puntuacion;
+                }
+
+                // Mostrar retroalimentación
+                quizFeedback.style.display = 'block';
+                if (index === preguntaActual.correcta) {
+                    quizFeedback.className = 'quiz__feedback quiz__feedback--correct';
+                    quizFeedback.innerHTML = '<strong>✅ ¡Correcto!</strong> ' + preguntaActual.retroalimentacion;
+                } else {
+                    quizFeedback.className = 'quiz__feedback quiz__feedback--incorrect';
+                    quizFeedback.innerHTML = '<strong>❌ Incorrecto.</strong> La respuesta correcta es la opción ' +
+                        ['A', 'B', 'C', 'D'][preguntaActual.correcta] + '. ' + preguntaActual.retroalimentacion;
+                }
+
+                // Habilitar botón siguiente
+                quizNextBtn.disabled = false;
+                quizNextBtn.focus();
+
+                actualizarProgreso();
+            }
+
+            function siguientePregunta() {
+                if (indiceActual < preguntas.length - 1) {
+                    indiceActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizContent.style.display = 'none';
+                quizResult.style.display = 'block';
+
+                const porcentaje = Math.round((puntuacion / preguntas.length) * 100);
+                quizResultScore.textContent = puntuacion + '/' + preguntas.length;
+                quizResultText.textContent = 'Obtuviste un ' + porcentaje + '% de respuestas correctas.';
+
+                let mensaje = '';
+                if (porcentaje === 100) {
+                    mensaje = '¡Excelente! Dominas completamente los conceptos sobre servidores. Estás listo para diseñar infraestructuras tecnológicas reales.';
+                } else if (porcentaje >= 80) {
+                    mensaje = '¡Muy bien! Tienes una comprensión sólida. Repasa los detalles para alcanzar la perfección.';
+                } else if (porcentaje >= 60) {
+                    mensaje = 'Buen trabajo. Has captado lo esencial, pero conviene repasar algunos conceptos clave.';
+                } else if (porcentaje >= 40) {
+                    mensaje = 'Vas por buen camino. Te recomendamos releer el desarrollo del taller y volver a intentarlo.';
+                } else {
+                    mensaje = 'No te desanimes. Los servidores son un tema amplio. Revisa el contenido y prueba de nuevo. ¡Puedes lograrlo!';
+                }
+                quizResultMessage.textContent = mensaje;
+
+                actualizarProgreso();
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+                quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function actualizarProgreso() {
+                const progreso = ((indiceActual) / preguntas.length) * 100;
+                quizProgress.style.width = progreso + '%';
+                quizProgress.parentElement.setAttribute('aria-valuenow', Math.round(progreso));
+            }
+
+            // =============================================
+            // EVENTOS
+            // =============================================
+            quizNextBtn.addEventListener('click', siguientePregunta);
+            quizRestartBtn.addEventListener('click', reiniciarQuiz);
+
+            // =============================================
+            // INICIALIZACIÓN
+            // =============================================
+            iniciarQuiz();
+
+            // =============================================
+            // NAVEGACIÓN ACTIVA (SCROLL SPY)
+            // =============================================
+            const secciones = document.querySelectorAll('.section');
+            const enlacesNav = document.querySelectorAll('.nav__link');
+
+            function actualizarNavActiva() {
+                let seccionActual = '';
+                secciones.forEach(function(seccion) {
+                    const rect = seccion.getBoundingClientRect();
+                    if (rect.top <= 120) {
+                        seccionActual = seccion.getAttribute('id');
+                    }
+                });
+
+                enlacesNav.forEach(function(enlace) {
+                    enlace.classList.remove('nav__link--active');
+                    if (enlace.getAttribute('href') === '#' + seccionActual) {
+                        enlace.classList.add('nav__link--active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', actualizarNavActiva, { passive: true });
+            actualizarNavActiva();
+
+            // =============================================
+            // ANIMACIONES DE APARICIÓN
+            // =============================================
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            document.querySelectorAll('.fade-in').forEach(function(el) {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(16px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+
+        })();
+    </script>
+</body>
+</html>

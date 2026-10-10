@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo — Requisitos para montar un servidor</title>
+    <style>
+        /* ============================================================
+           VARIABLES
+           ============================================================ */
+        :root {
+            --color-primary: #0a1a2f;
+            --color-secondary: #1e3a5f;
+            --color-accent: #f97316;
+            --color-accent-hover: #ea580c;
+            --color-background: #f1f5f9;
+            --color-surface: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #475569;
+            --color-text-muted: #94a3b8;
+            --color-success: #16a34a;
+            --color-success-bg: #dcfce7;
+            --color-error: #dc2626;
+            --color-error-bg: #fee2e2;
+            --color-border: #e2e8f0;
+            --color-code-bg: #0f172a;
+            --color-code-text: #e2e8f0;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --transition: 0.25s ease;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        /* ============================================================
+           RESET
+           ============================================================ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 1rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        /* ============================================================
+           BASE
+           ============================================================ */
+        h1, h2, h3, h4 {
+            line-height: 1.3;
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        h1 { font-size: 2.2rem; }
+        h2 { font-size: 1.7rem; margin-bottom: 1rem; }
+        h3 { font-size: 1.3rem; margin-bottom: 0.6rem; }
+        h4 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+        p { margin-bottom: 0.9rem; }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        a:hover { color: var(--color-accent-hover); }
+
+        ul, ol {
+            margin-left: 1.4rem;
+            margin-bottom: 0.9rem;
+        }
+
+        li { margin-bottom: 0.3rem; }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            padding: 3rem 1.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(249, 115, 22, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .header__badge {
+            display: inline-block;
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__title {
+            font-size: 2.8rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__description {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 650px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================
+           NAVEGACIÓN
+           ============================================================ */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav__list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            list-style: none;
+            margin: 0;
+            padding: 0.5rem 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .nav__link {
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav__link:hover,
+        .nav__link:focus-visible {
+            background: var(--color-accent);
+            color: #fff;
+            outline: none;
+        }
+
+        /* ============================================================
+           SECCIONES
+           ============================================================ */
+        .section {
+            padding: 3rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section--alt {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin: 1.5rem auto;
+            max-width: 1100px;
+        }
+
+        .section__label {
+            display: inline-block;
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.8rem;
+            border-radius: 50px;
+            margin-bottom: 0.8rem;
+        }
+
+        .section__title {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            color: var(--color-primary);
+        }
+
+        /* ============================================================
+           TARJETAS
+           ============================================================ */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.4rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: transform var(--transition), box-shadow var(--transition);
+            opacity: 0;
+            transform: translateY(16px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .card:nth-child(2) { animation-delay: 0.08s; }
+        .card:nth-child(3) { animation-delay: 0.16s; }
+        .card:nth-child(4) { animation-delay: 0.24s; }
+        .card:nth-child(5) { animation-delay: 0.32s; }
+        .card:nth-child(6) { animation-delay: 0.4s; }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card__icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .card__title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .card__text {
+            font-size: 0.93rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .card__text:last-child { margin-bottom: 0; }
+
+        /* ============================================================
+           BLOQUES ESPECIALES
+           ============================================================ */
+        .highlight-box {
+            background: #fff7ed;
+            border-left: 4px solid var(--color-accent);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .highlight-box strong {
+            color: var(--color-accent-hover);
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid var(--color-error);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .warning-box strong {
+            color: var(--color-error);
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .info-box strong {
+            color: #2563eb;
+        }
+
+        .analogy-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--color-success);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .analogy-box strong {
+            color: var(--color-success);
+        }
+
+        /* ============================================================
+           TABLAS
+           ============================================================ */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: var(--color-surface);
+            min-width: 600px;
+        }
+
+        th {
+            background: var(--color-primary);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-light);
+        }
+
+        tr:last-child td { border-bottom: none; }
+
+        tr:nth-child(even) td { background: #f8fafc; }
+
+        /* ============================================================
+           CÓDIGO
+           ============================================================ */
+        .code-block {
+            background: var(--color-code-bg);
+            color: var(--color-code-text);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem 1.4rem;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0.4rem;
+            right: 0.8rem;
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .code-block code {
+            font-family: inherit;
+            color: inherit;
+        }
+
+        .code-comment { color: #94a3b8; }
+        .code-keyword { color: #c084fc; }
+        .code-string { color: #86efac; }
+        .code-number { color: #fbbf24; }
+
+        /* ============================================================
+           FÓRMULA
+           ============================================================ */
+        .formula {
+            background: var(--color-surface);
+            border: 2px dashed var(--color-accent);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.4rem;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 1.05rem;
+            color: var(--color-primary);
+            margin: 1rem 0;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           RETO
+           ============================================================ */
+        .challenge {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.8rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .challenge h2,
+        .challenge h3 {
+            color: #fff;
+        }
+
+        .challenge p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .challenge__list {
+            list-style: none;
+            margin-left: 0;
+            margin-top: 1rem;
+        }
+
+        .challenge__list li {
+            position: relative;
+            padding-left: 1.6rem;
+            margin-bottom: 0.6rem;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 0.95rem;
+        }
+
+        .challenge__list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .challenge__criteria {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1.2rem;
+        }
+
+        .challenge__criteria span {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.35rem 1rem;
+            font-size: 0.82rem;
+            color: #fff;
+        }
+
+        /* ============================================================
+           QUIZ
+           ============================================================ */
+        .quiz {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            box-shadow: var(--shadow-md);
+            margin: 2rem 0;
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz__counter {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+        }
+
+        .quiz__score {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            background: #fff7ed;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        .quiz__progress {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz__progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #fb923c);
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz__question {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .quiz__options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .quiz__option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 0.9rem 1.1rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: #f8fafc;
+            text-align: left;
+            font-size: 0.95rem;
+            color: var(--color-text);
+            transition: all var(--transition);
+            width: 100%;
+            line-height: 1.5;
+        }
+
+        .quiz__option:hover:not(.quiz__option--disabled) {
+            border-color: var(--color-accent);
+            background: #fff7ed;
+            transform: translateX(4px);
+        }
+
+        .quiz__option:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz__option--disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .quiz__option--correct {
+            border-color: var(--color-success) !important;
+            background: var(--color-success-bg) !important;
+            opacity: 1 !important;
+        }
+
+        .quiz__option--wrong {
+            border-color: var(--color-error) !important;
+            background: var(--color-error-bg) !important;
+            opacity: 1 !important;
+        }
+
+        .quiz__option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .quiz__option--correct .quiz__option-letter {
+            background: var(--color-success);
+        }
+
+        .quiz__option--wrong .quiz__option-letter {
+            background: var(--color-error);
+        }
+
+        .quiz__feedback {
+            padding: 1rem 1.2rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.2rem;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .quiz__feedback--correct {
+            display: block;
+            background: var(--color-success-bg);
+            border-left: 4px solid var(--color-success);
+            color: #166534;
+        }
+
+        .quiz__feedback--wrong {
+            display: block;
+            background: var(--color-error-bg);
+            border-left: 4px solid var(--color-error);
+            color: #991b1b;
+        }
+
+        .quiz__feedback strong {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .quiz__actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all var(--transition);
+            text-align: center;
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .btn--primary {
+            background: var(--color-accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+        }
+
+        .btn--primary:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn--primary:disabled {
+            background: var(--color-text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn--secondary {
+            background: var(--color-secondary);
+            color: #fff;
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-border);
+        }
+
+        .btn--outline:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        /* ============================================================
+           RESULTADO QUIZ
+           ============================================================ */
+        .quiz__result {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+        }
+
+        .quiz__result--visible {
+            display: block;
+        }
+
+        .quiz__result-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz__result-title {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz__result-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .quiz__result-percent {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .quiz__result-message {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.7;
+        }
+
+        /* ============================================================
+           REFLEXIÓN
+           ============================================================ */
+        .reflection {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            margin: 2rem 0;
+        }
+
+        .reflection__item {
+            margin-bottom: 1.2rem;
+        }
+
+        .reflection__item:last-child {
+            margin-bottom: 0;
+        }
+
+        .reflection__question {
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.4rem;
+            font-size: 0.98rem;
+        }
+
+        .reflection__textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1rem;
+            font-family: inherit;
+            font-size: 0.92rem;
+            color: var(--color-text);
+            resize: vertical;
+            transition: border-color var(--transition);
+            background: #f8fafc;
+        }
+
+        .reflection__textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            background: #fff;
+        }
+
+        .reflection__textarea::placeholder {
+            color: var(--color-text-muted);
+        }
+
+        /* ============================================================
+           FOOTER
+           ============================================================ */
+        .footer {
+            background: var(--color-primary);
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .footer p:last-child {
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        /* ============================================================
+           ANIMACIONES
+           ============================================================ */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 768px) {
+            .header__title { font-size: 2rem; }
+            .header__subtitle { font-size: 1.05rem; }
+            .section { padding: 2rem 1rem; }
+            .section__title { font-size: 1.4rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .nav__list { gap: 0.1rem; padding: 0.4rem 0.5rem; }
+            .nav__link { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+            .quiz { padding: 1.2rem; }
+            .quiz__question { font-size: 1rem; }
+            .challenge { padding: 1.5rem 1.2rem; }
+            .btn { padding: 0.65rem 1.2rem; font-size: 0.88rem; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 2rem 1rem 1.8rem; }
+            .header__title { font-size: 1.6rem; }
+            .header__subtitle { font-size: 0.95rem; }
+            .header__description { font-size: 0.85rem; }
+            .nav__link { padding: 0.35rem 0.55rem; font-size: 0.72rem; }
+            .section { padding: 1.5rem 0.8rem; }
+            .section__title { font-size: 1.2rem; }
+            .card { padding: 1rem; }
+            .quiz { padding: 1rem; }
+            .quiz__actions { justify-content: center; }
+            .btn { width: 100%; }
+        }
+
+        /* ============================================================
+           ACCESIBILIDAD
+           ============================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+    <header class="header">
+        <span class="header__badge">Taller Interactivo</span>
+        <h1 class="header__title">Bucle Creativo</h1>
+        <p class="header__subtitle">Requisitos para montar un servidor</p>
+        <p class="header__description">
+            Aprende a elegir, adaptar y configurar el equipo adecuado para crear tu propio servidor,
+            aprovechando recursos disponibles y tomando decisiones técnicas fundamentadas.
+        </p>
+    </header>
+
+    <!-- ============================================================
+         NAVEGACIÓN
+         ============================================================ -->
+    <nav class="nav" aria-label="Navegación del taller">
+        <ul class="nav__list">
+            <li><a class="nav__link" href="#objetivo">Objetivo</a></li>
+            <li><a class="nav__link" href="#activacion">Activación</a></li>
+            <li><a class="nav__link" href="#desarrollo">Desarrollo</a></li>
+            <li><a class="nav__link" href="#reto">Reto</a></li>
+            <li><a class="nav__link" href="#evaluacion">Evaluación</a></li>
+            <li><a class="nav__link" href="#reflexion">Reflexión</a></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <!-- ============================================================
+             OBJETIVO DE APRENDIZAJE
+             ============================================================ -->
+        <section id="objetivo" class="section section--alt">
+            <span class="section__label">Objetivo de aprendizaje</span>
+            <h2 class="section__title">¿Qué vas a lograr?</h2>
+            <p>
+                Identificar y evaluar los requisitos de hardware, sistema operativo, conectividad y consumo
+                eléctrico necesarios para montar un servidor, mediante el análisis de casos prácticos y la
+                comparación de alternativas físicas y virtuales, con el fin de tomar decisiones fundamentadas
+                que permitan reutilizar equipos existentes y implementar soluciones funcionales en contextos
+                educativos, emprendimientos o proyectos personales, demostrando responsabilidad, pensamiento
+                crítico y creatividad en el uso de la tecnología.
+            </p>
+        </section>
+
+        <!-- ============================================================
+             ACTIVACIÓN
+             ============================================================ -->
+        <section id="activacion" class="section">
+            <span class="section__label">Activación</span>
+            <h2 class="section__title">Un computador olvidado en el rincón</h2>
+            <p>
+                Imagina que en tu casa hay un computador de escritorio que ya tiene varios años. Funciona,
+                pero nadie lo usa porque es "lento" para los juegos o programas actuales. Un día, tu primo
+                te dice que necesita compartir archivos con sus compañeros de colegio para un proyecto grupal.
+                No tienen dinero para comprar un servidor profesional, pero tú recuerdas que ese computador
+                antiguo podría tener una segunda vida.
+            </p>
+            <p>
+                ¿Qué necesitas revisar antes de convertir ese equipo en un servidor? ¿Bastará con instalarlo
+                y ya? ¿Qué pasa si el computador consume demasiada energía o se calienta? ¿Podrías usar tu
+                laptop en lugar del equipo de escritorio?
+            </p>
+            <div class="highlight-box">
+                <strong>Detente y piensa:</strong> Antes de continuar, anota en tu cuaderno tres cosas que
+                crees que son indispensables para que un computador funcione como servidor. Luego, compara
+                tus ideas con lo que aprenderás en este taller.
+            </div>
+        </section>
+
+        <!-- ============================================================
+             DESARROLLO DEL CONTENIDO
+             ============================================================ -->
+        <section id="desarrollo" class="section">
+            <span class="section__label">Desarrollo</span>
+            <h2 class="section__title">Requisitos para montar un servidor</h2>
+
+            <!-- NIVEL 1: FUNDAMENTOS -->
+            <article class="card" style="margin-bottom: 1.5rem;">
+                <h3>Nivel 1 — Fundamentos: ¿Se puede utilizar cualquier PC como servidor?</h3>
+                <p>
+                    <strong>¿Qué es?</strong> Un servidor es un equipo que ofrece servicios, recursos o datos
+                    a otros dispositivos llamados clientes. En principio, muchos ordenadores convencionales
+                    pueden funcionar como servidores, siempre que sean compatibles con el software que deseas
+                    utilizar y dispongan de recursos suficientes.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Un PC de escritorio, un portátil antiguo o un ordenador
+                    de bajo consumo pueden servir para distintos proyectos. Por ejemplo:
+                </p>
+                <ul>
+                    <li>Un PC básico puede utilizarse para compartir archivos.</li>
+                    <li>Un ordenador antiguo puede alojar una página web sencilla.</li>
+                    <li>Un equipo con suficiente almacenamiento puede funcionar como servidor multimedia.</li>
+                    <li>Un PC con más memoria y procesador puede ejecutar varias aplicaciones o máquinas virtuales.</li>
+                </ul>
+                <div class="warning-box">
+                    <strong>Error frecuente:</strong> Creer que cualquier equipo sirve para cualquier tipo de
+                    servidor. Un equipo suficiente para compartir documentos podría quedarse corto al transmitir
+                    vídeo de alta resolución con transcodificación o ejecutar varios servicios simultáneamente.
+                </div>
+                <div class="highlight-box">
+                    <strong>Recomendación:</strong> Antes de elegir el equipo, define qué quieres hacer con él
+                    y cuántos usuarios o dispositivos lo utilizarán.
+                </div>
+                <p>
+                    <strong>Piensa y responde:</strong> ¿Qué tipo de servidor podrías montar con el computador
+                    que tienes en casa? ¿Qué limitaciones tendría?
+                </p>
+            </article>
+
+            <!-- NIVEL 2: COMPRENSIÓN -->
+            <article class="card" style="margin-bottom: 1.5rem;">
+                <h3>Nivel 2 — Comprensión: Componentes clave</h3>
+                <p>
+                    Los componentes más importantes para un servidor son el <strong>procesador (CPU)</strong>,
+                    la <strong>memoria RAM</strong> y las <strong>unidades de almacenamiento</strong>.
+                </p>
+
+                <h4>Procesador (CPU)</h4>
+                <p>
+                    Es el componente que ejecuta las instrucciones de los programas y realiza los cálculos
+                    necesarios para atender las solicitudes de los clientes. Para compartir archivos o alojar
+                    una página web sencilla, un procesador básico moderno o relativamente antiguo puede ser
+                    suficiente. Las tareas de virtualización, transcodificación de vídeo o procesamiento
+                    intensivo requieren más capacidad.
+                </p>
+
+                <h4>Memoria RAM</h4>
+                <p>
+                    Almacena temporalmente los datos y programas que están en uso. A mayor cantidad de RAM,
+                    más aplicaciones o usuarios pueden ser atendidos simultáneamente sin que el sistema se
+                    ralentice.
+                </p>
+
+                <h4>Almacenamiento (SSD o HDD)</h4>
+                <p>
+                    Permite guardar el sistema operativo, los programas y los archivos que ofrece el servidor.
+                    Un <strong>SSD</strong> suele proporcionar tiempos de respuesta más rápidos y no tiene
+                    piezas móviles. Un <strong>HDD</strong> puede resultar económico cuando necesitas mucha
+                    capacidad para películas, fotografías o copias de seguridad.
+                </p>
+
+                <div class="analogy-box">
+                    <strong>Analogía:</strong> Piensa en el servidor como un restaurante. La CPU es el chef
+                    que cocina los platos; la RAM es la mesada donde se preparan los ingredientes; y el
+                    almacenamiento es la despensa donde se guardan los alimentos.
+                </div>
+
+                <h4>Requisitos orientativos según el uso</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo de servidor</th>
+                                <th>CPU orientativa</th>
+                                <th>RAM orientativa</th>
+                                <th>Almacenamiento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Compartir archivos</td>
+                                <td>2 núcleos</td>
+                                <td>2-4 GB</td>
+                                <td>Según los archivos</td>
+                            </tr>
+                            <tr>
+                                <td>Servidor web sencillo</td>
+                                <td>2 núcleos</td>
+                                <td>2-4 GB</td>
+                                <td>20-40 GB para sistema y aplicación</td>
+                            </tr>
+                            <tr>
+                                <td>Servidor multimedia</td>
+                                <td>2-4 núcleos</td>
+                                <td>4-8 GB</td>
+                                <td>Según el tamaño de la biblioteca</td>
+                            </tr>
+                            <tr>
+                                <td>Servidor de juegos</td>
+                                <td>4 núcleos o más, según el juego</td>
+                                <td>4-8 GB o más</td>
+                                <td>Según el juego y sus datos</td>
+                            </tr>
+                            <tr>
+                                <td>Varias aplicaciones o máquinas virtuales</td>
+                                <td>4 núcleos o más</td>
+                                <td>8-16 GB o más</td>
+                                <td>SSD con espacio suficiente</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>Ten en cuenta lo siguiente:</strong></p>
+                <ul>
+                    <li>Los requisitos aumentan con el número de usuarios y servicios.</li>
+                    <li>Algunos juegos necesitan mucha más memoria que otros.</li>
+                    <li>La transcodificación de vídeo puede requerir un procesador potente o una GPU compatible.</li>
+                    <li>Ejecutar máquinas virtuales suele exigir más RAM que ejecutar un servicio ligero directamente.</li>
+                    <li>El almacenamiento disponible debe permitir el crecimiento de los datos y las copias de seguridad.</li>
+                </ul>
+                <div class="highlight-box">
+                    <strong>Consejo para principiantes:</strong> Si ya tienes un PC con 4 GB de RAM y quieres
+                    aprender a compartir archivos o instalar un servidor web sencillo, puedes comenzar con ese
+                    equipo antes de invertir dinero.
+                </div>
+            </article>
+
+            <!-- NIVEL 3: APLICACIÓN -->
+            <article class="card" style="margin-bottom: 1.5rem;">
+                <h3>Nivel 3 — Aplicación: Conexión a Internet y consumo eléctrico</h3>
+
+                <h4>Importancia de la conexión a Internet</h4>
+                <p>
+                    La conexión de red determina cómo se comunicarán los usuarios con el servidor y a qué
+                    velocidad podrán acceder a sus recursos. Es importante distinguir entre una conexión a
+                    Internet y una conexión dentro de la red local.
+                </p>
+                <p>
+                    <strong>Para utilizar el servidor en casa:</strong> Si solo necesitas compartir archivos
+                    entre ordenadores de tu vivienda o reproducir contenido en tu televisor, una red local
+                    puede ser suficiente. No necesitas necesariamente una conexión a Internet activa para que
+                    los dispositivos se comuniquen entre sí.
+                </p>
+                <p>
+                    <strong>Para acceder al servidor desde fuera de casa:</strong> Si quieres acceder a tus
+                    archivos mientras estás fuera o publicar una página web, necesitarás una conectividad
+                    externa adecuada. Los factores más importantes son:
+                </p>
+                <ul>
+                    <li><strong>Velocidad de subida:</strong> influye en la rapidez con que el servidor envía datos a usuarios externos.</li>
+                    <li><strong>Velocidad de descarga:</strong> influye en la recepción de datos por parte del servidor.</li>
+                    <li><strong>Latencia:</strong> afecta al tiempo que tardan los datos en viajar entre los dispositivos.</li>
+                    <li><strong>Estabilidad:</strong> una conexión que se interrumpe con frecuencia puede afectar la disponibilidad del servicio.</li>
+                    <li><strong>Dirección IP y configuración del proveedor:</strong> pueden determinar si es posible recibir conexiones entrantes.</li>
+                </ul>
+                <div class="info-box">
+                    <strong>Ejemplo:</strong> Una conexión de fibra óptica con buena velocidad de subida suele
+                    ser más apropiada para compartir archivos grandes desde casa que una conexión con una subida
+                    muy limitada. No obstante, la velocidad anunciada por el proveedor no garantiza el rendimiento
+                    real del servidor. También influyen el router, el cableado, el equipo y el tráfico de la red.
+                </div>
+
+                <h4>Consumo eléctrico y refrigeración</h4>
+                <p>
+                    Si planeas mantener el servidor encendido durante muchas horas, el consumo eléctrico y la
+                    temperatura son factores importantes. El consumo depende del procesador, la fuente de
+                    alimentación, los discos, los ventiladores y la carga de trabajo.
+                </p>
+                <p>
+                    Un ordenador antiguo puede ser útil para aprender, pero algunos equipos consumen bastante
+                    más energía que un mini-PC moderno.
+                </p>
+                <p>Puedes estimar el consumo con esta fórmula:</p>
+                <div class="formula">
+                    Consumo (kWh) = (Potencia (W) × Horas) / 1000
+                </div>
+                <p>
+                    Por ejemplo, si un servidor consume en promedio 40 W y permanece encendido durante 24 horas
+                    al día:
+                </p>
+                <div class="formula">
+                    (40 × 24) / 1000 = 0,96 kWh/día
+                </div>
+                <p>
+                    En un mes de 30 días, equivaldría a 28,8 kWh. Para calcular el coste, multiplica ese consumo
+                    por el precio del kilovatio-hora de tu tarifa eléctrica.
+                </p>
+
+                <h4>Refrigeración y ventilación</h4>
+                <p>
+                    El calor excesivo puede reducir el rendimiento y la vida útil de los componentes. Para
+                    mantener el equipo en buenas condiciones:
+                </p>
+                <ul>
+                    <li>Colócalo en un lugar ventilado.</li>
+                    <li>Limpia periódicamente el polvo.</li>
+                    <li>Comprueba que los ventiladores funcionan correctamente.</li>
+                    <li>Evita bloquear las entradas y salidas de aire.</li>
+                    <li>Supervisa las temperaturas durante cargas prolongadas.</li>
+                </ul>
+            </article>
+
+            <!-- NIVEL 4: ANÁLISIS -->
+            <article class="card" style="margin-bottom: 1.5rem;">
+                <h3>Nivel 4 — Análisis: Reutilizar un ordenador antiguo</h3>
+                <p>
+                    Reutilizar un ordenador antiguo es una de las formas más económicas de comenzar. Antes de
+                    instalar el sistema operativo, revisa estos aspectos:
+                </p>
+                <ol>
+                    <li><strong>Estado general:</strong> comprueba que el equipo arranca y funciona sin fallos frecuentes.</li>
+                    <li><strong>Memoria RAM:</strong> verifica si dispone de suficiente memoria para el sistema y las aplicaciones.</li>
+                    <li><strong>Disco de almacenamiento:</strong> revisa su estado y realiza una copia de seguridad de los datos importantes.</li>
+                    <li><strong>Conexión de red:</strong> comprueba que la tarjeta Ethernet o Wi-Fi funciona correctamente.</li>
+                    <li><strong>Temperatura:</strong> asegúrate de que el procesador no se sobrecalienta.</li>
+                    <li><strong>Consumo eléctrico:</strong> estima cuánto costaría mantenerlo encendido.</li>
+                    <li><strong>Compatibilidad:</strong> verifica que el sistema operativo elegido admite el hardware.</li>
+                </ol>
+
+                <h4>¿Qué sistema operativo conviene instalar?</h4>
+                <p>
+                    Para equipos antiguos, Linux puede ser una buena opción porque existen distribuciones que
+                    funcionan bien con recursos modestos y permiten administrar servicios sin necesidad de una
+                    interfaz gráfica. Windows también puede utilizarse si el hardware y las licencias son
+                    adecuados para el proyecto. La elección dependerá de tu experiencia, del software que
+                    necesites ejecutar y del tiempo que quieras dedicar a la configuración.
+                </p>
+                <div class="warning-box">
+                    <strong>Importante:</strong> Si el ordenador almacena información importante, no confíes
+                    exclusivamente en él como única copia de tus archivos. Un servidor puede averiarse, sufrir
+                    un ataque o perder datos. Mantén copias de seguridad independientes.
+                </div>
+            </article>
+
+            <!-- NIVEL 5: TRANSFERENCIA -->
+            <article class="card" style="margin-bottom: 1.5rem;">
+                <h3>Nivel 5 — Transferencia: Servidor físico frente a servidor virtual</h3>
+                <p>
+                    Hay dos formas habituales de ejecutar servicios: instalarlos directamente en un equipo
+                    físico o utilizar máquinas virtuales.
+                </p>
+
+                <h4>Servidor físico</h4>
+                <p>
+                    El sistema operativo y los servicios se ejecutan directamente en el hardware del ordenador.
+                </p>
+                <ul>
+                    <li><strong>Ventajas:</strong> configuración relativamente sencilla para empezar, buen aprovechamiento de los recursos y acceso directo a los componentes.</li>
+                    <li><strong>Inconvenientes:</strong> si necesitas separar aplicaciones con sistemas operativos distintos, puede ser más difícil aislarlas sin utilizar tecnologías adicionales.</li>
+                </ul>
+
+                <h4>Servidor virtual</h4>
+                <p>
+                    Una máquina física ejecuta un hipervisor que permite crear varias máquinas virtuales, cada
+                    una con su propio sistema operativo.
+                </p>
+                <ul>
+                    <li><strong>Ventajas:</strong> aislamiento entre entornos, facilidad para realizar pruebas y posibilidad de ejecutar diferentes sistemas operativos en el mismo equipo.</li>
+                    <li><strong>Inconvenientes:</strong> mayor consumo de memoria y almacenamiento, más complejidad de configuración y posibles costes de licencia.</li>
+                </ul>
+
+                <p>Entre las herramientas de virtualización más conocidas se encuentran:</p>
+                <ul>
+                    <li><strong>VirtualBox:</strong> permite crear y ejecutar máquinas virtuales en un ordenador personal.</li>
+                    <li><strong>Proxmox VE:</strong> plataforma de virtualización orientada a servidores, con administración mediante interfaz web.</li>
+                    <li><strong>Hyper-V:</strong> tecnología de virtualización de Microsoft disponible en determinadas ediciones de Windows.</li>
+                    <li><strong>VMware ESXi:</strong> hipervisor destinado a entornos de virtualización de servidores, cuya disponibilidad y condiciones de uso dependen de la versión.</li>
+                </ul>
+                <p>
+                    También existe la tecnología de contenedores, como Docker, que permite ejecutar aplicaciones
+                    aisladas sin necesitar una máquina virtual completa para cada aplicación.
+                </p>
+                <div class="highlight-box">
+                    <strong>Para comenzar:</strong> No es obligatorio utilizar virtualización. Puedes instalar
+                    un único sistema operativo y añadir los servicios que necesites.
+                </div>
+            </article>
+
+            <!-- RESUMEN -->
+            <article class="card">
+                <h3>Resumen del capítulo</h3>
+                <p>
+                    Para montar un servidor debes tener en cuenta el procesador, la memoria RAM, el almacenamiento,
+                    la conexión de red, el consumo eléctrico y la refrigeración.
+                </p>
+                <p>
+                    No necesitas necesariamente un ordenador nuevo: un PC antiguo puede ser suficiente para
+                    proyectos sencillos. Lo más importante es adaptar los recursos disponibles al servicio que
+                    deseas ofrecer.
+                </p>
+                <p>
+                    Si quieres experimentar con varios sistemas operativos o probar aplicaciones sin modificar
+                    tu instalación principal, puedes considerar la virtualización. Si solo necesitas compartir
+                    archivos o alojar una página web sencilla, una instalación directa puede ser más fácil de
+                    administrar.
+                </p>
+                <p>
+                    En el siguiente capítulo conocerás los sistemas operativos para servidores, sus diferencias
+                    y cómo elegir entre Windows y Linux según tus necesidades.
+                </p>
+            </article>
+        </section>
+
+        <!-- ============================================================
+             RETO INTEGRADOR
+             ============================================================ -->
+        <section id="reto" class="section">
+            <div class="challenge">
+                <span class="section__label" style="background: var(--color-accent);">Reto integrador</span>
+                <h2>Diseña el servidor para tu colegio</h2>
+                <p>
+                    Tu institución educativa quiere montar un servidor para compartir materiales de estudio,
+                    alojar una página web con información del colegio y permitir que los estudiantes accedan
+                    a archivos desde sus casas. Te han pedido que analices qué equipo conviene utilizar.
+                </p>
+                <p>
+                    En la sala de computación hay tres equipos disponibles:
+                </p>
+                <ul style="color: rgba(255,255,255,0.9); margin-left: 1.4rem;">
+                    <li><strong>Equipo A:</strong> PC de escritorio con Intel Core i3, 4 GB de RAM y disco duro de 500 GB.</li>
+                    <li><strong>Equipo B:</strong> Laptop antigua con Intel Celeron, 2 GB de RAM y SSD de 120 GB.</li>
+                    <li><strong>Equipo C:</strong> PC de escritorio con Intel Core i5, 8 GB de RAM y SSD de 256 GB.</li>
+                </ul>
+                <p>
+                    El colegio tiene conexión a Internet de 50 Mbps de bajada y 10 Mbps de subida. El servidor
+                    deberá estar encendido de lunes a viernes, de 7:00 a 17:00.
+                </p>
+
+                <h3>¿Qué debes lograr?</h3>
+                <ul class="challenge__list">
+                    <li>Seleccionar el equipo más adecuado para el proyecto y justificar tu elección con al menos tres criterios técnicos.</li>
+                    <li>Identificar los componentes que sería necesario ampliar o mejorar en el equipo elegido.</li>
+                    <li>Calcular el consumo eléctrico diario y mensual del equipo seleccionado, asumiendo un consumo promedio de 50 W.</li>
+                    <li>Proponer una alternativa de virtualización si el colegio quisiera ejecutar dos servicios independientes (web y archivos).</li>
+                    <li>Redactar una recomendación final de máximo 10 líneas explicando la solución propuesta.</li>
+                </ul>
+
+                <h3>Criterios de éxito</h3>
+                <div class="challenge__criteria">
+                    <span>Comprensión de requisitos</span>
+                    <span>Aplicación de conceptos</span>
+                    <span>Justificación técnica</span>
+                    <span>Cálculo correcto</span>
+                    <span>Creatividad</span>
+                    <span>Claridad en la comunicación</span>
+                    <span>Buenas prácticas</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             EVALUACIÓN LÚDICA
+             ============================================================ -->
+        <section id="evaluacion" class="section">
+            <span class="section__label">Evaluación</span>
+            <h2 class="section__title">Comprueba lo que aprendiste</h2>
+            <p>
+                Responde las siguientes 5 preguntas. Recibirás retroalimentación inmediata después de cada
+                respuesta.
+            </p>
+
+            <div class="quiz" id="quiz">
+                <div class="quiz__header">
+                    <span class="quiz__counter" id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz__score" id="quizScore">Puntuación: 0</span>
+                </div>
+                <div class="quiz__progress">
+                    <div class="quiz__progress-bar" id="quizProgressBar"></div>
+                </div>
+                <div id="quizContent">
+                    <p class="quiz__question" id="quizQuestion"></p>
+                    <div class="quiz__options" id="quizOptions"></div>
+                    <div class="quiz__feedback" id="quizFeedback"></div>
+                    <div class="quiz__actions">
+                        <button class="btn btn--primary" id="quizNextBtn" disabled>Siguiente pregunta</button>
+                    </div>
+                </div>
+                <div class="quiz__result" id="quizResult">
+                    <div class="quiz__result-icon" id="quizResultIcon">🏆</div>
+                    <h3 class="quiz__result-title" id="quizResultTitle">¡Taller completado!</h3>
+                    <div class="quiz__result-score" id="quizResultScore">0 / 5</div>
+                    <div class="quiz__result-percent" id="quizResultPercent">0%</div>
+                    <p class="quiz__result-message" id="quizResultMessage"></p>
+                    <button class="btn btn--secondary" id="quizRestartBtn">Reiniciar cuestionario</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             CIERRE REFLEXIVO
+             ============================================================ -->
+        <section id="reflexion" class="section">
+            <span class="section__label">Cierre</span>
+            <h2 class="section__title">Antes de terminar...</h2>
+            <div class="reflection">
+                <div class="reflection__item">
+                    <p class="reflection__question">¿Qué aprendí en este taller?</p>
+                    <textarea class="reflection__textarea" id="reflexion1" placeholder="Escribe tu respuesta aquí..." aria-label="¿Qué aprendí en este taller?"></textarea>
+                </div>
+                <div class="reflection__item">
+                    <p class="reflection__question">¿Qué puedo aplicar en un proyecto real?</p>
+                    <textarea class="reflection__textarea" id="reflexion2" placeholder="Escribe tu respuesta aquí..." aria-label="¿Qué puedo aplicar en un proyecto real?"></textarea>
+                </div>
+                <div class="reflection__item">
+                    <p class="reflection__question">¿Qué necesito seguir practicando?</p>
+                    <textarea class="reflection__textarea" id="reflexion3" placeholder="Escribe tu respuesta aquí..." aria-label="¿Qué necesito seguir practicando?"></textarea>
+                </div>
+                <div class="reflection__item">
+                    <p class="reflection__question">¿Cómo utilizaría este conocimiento en un proyecto real?</p>
+                    <textarea class="reflection__textarea" id="reflexion4" placeholder="Escribe tu respuesta aquí..." aria-label="¿Cómo utilizaría este conocimiento en un proyecto real?"></textarea>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <footer class="footer">
+        <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+        <p>Diseñado por: Edwin Méndez J.</p>
+    </footer>
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            /* ============================================================
+               DATOS DEL CUESTIONARIO
+               ============================================================ */
+            const preguntas = [
+                {
+                    pregunta: '¿Cuál de los siguientes componentes es el encargado de ejecutar las instrucciones de los programas y realizar los cálculos necesarios para atender las solicitudes de los clientes?',
+                    opciones: [
+                        'La memoria RAM',
+                        'El procesador (CPU)',
+                        'La unidad de almacenamiento',
+                        'La fuente de alimentación'
+                    ],
+                    correcta: 1,
+                    explicacion: 'El procesador (CPU) es el componente que ejecuta las instrucciones de los programas y realiza los cálculos necesarios. La memoria RAM almacena datos temporalmente, el almacenamiento guarda archivos y la fuente de alimentación suministra energía.'
+                },
+                {
+                    pregunta: 'Un estudiante quiere montar un servidor para compartir archivos con sus compañeros en la red local del colegio. ¿Qué componentes debería priorizar si tiene un presupuesto limitado?',
+                    opciones: [
+                        'Una tarjeta gráfica potente y un monitor de alta resolución',
+                        'Un procesador de gama alta y 32 GB de RAM',
+                        'Suficiente almacenamiento y una conexión de red estable',
+                        'Una fuente de alimentación de 1000 W y refrigeración líquida'
+                    ],
+                    correcta: 2,
+                    explicacion: 'Para compartir archivos, lo más importante es tener suficiente almacenamiento para los archivos y una conexión de red estable que permita a los clientes acceder a ellos. No se requiere una tarjeta gráfica potente ni un procesador de gama alta para este tipo de servidor.'
+                },
+                {
+                    pregunta: 'Un servidor consume en promedio 60 W y permanece encendido 12 horas al día. ¿Cuál es su consumo diario en kWh?',
+                    opciones: [
+                        '0,72 kWh',
+                        '7,2 kWh',
+                        '0,072 kWh',
+                        '72 kWh'
+                    ],
+                    correcta: 0,
+                    explicacion: 'Aplicando la fórmula: (60 W × 12 h) / 1000 = 720 / 1000 = 0,72 kWh al día. Es importante dividir entre 1000 para convertir de vatios-hora a kilovatios-hora.'
+                },
+                {
+                    pregunta: '¿Cuál de las siguientes afirmaciones sobre la virtualización es correcta?',
+                    opciones: [
+                        'La virtualización siempre consume menos RAM que ejecutar los servicios directamente en el hardware.',
+                        'Un hipervisor permite crear varias máquinas virtuales, cada una con su propio sistema operativo.',
+                        'La virtualización elimina la necesidad de tener una conexión de red.',
+                        'Las máquinas virtuales no pueden ejecutar sistemas operativos diferentes al del equipo físico.'
+                    ],
+                    correcta: 1,
+                    explicacion: 'Un hipervisor es el software que permite crear y ejecutar varias máquinas virtuales en un mismo equipo físico, cada una con su propio sistema operativo. La virtualización suele consumir más RAM, no menos, y no elimina la necesidad de conexión de red. Las máquinas virtuales sí pueden ejecutar sistemas operativos diferentes.'
+                },
+                {
+                    pregunta: 'Un colegio quiere montar un servidor que funcione como página web y, al mismo tiempo, como servidor de archivos, pero solo dispone de un equipo físico. ¿Cuál sería la mejor estrategia para lograr ambos servicios de forma aislada?',
+                    opciones: [
+                        'Instalar los dos servicios directamente en el mismo sistema operativo sin ninguna separación.',
+                        'Comprar un segundo equipo físico aunque no haya presupuesto.',
+                        'Utilizar un hipervisor para crear dos máquinas virtuales, una para cada servicio.',
+                        'Renunciar a uno de los dos servicios porque es imposible tener ambos en un solo equipo.'
+                    ],
+                    correcta: 2,
+                    explicacion: 'La virtualización mediante un hipervisor permite crear dos máquinas virtuales independientes en el mismo equipo físico, cada una con su propio sistema operativo y servicio. Esto proporciona aislamiento entre entornos y es una solución adecuada cuando no se dispone de más hardware.'
+                }
+            ];
+
+            /* ============================================================
+               ESTADO DEL CUESTIONARIO
+               ============================================================ */
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = null;
+            let respondida = false;
+
+            /* ============================================================
+               REFERENCIAS AL DOM
+               ============================================================ */
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScore = document.getElementById('quizScore');
+            const quizProgressBar = document.getElementById('quizProgressBar');
+            const quizContent = document.getElementById('quizContent');
+            const quizQuestion = document.getElementById('quizQuestion');
+            const quizOptions = document.getElementById('quizOptions');
+            const quizFeedback = document.getElementById('quizFeedback');
+            const quizNextBtn = document.getElementById('quizNextBtn');
+            const quizResult = document.getElementById('quizResult');
+            const quizResultIcon = document.getElementById('quizResultIcon');
+            const quizResultTitle = document.getElementById('quizResultTitle');
+            const quizResultScore = document.getElementById('quizResultScore');
+            const quizResultPercent = document.getElementById('quizResultPercent');
+            const quizResultMessage = document.getElementById('quizResultMessage');
+            const quizRestartBtn = document.getElementById('quizRestartBtn');
+
+            /* ============================================================
+               FUNCIONES DEL CUESTIONARIO
+               ============================================================ */
+
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = null;
+                respondida = false;
+
+                quizContent.style.display = 'block';
+                quizResult.classList.remove('quiz__result--visible');
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = 'Siguiente pregunta';
+
+                actualizarMarcadores();
+                mostrarPregunta();
+            }
+
+            function actualizarMarcadores() {
+                const total = preguntas.length;
+                const numero = indiceActual + 1;
+                quizCounter.textContent = 'Pregunta ' + numero + ' de ' + total;
+                quizScore.textContent = 'Puntuación: ' + puntuacion;
+
+                const progreso = ((indiceActual) / total) * 100;
+                quizProgressBar.style.width = progreso + '%';
+            }
+
+            function mostrarPregunta() {
+                const preguntaActual = preguntas[indiceActual];
+                quizQuestion.textContent = preguntaActual.pregunta;
+
+                quizOptions.innerHTML = '';
+                quizFeedback.className = 'quiz__feedback';
+                quizFeedback.innerHTML = '';
+                quizNextBtn.disabled = true;
+                respondida = false;
+                respuestaSeleccionada = null;
+
+                const letras = ['A', 'B', 'C', 'D'];
+
+                preguntaActual.opciones.forEach(function(opcion, index) {
+                    const boton = document.createElement('button');
+                    boton.className = 'quiz__option';
+                    boton.setAttribute('type', 'button');
+                    boton.setAttribute('aria-label', 'Opción ' + letras[index] + ': ' + opcion);
+
+                    const letraSpan = document.createElement('span');
+                    letraSpan.className = 'quiz__option-letter';
+                    letraSpan.textContent = letras[index];
+
+                    const textoSpan = document.createElement('span');
+                    textoSpan.textContent = opcion;
+
+                    boton.appendChild(letraSpan);
+                    boton.appendChild(textoSpan);
+
+                    boton.addEventListener('click', function() {
+                        seleccionarRespuesta(index);
+                    });
+
+                    quizOptions.appendChild(boton);
+                });
+
+                actualizarMarcadores();
+            }
+
+            function seleccionarRespuesta(indice) {
+                if (respondida) return;
+
+                const preguntaActual = preguntas[indiceActual];
+                const opciones = quizOptions.querySelectorAll('.quiz__option');
+
+                // Marcar todas como deshabilitadas
+                opciones.forEach(function(op) {
+                    op.classList.add('quiz__option--disabled');
+                    op.disabled = true;
+                });
+
+                // Marcar la seleccionada
+                opciones[indice].classList.add(
+                    indice === preguntaActual.correcta ? 'quiz__option--correct' : 'quiz__option--wrong'
+                );
+
+                // Si es incorrecta, marcar también la correcta
+                if (indice !== preguntaActual.correcta) {
+                    opciones[preguntaActual.correcta].classList.add('quiz__option--correct');
+                }
+
+                // Actualizar puntuación
+                if (indice === preguntaActual.correcta) {
+                    puntuacion++;
+                }
+
+                // Mostrar retroalimentación
+                const esCorrecta = indice === preguntaActual.correcta;
+                quizFeedback.className = 'quiz__feedback ' +
+                    (esCorrecta ? 'quiz__feedback--correct' : 'quiz__feedback--wrong');
+
+                const tituloFeedback = esCorrecta ? '¡Correcto!' : 'Respuesta incorrecta';
+                const respuestaCorrectaTexto = preguntaActual.opciones[preguntaActual.correcta];
+
+                quizFeedback.innerHTML =
+                    '<strong>' + tituloFeedback + '</strong>' +
+                    (esCorrecta ? '' : 'La respuesta correcta es: <em>' + respuestaCorrectaTexto + '</em>. ') +
+                    preguntaActual.explicacion;
+
+                // Actualizar marcadores
+                quizScore.textContent = 'Puntuación: ' + puntuacion;
+
+                // Habilitar botón siguiente
+                respondida = true;
+                quizNextBtn.disabled = false;
+
+                // Cambiar texto si es la última pregunta
+                if (indiceActual === preguntas.length - 1) {
+                    quizNextBtn.textContent = 'Ver resultado';
+                }
+            }
+
+            function siguientePregunta() {
+                if (!respondida) return;
+
+                if (indiceActual < preguntas.length - 1) {
+                    indiceActual++;
+                    mostrarPregunta();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizContent.style.display = 'none';
+                quizResult.classList.add('quiz__result--visible');
+
+                const total = preguntas.length;
+                const porcentaje = Math.round((puntuacion / total) * 100);
+
+                quizResultScore.textContent = puntuacion + ' / ' + total;
+                quizResultPercent.textContent = porcentaje + '%';
+
+                let icono, titulo, mensaje;
+
+                if (porcentaje === 100) {
+                    icono = '🏆';
+                    titulo = '¡Excelente trabajo!';
+                    mensaje = 'Has demostrado un dominio completo de los requisitos para montar un servidor. Estás listo para aplicar estos conocimientos en proyectos reales.';
+                } else if (porcentaje >= 80) {
+                    icono = '🌟';
+                    titulo = '¡Muy bien!';
+                    mensaje = 'Tienes una comprensión sólida de los conceptos. Repasa los detalles que fallaste y estarás listo para el siguiente nivel.';
+                } else if (porcentaje >= 60) {
+                    icono = '📚';
+                    titulo = 'Buen intento';
+                    mensaje = 'Comprendes lo esencial, pero conviene repasar algunos conceptos clave como los componentes del servidor, el consumo eléctrico o la virtualización.';
+                } else if (porcentaje >= 40) {
+                    icono = '💪';
+                    titulo = 'Sigue practicando';
+                    mensaje = 'Has captado algunas ideas, pero necesitas repasar el capítulo con más detalle. Vuelve a leer las secciones de desarrollo y prueba de nuevo.';
+                } else {
+                    icono = '🔄';
+                    titulo = 'Es momento de repasar';
+                    mensaje = 'Te recomendamos volver a leer todo el contenido del taller con calma. Presta especial atención a los componentes, la fórmula de consumo y la virtualización.';
+                }
+
+                quizResultIcon.textContent = icono;
+                quizResultTitle.textContent = titulo;
+                quizResultMessage.textContent = mensaje;
+
+                // Barra de progreso al 100%
+                quizProgressBar.style.width = '100%';
+                quizCounter.textContent = 'Cuestionario completado';
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+                // Scroll suave al inicio del quiz
+                document.getElementById('evaluacion').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            /* ============================================================
+               EVENTOS
+               ============================================================ */
+            quizNextBtn.addEventListener('click', siguientePregunta);
+            quizRestartBtn.addEventListener('click', reiniciarQuiz);
+
+            /* ============================================================
+               INICIALIZACIÓN
+               ============================================================ */
+            iniciarQuiz();
+
+            /* ============================================================
+               MICROINTERACCIONES: Aparición progresiva de tarjetas
+               ============================================================ */
+            const tarjetas = document.querySelectorAll('.card');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.style.animationPlayState = 'running';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                tarjetas.forEach(function(tarjeta) {
+                    tarjeta.style.animationPlayState = 'paused';
+                    observer.observe(tarjeta);
+                });
+            }
+
+        })();
+    </script>
+</body>
+</html>

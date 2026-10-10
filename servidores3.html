@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo | Redes y Servidores: Fundamentos Esenciales</title>
+    <style>
+        /* ============================================ */
+        /* VARIABLES                                    */
+        /* ============================================ */
+        :root {
+            --color-primary: #0a192f;
+            --color-secondary: #1e3a5f;
+            --color-accent: #f97316;
+            --color-accent-hover: #ea580c;
+            --color-background: #f1f5f9;
+            --color-surface: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-border: #e2e8f0;
+            --color-success: #16a34a;
+            --color-success-bg: #f0fdf4;
+            --color-error: #dc2626;
+            --color-error-bg: #fef2f2;
+            --color-info-bg: #eff6ff;
+            --color-info-border: #3b82f6;
+            --color-warning-bg: #fffbeb;
+            --color-warning-border: #f59e0b;
+
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+
+            --shadow-sm: 0 1px 3px rgba(10, 25, 47, 0.08);
+            --shadow-md: 0 4px 12px rgba(10, 25, 47, 0.1);
+            --shadow-lg: 0 10px 30px rgba(10, 25, 47, 0.12);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ============================================ */
+        /* RESET                                        */
+        /* ============================================ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ============================================ */
+        /* BASE                                         */
+        /* ============================================ */
+        h1, h2, h3, h4 {
+            line-height: 1.3;
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================ */
+        /* HEADER                                       */
+        /* ============================================ */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            padding: 4rem 1.5rem 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 70%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.06) 0%, transparent 50%);
+            animation: headerGlow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-2%, -2%) scale(1.05); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 span {
+            color: var(--color-accent);
+        }
+
+        .header .subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(249, 115, 22, 0.2);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            color: var(--color-accent);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ============================================ */
+        /* NAVEGACIÓN                                   */
+        /* ============================================ */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--color-primary);
+            white-space: nowrap;
+        }
+
+        .nav-logo span {
+            color: var(--color-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.25rem;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 0.5rem 0.85rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-light);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus {
+            background: var(--color-info-bg);
+            color: var(--color-secondary);
+            text-decoration: none;
+        }
+
+        .nav-links a:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .nav-toggle:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* ============================================ */
+        /* MAIN / SECCIONES                             */
+        /* ============================================ */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .section-subtitle {
+            color: var(--color-text-light);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ============================================ */
+        /* TARJETAS                                     */
+        /* ============================================ */
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            margin-bottom: 1.25rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--color-info-bg);
+            color: var(--color-secondary);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .card h4 {
+            margin-bottom: 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-grid .card {
+            margin-bottom: 0;
+        }
+
+        /* ============================================ */
+        /* ETIQUETAS / BADGES                           */
+        /* ============================================ */
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .tag-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tag-orange {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        .tag-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .tag-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .tag-purple {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        /* ============================================ */
+        /* CAJAS ESPECIALES                             */
+        /* ============================================ */
+        .box {
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .box-info {
+            background: var(--color-info-bg);
+            border-color: var(--color-info-border);
+        }
+
+        .box-warning {
+            background: var(--color-warning-bg);
+            border-color: var(--color-warning-border);
+        }
+
+        .box-success {
+            background: var(--color-success-bg);
+            border-color: var(--color-success);
+        }
+
+        .box-error {
+            background: var(--color-error-bg);
+            border-color: var(--color-error);
+        }
+
+        .box strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* ============================================ */
+        /* CÓDIGO                                       */
+        /* ============================================ */
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+            border: 1px solid #1e293b;
+        }
+
+        .code-block .cmd {
+            color: #7dd3fc;
+        }
+
+        .code-block .comment {
+            color: #64748b;
+        }
+
+        .code-inline {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        /* ============================================ */
+        /* TABLAS                                       */
+        /* ============================================ */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: var(--color-surface);
+        }
+
+        th {
+            background: var(--color-primary);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--color-border);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* ============================================ */
+        /* RETO                                         */
+        /* ============================================ */
+        .challenge {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .challenge h3 {
+            color: #fff;
+        }
+
+        .challenge p,
+        .challenge li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .challenge .challenge-tag {
+            background: rgba(249, 115, 22, 0.25);
+            color: var(--color-accent);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            display: inline-block;
+            padding: 0.25rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .challenge ul {
+            padding-left: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .challenge ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        .challenge .criteria {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .challenge .criteria h4 {
+            color: var(--color-accent);
+        }
+
+        .challenge .criteria ul {
+            margin-bottom: 0;
+        }
+
+        /* ============================================ */
+        /* QUIZ                                         */
+        /* ============================================ */
+        .quiz-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 50px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #fb923c);
+            border-radius: 50px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            font-weight: 500;
+        }
+
+        .quiz-score {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            text-align: left;
+            width: 100%;
+            font-family: var(--font-main);
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--color-accent);
+            background: #fff7ed;
+        }
+
+        .quiz-option:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz-option:disabled {
+            cursor: default;
+        }
+
+        .quiz-option .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--color-background);
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            color: var(--color-text-light);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--color-accent);
+            background: #fff7ed;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--color-success);
+            background: var(--color-success-bg);
+        }
+
+        .quiz-option.correct .option-letter {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--color-error);
+            background: var(--color-error-bg);
+        }
+
+        .quiz-option.incorrect .option-letter {
+            background: var(--color-error);
+            color: #fff;
+        }
+
+        .quiz-feedback {
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: var(--color-success-bg);
+            border: 1px solid #bbf7d0;
+        }
+
+        .quiz-feedback.incorrect {
+            background: var(--color-error-bg);
+            border: 1px solid #fecaca;
+        }
+
+        .quiz-feedback strong {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .quiz-feedback.correct strong {
+            color: var(--color-success);
+        }
+
+        .quiz-feedback.incorrect strong {
+            color: var(--color-error);
+        }
+
+        .quiz-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--color-accent);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-main);
+        }
+
+        .quiz-btn:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.35);
+        }
+
+        .quiz-btn:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-btn-secondary {
+            background: var(--color-secondary);
+        }
+
+        .quiz-btn-secondary:hover:not(:disabled) {
+            background: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(10, 25, 47, 0.3);
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-result .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1.2;
+        }
+
+        .quiz-result .score-label {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-result .message {
+            font-size: 1.1rem;
+            font-weight: 500;
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================ */
+        /* REFLEXIÓN                                    */
+        /* ============================================ */
+        .reflection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .reflection-card {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .reflection-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .reflection-card .reflection-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--color-info-bg);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .reflection-card h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .reflection-card p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 0;
+        }
+
+        /* ============================================ */
+        /* ICONOS SVG                                   */
+        /* ============================================ */
+        .icon-svg {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+            fill: currentColor;
+        }
+
+        /* ============================================ */
+        /* DIAGRAMA DE RED                              */
+        /* ============================================ */
+        .network-diagram {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .network-diagram svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ============================================ */
+        /* FOOTER                                       */
+        /* ============================================ */
+        .footer {
+            background: var(--color-primary);
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .footer .footer-line {
+            color: #fff;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .footer .footer-author {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .footer .footer-separator {
+            width: 60px;
+            height: 3px;
+            background: var(--color-accent);
+            border-radius: 50px;
+            margin: 1rem auto;
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE                                   */
+        /* ============================================ */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header .subtitle {
+                font-size: 1rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .nav-inner {
+                padding: 0 1rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: var(--color-surface);
+                flex-direction: column;
+                padding: 0.5rem;
+                border-bottom: 1px solid var(--color-border);
+                box-shadow: var(--shadow-md);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .main {
+                padding: 0 1rem;
+            }
+
+            .section {
+                padding: 2rem 0;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .challenge {
+                padding: 1.5rem;
+            }
+
+            .quiz-container {
+                padding: 1.25rem;
+            }
+
+            .quiz-question {
+                font-size: 1rem;
+            }
+
+            .quiz-option {
+                font-size: 0.88rem;
+                padding: 0.7rem 0.85rem;
+            }
+
+            .quiz-result .score-display {
+                font-size: 2.2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reflection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header {
+                padding: 3rem 1rem 2rem;
+            }
+
+            .quiz-option {
+                font-size: 0.82rem;
+                padding: 0.6rem 0.75rem;
+                gap: 0.5rem;
+            }
+
+            .quiz-option .option-letter {
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
+            }
+
+            .quiz-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ============================================ */
+        /* ACCESIBILIDAD                                */
+        /* ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================ -->
+    <!-- HEADER                                       -->
+    <!-- ============================================ -->
+    <header class="header" id="inicio">
+        <div class="header-content">
+            <div class="header-badge">Taller Interactivo</div>
+            <h1>Bucle <span>Creativo</span></h1>
+            <p class="subtitle">Redes y Servidores: Fundamentos Esenciales</p>
+            <p class="description">
+                Descubre cómo se comunican los dispositivos, qué es una red local, cómo funcionan las direcciones IP,
+                los puertos, el DNS y todo lo que necesitas para convertir tu ordenador en un servidor.
+            </p>
+        </div>
+    </header>
+
+    <!-- ============================================ -->
+    <!-- NAVEGACIÓN                                   -->
+    <!-- ============================================ -->
+    <nav class="nav" aria-label="Navegación principal">
+        <div class="nav-inner">
+            <span class="nav-logo">Bucle <span>Creativo</span></span>
+            <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <svg class="icon-svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+                </svg>
+            </button>
+            <ul class="nav-links" id="navLinks" role="list">
+                <li><a href="#objetivo">Objetivo</a></li>
+                <li><a href="#activacion">Activación</a></li>
+                <li><a href="#desarrollo">Desarrollo</a></li>
+                <li><a href="#reto">Reto</a></li>
+                <li><a href="#evaluacion">Evaluación</a></li>
+                <li><a href="#reflexion">Reflexión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- MAIN                                         -->
+    <!-- ============================================ -->
+    <main class="main">
+
+        <!-- ======================================== -->
+        <!-- OBJETIVO                                  -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="objetivo" aria-labelledby="objetivo-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">1</span>
+                <h2 id="objetivo-title">Objetivo de aprendizaje</h2>
+            </div>
+            <p class="section-subtitle">¿Qué lograrás con este taller?</p>
+
+            <article class="card">
+                <p>
+                    <strong>Comprender</strong> los fundamentos de las redes locales y la comunicación entre dispositivos,
+                    <strong>identificando</strong> conceptos como direcciones IP, puertos, protocolos, DNS y acceso remoto,
+                    <strong>aplicando</strong> estos conocimientos en la resolución de problemas prácticos y en la configuración
+                    de un servidor básico, <strong>demostrando</strong> responsabilidad, pensamiento crítico y buenas prácticas
+                    de seguridad, para <strong>utilizar</strong> la tecnología de forma eficiente y segura en proyectos
+                    académicos y personales.
+                </p>
+            </article>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- ACTIVACIÓN                                -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="activacion" aria-labelledby="activacion-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">2</span>
+                <h2 id="activacion-title">Activación</h2>
+            </div>
+            <p class="section-subtitle">Conecta con tu experiencia</p>
+
+            <article class="card">
+                <h3>📱 Imagina que estás en tu casa…</h3>
+                <p>
+                    Tienes tu laptop conectada al Wi-Fi, tu teléfono descargando una actualización, tu Smart TV
+                    reproduciendo una serie y tu PC de escritorio encendido. De repente, quieres pasar una foto
+                    desde tu teléfono a tu computadora sin usar cables ni aplicaciones de mensajería.
+                </p>
+                <p>
+                    <strong>¿Cómo crees que podrías hacerlo?</strong> ¿Qué tienen que ver todos esos dispositivos
+                    entre sí para poder comunicarse? ¿Qué pasa si quieres que tu PC sea un servidor al que puedas
+                    acceder desde el celular de tu amigo que está en otra casa?
+                </p>
+                <p>
+                    Todas estas preguntas tienen una respuesta: <strong>las redes</strong>. En este taller descubrirás
+                    cómo funcionan y cómo puedes aprovecharlas para convertir tu ordenador en un servidor.
+                </p>
+
+                <div class="box box-info">
+                    <strong>💡 Pregunta de reflexión inicial</strong>
+                    <p>¿Alguna vez has compartido archivos entre dispositivos de tu casa? ¿Sabes cómo ocurre esa
+                    comunicación por dentro?</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- DESARROLLO                                -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="desarrollo" aria-labelledby="desarrollo-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">3</span>
+                <h2 id="desarrollo-title">Desarrollo del contenido</h2>
+            </div>
+            <p class="section-subtitle">Fundamentos, comprensión, aplicación, análisis y transferencia</p>
+
+            <!-- NIVEL 1: FUNDAMENTOS -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon" aria-hidden="true">🔰</span>
+                    <h3>Nivel 1 — Fundamentos: La red local (LAN)</h3>
+                </div>
+
+                <h4>¿Qué es una red local?</h4>
+                <p>
+                    Una <strong>red local (LAN, Local Area Network)</strong> es un conjunto de dispositivos conectados
+                    entre sí dentro de un área limitada, como una vivienda, una oficina o un centro educativo.
+                </p>
+                <p>
+                    Estos dispositivos pueden compartir archivos, impresoras, conexión a Internet y otros recursos.
+                    Por ejemplo, en una casa puedes tener:
+                </p>
+                <ul>
+                    <li>Un ordenador de sobremesa.</li>
+                    <li>Un portátil.</li>
+                    <li>Varios teléfonos móviles.</li>
+                    <li>Una televisión inteligente.</li>
+                    <li>Un router que conecta los dispositivos.</li>
+                </ul>
+                <p>
+                    Si todos están conectados a la misma red local, pueden comunicarse entre sí siempre que la
+                    configuración de red y los permisos lo permitan.
+                </p>
+
+                <h4>¿Qué función cumple el router?</h4>
+                <p>
+                    El <strong>router</strong> es el dispositivo que conecta diferentes redes y dirige el tráfico
+                    entre ellas. En una vivienda, normalmente conecta la red doméstica con Internet.
+                </p>
+                <p>Muchos routers domésticos también incorporan otras funciones, como:</p>
+                <ul>
+                    <li><strong>Punto de acceso Wi-Fi:</strong> permite conectar dispositivos inalámbricamente.</li>
+                    <li><strong>Servidor DHCP:</strong> asigna automáticamente direcciones IP a los dispositivos.</li>
+                    <li><strong>Firewall:</strong> aplica reglas para controlar determinadas conexiones.</li>
+                    <li><strong>Switch integrado:</strong> permite conectar varios equipos mediante cables Ethernet.</li>
+                </ul>
+                <p>
+                    Estas funciones pueden estar distribuidas en dispositivos diferentes, aunque suelen venir
+                    integradas en un mismo aparato doméstico.
+                </p>
+
+                <div class="box box-success">
+                    <strong>🌐 Ejemplo práctico</strong>
+                    <p>Si conectas tu PC al router mediante un cable Ethernet y tu teléfono al mismo router por Wi-Fi,
+                    ambos pueden comunicarse a través de la red local. Así podrías acceder desde el teléfono a una
+                    página web alojada en tu PC.</p>
+                </div>
+
+                <div class="box box-info">
+                    <strong>🏠 Analogía</strong>
+                    <p>Una red local es como una casa: todos los dispositivos que están dentro pueden hablar entre
+                    ellos. El router sería la puerta principal que conecta la casa con el resto del mundo (Internet).</p>
+                </div>
+            </div>
+
+            <!-- DIAGRAMA DE RED -->
+            <div class="network-diagram" role="img" aria-label="Diagrama de una red local típica: Internet se conecta al módem, este al router inalámbrico, y el router distribuye la conexión a laptops, smartphones, Smart TV, PC de escritorio, impresora y dispositivos IoT.">
+                <svg viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg" width="800" height="380">
+                    <!-- Fondo -->
+                    <rect width="800" height="380" fill="#f8fafc" rx="12"/>
+
+                    <!-- Internet -->
+                    <circle cx="60" cy="190" r="40" fill="none" stroke="#1e3a5f" stroke-width="3"/>
+                    <ellipse cx="60" cy="190" rx="40" ry="15" fill="none" stroke="#1e3a5f" stroke-width="2"/>
+                    <ellipse cx="60" cy="190" rx="15" ry="40" fill="none" stroke="#1e3a5f" stroke-width="2"/>
+                    <line x1="20" y1="190" x2="100" y2="190" stroke="#1e3a5f" stroke-width="2"/>
+                    <text x="60" y="250" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="bold">Internet</text>
+                    <text x="60" y="265" text-anchor="middle" font-size="9" fill="#64748b">203.0.113.10</text>
+
+                    <!-- Línea Internet - Módem -->
+                    <line x1="100" y1="190" x2="170" y2="190" stroke="#64748b" stroke-width="2" stroke-dasharray="6,3"/>
+
+                    <!-- Módem -->
+                    <rect x="170" y="155" width="50" height="70" rx="8" fill="#1e3a5f"/>
+                    <rect x="178" y="163" width="34" height="8" rx="2" fill="#3b82f6" opacity="0.5"/>
+                    <rect x="178" y="175" width="34" height="8" rx="2" fill="#3b82f6" opacity="0.7"/>
+                    <rect x="178" y="187" width="34" height="8" rx="2" fill="#f97316" opacity="0.8"/>
+                    <text x="195" y="245" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="bold">Módem</text>
+                    <text x="195" y="260" text-anchor="middle" font-size="9" fill="#64748b">203.0.113.2</text>
+
+                    <!-- Línea Módem - Router -->
+                    <line x1="220" y1="190" x2="300" y2="190" stroke="#64748b" stroke-width="2"/>
+
+                    <!-- Router -->
+                    <rect x="300" y="140" width="100" height="60" rx="10" fill="#0a192f"/>
+                    <circle cx="330" cy="170" r="4" fill="#16a34a"/>
+                    <circle cx="350" cy="170" r="4" fill="#16a34a"/>
+                    <circle cx="370" cy="170" r="4" fill="#16a34a"/>
+                    <circle cx="390" cy="170" r="4" fill="#f97316"/>
+                    <!-- Antenas -->
+                    <line x1="315" y1="140" x2="305" y2="100" stroke="#0a192f" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="350" y1="140" x2="350" y2="90" stroke="#0a192f" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="385" y1="140" x2="395" y2="100" stroke="#0a192f" stroke-width="3" stroke-linecap="round"/>
+                    <text x="350" y="245" text-anchor="middle" font-size="11" fill="#1e3a5f" font-weight="bold">Router Inalámbrico</text>
+                    <text x="350" y="260" text-anchor="middle" font-size="9" fill="#64748b">192.168.1.1</text>
+
+                    <!-- Líneas del router a dispositivos -->
+                    <!-- Laptop -->
+                    <line x1="400" y1="160" x2="530" y2="100" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <rect x="530" y="65" width="70" height="45" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <rect x="538" y="73" width="54" height="29" rx="3" fill="#e2e8f0"/>
+                    <line x1="555" y1="110" x2="575" y2="110" stroke="#1e3a5f" stroke-width="2"/>
+                    <text x="565" y="130" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="bold">Laptop</text>
+                    <text x="565" y="143" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.101</text>
+
+                    <!-- Smartphone -->
+                    <line x1="400" y1="175" x2="530" y2="175" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <rect x="540" y="155" width="35" height="55" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <rect x="545" y="162" width="25" height="38" rx="2" fill="#e2e8f0"/>
+                    <text x="557" y="228" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="bold">Smartphone</text>
+                    <text x="557" y="241" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.102</text>
+
+                    <!-- Smart TV -->
+                    <line x1="400" y1="190" x2="530" y2="250" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <rect x="535" y="230" width="75" height="45" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <rect x="543" y="238" width="59" height="29" rx="3" fill="#e2e8f0"/>
+                    <text x="572" y="295" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="bold">Smart TV</text>
+                    <text x="572" y="308" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.103</text>
+
+                    <!-- Desktop (cable) -->
+                    <line x1="350" y1="200" x2="200" y2="310" stroke="#f97316" stroke-width="2"/>
+                    <rect x="155" y="295" width="80" height="50" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <rect x="162" y="302" width="45" height="30" rx="3" fill="#e2e8f0"/>
+                    <rect x="213" y="302" width="15" height="30" rx="2" fill="#e2e8f0"/>
+                    <text x="195" y="360" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="bold">Desktop</text>
+                    <text x="195" y="373" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.10</text>
+
+                    <!-- Printer -->
+                    <line x1="370" y1="200" x2="370" y2="310" stroke="#f97316" stroke-width="2"/>
+                    <rect x="335" y="300" width="70" height="45" rx="6" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <rect x="345" y="310" width="50" height="15" rx="3" fill="#e2e8f0"/>
+                    <rect x="352" y="330" width="36" height="8" rx="2" fill="#e2e8f0"/>
+                    <text x="370" y="360" text-anchor="middle" font-size="10" fill="#1e3a5f" font-weight="bold">Impresora</text>
+                    <text x="370" y="373" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.20</text>
+
+                    <!-- IoT Devices -->
+                    <line x1="390" y1="200" x2="520" y2="320" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="5,3"/>
+                    <circle cx="530" cy="320" r="12" fill="#fff" stroke="#1e3a5f" stroke-width="2"/>
+                    <circle cx="530" cy="320" r="5" fill="#f97316"/>
+                    <text x="530" y="350" text-anchor="middle" font-size="9" fill="#1e3a5f" font-weight="bold">IoT</text>
+                    <text x="530" y="363" text-anchor="middle" font-size="8" fill="#64748b">192.168.1.30</text>
+                </svg>
+            </div>
+
+            <!-- NIVEL 2: COMPRENSIÓN -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon" aria-hidden="true">🔍</span>
+                    <h3>Nivel 2 — Comprensión: Direcciones IP, DNS y puertos</h3>
+                </div>
+
+                <h4>Dirección IP pública y privada</h4>
+                <p>
+                    Una <strong>dirección IP (Internet Protocol)</strong> es una dirección numérica que permite
+                    identificar una interfaz de red y dirigir los datos hacia su destino. Existen dos versiones
+                    principales: <strong>IPv4</strong> e <strong>IPv6</strong>. En redes domésticas todavía es muy
+                    común encontrar direcciones IPv4.
+                </p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🏠 Dirección IP privada</h4>
+                        <p>
+                            Se utiliza dentro de una red privada, como la red de tu hogar. No es directamente
+                            enrutable a través de Internet público.
+                        </p>
+                        <p><strong>Ejemplos de rangos privados IPv4:</strong></p>
+                        <ul>
+                            <li><span class="code-inline">10.0.0.0 – 10.255.255.255</span></li>
+                            <li><span class="code-inline">172.16.0.0 – 172.31.255.255</span></li>
+                            <li><span class="code-inline">192.168.0.0 – 192.168.255.255</span></li>
+                        </ul>
+                        <p>Estas direcciones son ejemplos: las direcciones reales dependen de la configuración del router.</p>
+                    </div>
+                    <div class="card">
+                        <h4>🌍 Dirección IP pública</h4>
+                        <p>
+                            Identifica el punto de conexión de una red con Internet. Normalmente la asigna el
+                            proveedor de servicios de Internet (ISP), aunque existen distintas configuraciones.
+                        </p>
+                        <p>Puede ser:</p>
+                        <ul>
+                            <li><strong>Dinámica:</strong> cambia con el tiempo.</li>
+                            <li><strong>Estática:</strong> se contrata o configura de ese modo.</li>
+                        </ul>
+                        <p>
+                            Una dirección IP pública no garantiza por sí sola que puedas acceder a tu servidor
+                            desde Internet. También influyen el router, el firewall, las reglas de acceso y las
+                            restricciones del proveedor.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <caption class="sr-only">Diferencias entre dirección IP privada y pública</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Característica</th>
+                                <th scope="col">IP Privada</th>
+                                <th scope="col">IP Pública</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Alcance habitual</td>
+                                <td>Red local (LAN)</td>
+                                <td>Internet</td>
+                            </tr>
+                            <tr>
+                                <td>Ejemplo</td>
+                                <td><span class="code-inline">192.168.1.50</span></td>
+                                <td><span class="code-inline">203.0.113.10</span></td>
+                            </tr>
+                            <tr>
+                                <td>Asignación</td>
+                                <td>Router (DHCP)</td>
+                                <td>Proveedor de Internet (ISP)</td>
+                            </tr>
+                            <tr>
+                                <td>Acceso directo desde Internet</td>
+                                <td>No</td>
+                                <td>Sí (con configuración adecuada)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4>¿Cómo puedes conocer la IP de tu PC?</h4>
+                <p><strong>En Windows:</strong></p>
+                <ol>
+                    <li>Abre el menú Inicio.</li>
+                    <li>Escribe <span class="code-inline">cmd</span> y abre el Símbolo del sistema.</li>
+                    <li>Ejecuta el comando:</li>
+                </ol>
+                <div class="code-block">
+                    <span class="cmd">ipconfig</span>
+                </div>
+                <ol start="4">
+                    <li>Busca el adaptador de red que estás utilizando.</li>
+                    <li>Localiza el campo <strong>Dirección IPv4</strong>.</li>
+                </ol>
+
+                <p><strong>En Linux:</strong></p>
+                <p>Puedes abrir una terminal y ejecutar:</p>
+                <div class="code-block">
+                    <span class="cmd">ip addr</span>
+                </div>
+                <p>Busca la dirección correspondiente a la interfaz de red conectada.</p>
+
+                <h4>Nombre de dominio y DNS</h4>
+                <p>
+                    Un <strong>nombre de dominio</strong> es un nombre fácil de recordar que puede utilizarse para
+                    localizar un servicio en una red. Por ejemplo, <span class="code-inline">ejemplo.com</span> es más
+                    sencillo de recordar que una dirección IP numérica.
+                </p>
+                <p>
+                    El <strong>DNS (Domain Name System)</strong> es un sistema que permite consultar qué direcciones
+                    IP están asociadas a nombres de dominio y obtener otros registros necesarios para el
+                    funcionamiento de los servicios de Internet.
+                </p>
+
+                <div class="box box-info">
+                    <strong>🔄 El proceso simplificado funciona así:</strong>
+                    <ol>
+                        <li>Escribes un dominio en el navegador.</li>
+                        <li>El dispositivo consulta la información DNS, si no está disponible en su caché.</li>
+                        <li>Obtiene la dirección IP correspondiente.</li>
+                        <li>El navegador intenta establecer una conexión con el servidor.</li>
+                    </ol>
+                </div>
+
+                <h4>¿Qué es el DNS dinámico (DDNS)?</h4>
+                <p>
+                    En algunas conexiones domésticas, la dirección IP pública cambia periódicamente. El
+                    <strong>DNS dinámico (DDNS)</strong> permite actualizar automáticamente la asociación entre un
+                    nombre de dominio y la dirección IP actual.
+                </p>
+                <p>
+                    Esta solución puede resultar útil cuando deseas acceder a un servidor doméstico desde fuera de casa.
+                    Por ejemplo, podrías utilizar un nombre como <span class="code-inline">miservidor.example.net</span>
+                    en lugar de tener que recordar una dirección IP que puede cambiar.
+                </p>
+
+                <div class="box box-warning">
+                    <strong>⚠️ Importante</strong>
+                    <p>El DDNS no elimina las restricciones del proveedor de Internet ni sustituye la configuración
+                    del router y del firewall.</p>
+                </div>
+
+                <h4>Puertos y protocolos de comunicación</h4>
+                <p>
+                    Para que un cliente pueda comunicarse con un servicio concreto, normalmente necesita conocer la
+                    dirección del servidor y el <strong>puerto</strong> en el que está disponible el servicio.
+                </p>
+
+                <div class="box box-info">
+                    <strong>🏢 Analogía</strong>
+                    <p>Puedes imaginar la dirección IP como la dirección de un edificio y el puerto como el número
+                    de una oficina dentro de ese edificio.</p>
+                </div>
+
+                <p>
+                    Un <strong>puerto de red</strong> es un número lógico que permite identificar un servicio o
+                    aplicación dentro de una comunicación de red basada en TCP o UDP.
+                </p>
+                <p>
+                    Por ejemplo, un mismo ordenador puede ejecutar un servidor web y un servicio de administración
+                    remota. Cada servicio puede utilizar un puerto diferente.
+                </p>
+
+                <p><strong>Algunos puertos habituales son:</strong></p>
+                <div class="table-wrapper">
+                    <table>
+                        <caption class="sr-only">Puertos y protocolos habituales</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Puerto(s)</th>
+                                <th scope="col">Protocolo o servicio habitual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>20 y 21</td><td>FTP</td></tr>
+                            <tr><td>22</td><td>SSH / SFTP</td></tr>
+                            <tr><td>25</td><td>SMTP (correo)</td></tr>
+                            <tr><td>53</td><td>DNS</td></tr>
+                            <tr><td>80</td><td>HTTP</td></tr>
+                            <tr><td>443</td><td>HTTPS</td></tr>
+                            <tr><td>3389</td><td>Escritorio remoto de Windows (RDP)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>
+                    Estos son valores habituales, no reglas absolutas: algunos servicios pueden configurarse para
+                    utilizar otros puertos.
+                </p>
+
+                <h4>¿Qué es un protocolo?</h4>
+                <p>
+                    Un <strong>protocolo de red</strong> es un conjunto de reglas que define cómo se comunican los
+                    dispositivos. Entre los más importantes para administrar servidores se encuentran:
+                </p>
+                <ul>
+                    <li><strong>HTTP:</strong> permite intercambiar información para servicios web.</li>
+                    <li><strong>HTTPS:</strong> añade cifrado TLS a la comunicación HTTP.</li>
+                    <li><strong>FTP:</strong> permite transferir archivos, aunque la versión tradicional no cifra las credenciales ni los datos.</li>
+                    <li><strong>SFTP:</strong> permite transferir archivos mediante una conexión SSH.</li>
+                    <li><strong>SSH:</strong> permite administrar sistemas de forma remota mediante una conexión cifrada.</li>
+                    <li><strong>SMB:</strong> se utiliza habitualmente para compartir archivos e impresoras.</li>
+                    <li><strong>DNS:</strong> permite consultar información sobre nombres de dominio.</li>
+                </ul>
+
+                <h4>¿Qué es la redirección de puertos?</h4>
+                <p>
+                    La <strong>redirección de puertos</strong> es una regla del router que dirige determinadas
+                    conexiones entrantes hacia un dispositivo de la red local.
+                </p>
+                <p>
+                    Por ejemplo, si deseas publicar un servidor web doméstico, podrías configurar una regla para
+                    dirigir las conexiones entrantes al puerto 443 del equipo que aloja la página web.
+                </p>
+
+                <div class="box box-warning">
+                    <strong>⚠️ Precaución</strong>
+                    <p>Esta configuración requiere precaución: abrir un puerto puede exponer un servicio a intentos
+                    de conexión desde Internet. Antes de hacerlo, es necesario revisar las actualizaciones, la
+                    autenticación y las reglas del firewall.</p>
+                </div>
+
+                <p>
+                    Para comenzar, es preferible probar los servicios dentro de la red local y publicar un servicio
+                    en Internet únicamente cuando sea necesario.
+                </p>
+            </div>
+
+            <!-- NIVEL 3: APLICACIÓN -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon" aria-hidden="true">🔧</span>
+                    <h3>Nivel 3 — Aplicación: Conexión por cable y Wi-Fi</h3>
+                </div>
+
+                <p>
+                    Los dispositivos pueden conectarse a una red local mediante cables o de forma inalámbrica.
+                </p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>🔌 Conexión Ethernet</h4>
+                        <ul>
+                            <li>Generalmente estable.</li>
+                            <li>Baja latencia.</li>
+                            <li>Adecuada para transferir archivos grandes.</li>
+                            <li>Recomendada para servidores que funcionan continuamente.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>📶 Conexión Wi-Fi</h4>
+                        <ul>
+                            <li>Evita instalar cables.</li>
+                            <li>Facilita la ubicación de los dispositivos.</li>
+                            <li>Puede sufrir interferencias.</li>
+                            <li>Su rendimiento depende de la señal y de la congestión.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p>
+                    Ambas tecnologías permiten ejecutar un servidor. La elección depende de la estabilidad, la
+                    velocidad y las condiciones de la red.
+                </p>
+                <p>
+                    Si quieres montar un servidor para compartir archivos grandes, transmitir películas o ejecutar
+                    un servicio utilizado por varios dispositivos, una conexión Ethernet suele ser una buena elección.
+                    Para pruebas sencillas, un servidor conectado por Wi-Fi puede ser suficiente.
+                </p>
+
+                <div class="box box-info">
+                    <strong>💡 Consejo práctico</strong>
+                    <p>Si tu servidor va a estar encendido 24/7 y necesita transferir datos constantemente, usa cable
+                    Ethernet. Si es para pruebas o uso esporádico, Wi-Fi puede ser suficiente.</p>
+                </div>
+            </div>
+
+            <!-- NIVEL 4: ANÁLISIS -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon" aria-hidden="true">🧠</span>
+                    <h3>Nivel 4 — Análisis: Acceso local y acceso remoto</h3>
+                </div>
+
+                <p>
+                    Un servidor puede ofrecer sus servicios únicamente dentro de una red local o permitir conexiones
+                    desde otros lugares.
+                </p>
+
+                <h4>Acceso local</h4>
+                <p>
+                    El acceso local se produce cuando un dispositivo se conecta al servidor desde el mismo equipo o
+                    desde la red local.
+                </p>
+                <p>
+                    Por ejemplo, si tu PC servidor tiene la dirección <span class="code-inline">192.168.1.50</span> y
+                    ejecuta un servidor web en el puerto <span class="code-inline">8080</span>, podrías acceder desde
+                    otro equipo de la misma red utilizando:
+                </p>
+                <div class="code-block">
+                    <span class="cmd">http://192.168.1.50:8080</span>
+                </div>
+                <p>
+                    Esta dirección solo funcionará si el servidor escucha en ese puerto, el firewall permite la
+                    conexión y ambos dispositivos pueden comunicarse.
+                </p>
+
+                <h4>Acceso remoto</h4>
+                <p>
+                    El acceso remoto permite conectarse a un servidor desde otra red, por ejemplo, desde tu trabajo
+                    o cuando estás de viaje.
+                </p>
+                <p>Existen varias formas de hacerlo:</p>
+                <ul>
+                    <li><strong>VPN:</strong> crea una conexión protegida para acceder a una red privada.</li>
+                    <li><strong>SSH:</strong> permite administrar remotamente sistemas compatibles.</li>
+                    <li><strong>Escritorio remoto:</strong> permite controlar gráficamente un equipo.</li>
+                    <li><strong>Servicios web publicados:</strong> permiten acceder a aplicaciones desde un navegador.</li>
+                </ul>
+
+                <div class="box box-error">
+                    <strong>🚫 CGNAT</strong>
+                    <p>En algunos casos, el proveedor de Internet utiliza CGNAT, una tecnología que comparte una
+                    dirección IPv4 pública entre varios clientes. En ese escenario, la redirección de puertos
+                    convencional puede no funcionar. Una VPN con capacidad de acceso remoto o un servicio de
+                    conexión intermediaria puede ser una alternativa.</p>
+                </div>
+
+                <div class="box box-warning">
+                    <strong>🔒 Recomendación de seguridad</strong>
+                    <p>No expongas servicios de administración directamente a Internet sin las medidas de protección
+                    adecuadas. Utiliza contraseñas robustas, autenticación adicional cuando esté disponible y software
+                    actualizado.</p>
+                </div>
+
+                <h4>Piensa y responde</h4>
+                <p>
+                    Si tuvieras que montar un servidor para un proyecto del colegio y necesitaras que tus compañeros
+                    accedieran a él desde sus casas, ¿qué opción elegirías: VPN, SSH, escritorio remoto o servicio web
+                    publicado? <strong>¿Por qué?</strong>
+                </p>
+            </div>
+
+            <!-- NIVEL 5: TRANSFERENCIA -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon" aria-hidden="true">🚀</span>
+                    <h3>Nivel 5 — Transferencia: Resumen y aplicación real</h3>
+                </div>
+
+                <p>
+                    Para configurar un servidor es importante comprender los siguientes conceptos:
+                </p>
+                <ul>
+                    <li><strong>Red local (LAN):</strong> permite que los dispositivos se comuniquen dentro de un entorno limitado.</li>
+                    <li><strong>Dirección IP:</strong> identifica una interfaz de red y permite dirigir el tráfico.</li>
+                    <li><strong>Dominio y DNS:</strong> facilitan la localización de servicios mediante nombres.</li>
+                    <li><strong>Puertos:</strong> permiten identificar los servicios de red.</li>
+                    <li><strong>Protocolos:</strong> establecen las reglas de comunicación entre clientes y servidores.</li>
+                    <li><strong>Ethernet y Wi-Fi:</strong> son dos formas habituales de conectar dispositivos.</li>
+                    <li><strong>Acceso local y remoto:</strong> determinan desde dónde se puede utilizar el servidor.</li>
+                </ul>
+
+                <p>
+                    Con estos conocimientos ya puedes entender cómo se conectan los dispositivos y qué elementos
+                    intervienen cuando accedes a un servicio alojado en tu PC.
+                </p>
+
+                <div class="box box-success">
+                    <strong>🎯 Aplicación real</strong>
+                    <p>Imagina que tienes un emprendimiento de diseño gráfico y quieres compartir tus archivos con
+                    tus clientes sin usar servicios de terceros. Con lo aprendido, podrías montar un servidor web
+                    en tu PC, configurar un DNS dinámico y permitir que tus clientes descarguen sus diseños desde
+                    cualquier lugar, con las medidas de seguridad adecuadas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- RETO INTEGRADOR                           -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="reto" aria-labelledby="reto-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">4</span>
+                <h2 id="reto-title">Reto integrador</h2>
+            </div>
+            <p class="section-subtitle">Aplica todo lo aprendido en un escenario real</p>
+
+            <div class="challenge">
+                <span class="challenge-tag">Desafío final</span>
+                <h3>🏗️ «Mi primer servidor en casa»</h3>
+                <p>
+                    Eres el responsable de tecnología de un pequeño emprendimiento familiar. Tu tarea es diseñar
+                    la configuración de red y servidor para que todos los dispositivos del negocio puedan
+                    comunicarse entre sí y, además, permitir que un cliente externo acceda a un servicio web
+                    alojado en el local.
+                </p>
+
+                <p><strong>Contexto:</strong></p>
+                <ul>
+                    <li>El negocio tiene 3 computadoras de escritorio, 2 laptops, 2 teléfonos móviles y una impresora.</li>
+                    <li>Necesitan compartir archivos entre todos los dispositivos.</li>
+                    <li>Quieren alojar una página web con información del negocio en una de las computadoras.</li>
+                    <li>El proveedor de Internet les ha dado una IP pública dinámica.</li>
+                    <li>El router del local permite configurar redirección de puertos y tiene firewall integrado.</li>
+                </ul>
+
+                <p><strong>¿Qué debes lograr?</strong></p>
+                <ul>
+                    <li>Diseñar un esquema de red local que incluya todos los dispositivos.</li>
+                    <li>Asignar direcciones IP privadas coherentes (puedes usar el rango 192.168.1.0/24).</li>
+                    <li>Indicar qué puerto usarías para el servidor web y por qué.</li>
+                    <li>Explicar cómo configurarías el acceso remoto para que el cliente externo pueda ver la página.</li>
+                    <li>Mencionar al menos 3 medidas de seguridad que aplicarías.</li>
+                    <li>Justificar si usarías Ethernet o Wi-Fi para el servidor y por qué.</li>
+                </ul>
+
+                <div class="criteria">
+                    <h4>Criterios de éxito</h4>
+                    <ul>
+                        <li><strong>Comprensión:</strong> Los conceptos de IP, puertos y protocolos se aplican correctamente.</li>
+                        <li><strong>Aplicación:</strong> La configuración propuesta es coherente y funcional.</li>
+                        <li><strong>Creatividad:</strong> Se proponen soluciones propias y bien argumentadas.</li>
+                        <li><strong>Seguridad:</strong> Se incluyen medidas de protección adecuadas.</li>
+                        <li><strong>Argumentación:</strong> Cada decisión está justificada técnicamente.</li>
+                        <li><strong>Buenas prácticas:</strong> Se demuestra responsabilidad y ética profesional.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- EVALUACIÓN LÚDICA                         -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="evaluacion" aria-labelledby="evaluacion-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">5</span>
+                <h2 id="evaluacion-title">Evaluación lúdica</h2>
+            </div>
+            <p class="section-subtitle">Demuestra lo que aprendiste</p>
+
+            <div class="quiz-container" id="quizContainer">
+                <!-- Barra de progreso -->
+                <div class="quiz-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso del cuestionario">
+                    <div class="quiz-progress-fill" id="quizProgressFill"></div>
+                </div>
+
+                <div class="quiz-meta">
+                    <span id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz-score" id="quizScore">Puntuación: 0</span>
+                </div>
+
+                <!-- Contenido del quiz -->
+                <div id="quizContent">
+                    <p class="quiz-question" id="quizQuestion"></p>
+                    <div class="quiz-options" id="quizOptions" role="group" aria-label="Opciones de respuesta"></div>
+                    <div class="quiz-feedback" id="quizFeedback" role="alert"></div>
+                    <button class="quiz-btn" id="quizNextBtn" disabled>Siguiente pregunta →</button>
+                </div>
+
+                <!-- Resultado final -->
+                <div class="quiz-result" id="quizResult">
+                    <div class="score-display" id="finalScore">0/5</div>
+                    <div class="score-label" id="finalPercentage">0%</div>
+                    <p class="message" id="finalMessage"></p>
+                    <button class="quiz-btn quiz-btn-secondary" id="quizRestartBtn">🔄 Reiniciar cuestionario</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- CIERRE / REFLEXIÓN                        -->
+        <!-- ======================================== -->
+        <section class="section reveal" id="reflexion" aria-labelledby="reflexion-title">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">6</span>
+                <h2 id="reflexion-title">Cierre y reflexión</h2>
+            </div>
+            <p class="section-subtitle">Antes de terminar...</p>
+
+            <div class="reflection-grid">
+                <div class="reflection-card">
+                    <div class="reflection-icon" aria-hidden="true">🧠</div>
+                    <h4>¿Qué aprendí?</h4>
+                    <p>Piensa en los conceptos nuevos que descubriste: redes LAN, IP, DNS, puertos, protocolos...</p>
+                </div>
+                <div class="reflection-card">
+                    <div class="reflection-icon" aria-hidden="true">🛠️</div>
+                    <h4>¿Qué puedo aplicar?</h4>
+                    <p>¿Cómo usarías estos conocimientos en un proyecto escolar, personal o de emprendimiento?</p>
+                </div>
+                <div class="reflection-card">
+                    <div class="reflection-icon" aria-hidden="true">📚</div>
+                    <h4>¿Qué necesito practicar?</h4>
+                    <p>¿Qué concepto te resultó más difícil? ¿Qué te gustaría investigar más a fondo?</p>
+                </div>
+                <div class="reflection-card">
+                    <div class="reflection-icon" aria-hidden="true">🌍</div>
+                    <h4>¿Cómo lo usaría en la vida real?</h4>
+                    <p>¿Podrías montar un servidor en tu casa? ¿Para qué lo usarías?</p>
+                </div>
+            </div>
+
+            <div class="box box-info" style="margin-top: 1.5rem;">
+                <strong>💬 Reflexión final</strong>
+                <p>
+                    La tecnología no es magia: es un conjunto de reglas y protocolos que, una vez comprendidos,
+                    te permiten crear soluciones poderosas. Ahora sabes cómo se comunican los dispositivos y qué
+                    necesitas para convertir tu ordenador en un servidor. El siguiente paso es experimentar,
+                    practicar y seguir aprendiendo.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================ -->
+    <!-- FOOTER                                       -->
+    <!-- ============================================ -->
+    <footer class="footer">
+        <div class="footer-separator"></div>
+        <p class="footer-line">Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+        <p class="footer-author">Diseñado por: Edwin Méndez J.</p>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT                                   -->
+    <!-- ============================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            /* ======================================== */
+            /* NAVEGACIÓN MÓVIL                          */
+            /* ======================================== */
+            const navToggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', function() {
+                    const isOpen = navLinks.classList.toggle('open');
+                    navToggle.setAttribute('aria-expanded', isOpen.toString());
+                });
+
+                // Cerrar menú al hacer clic en un enlace
+                navLinks.querySelectorAll('a').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        navLinks.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+
+            /* ======================================== */
+            /* SCROLL REVEAL                             */
+            /* ======================================== */
+            const revealElements = document.querySelectorAll('.reveal');
+
+            if ('IntersectionObserver' in window) {
+                const revealObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                });
+
+                revealElements.forEach(function(el) {
+                    revealObserver.observe(el);
+                });
+            } else {
+                // Fallback: mostrar todo
+                revealElements.forEach(function(el) {
+                    el.classList.add('visible');
+                });
+            }
+
+            /* ======================================== */
+            /* QUIZ                                      */
+            /* ======================================== */
+
+            const preguntas = [
+                {
+                    pregunta: "¿Cuál es la función principal de un router en una red local?",
+                    opciones: [
+                        "Almacenar archivos compartidos de todos los dispositivos.",
+                        "Conectar diferentes redes y dirigir el tráfico entre ellas.",
+                        "Asignar direcciones IP públicas a los dispositivos.",
+                        "Cifrar todas las comunicaciones de la red local."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "El router conecta diferentes redes y dirige el tráfico entre ellas. En una vivienda, normalmente conecta la red doméstica con Internet. También puede incorporar funciones como punto de acceso Wi-Fi, servidor DHCP, firewall y switch integrado."
+                },
+                {
+                    pregunta: "Tu PC tiene la IP 192.168.1.50 y ejecutas un servidor web en el puerto 8080. ¿Cuál de las siguientes direcciones usarías desde otro equipo de la misma red local para acceder?",
+                    opciones: [
+                        "http://192.168.1.50",
+                        "http://192.168.1.50:8080",
+                        "https://192.168.1.50:80",
+                        "http://192.168.1.50/8080"
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "La sintaxis correcta para acceder a un servicio en un puerto específico es http://direcciónIP:puerto. En este caso: http://192.168.1.50:8080. La opción A no especifica el puerto 8080, la C usa HTTPS y el puerto 80 (incorrectos), y la D usa una barra en lugar de dos puntos."
+                },
+                {
+                    pregunta: "Analiza la siguiente situación: En tu casa, la IP pública cambia cada cierto tiempo. Quieres acceder a tu servidor doméstico desde fuera. ¿Qué tecnología te permitiría mantener un nombre de dominio actualizado automáticamente?",
+                    opciones: [
+                        "DNS estático",
+                        "DHCP",
+                        "DNS dinámico (DDNS)",
+                        "Firewall"
+                    ],
+                    correcta: 2,
+                    retroalimentacion: "El DNS dinámico (DDNS) permite actualizar automáticamente la asociación entre un nombre de dominio y la dirección IP actual, que puede cambiar periódicamente. El DHCP asigna IPs locales, el DNS estático no se actualiza automáticamente y el firewall controla conexiones."
+                },
+                {
+                    pregunta: "Un compañero quiere publicar un servidor web en su casa, pero su proveedor de Internet utiliza CGNAT. ¿Cuál es la mejor alternativa para permitir el acceso remoto?",
+                    opciones: [
+                        "Configurar la redirección de puertos en el router.",
+                        "Usar una VPN con capacidad de acceso remoto o un servicio de conexión intermediaria.",
+                        "Cambiar la dirección IP privada del servidor a una pública.",
+                        "Desactivar el firewall del router."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Con CGNAT, la redirección de puertos convencional puede no funcionar porque la IP pública es compartida. Una VPN con acceso remoto o un servicio de conexión intermediaria (como un túnel) puede ser una alternativa viable. Cambiar la IP privada a pública no es posible sin configuración del ISP, y desactivar el firewall es una mala práctica de seguridad."
+                },
+                {
+                    pregunta: "Estás configurando un servidor para compartir archivos grandes y transmitir video en un pequeño negocio. ¿Qué tipo de conexión recomendarías y por qué?",
+                    opciones: [
+                        "Wi-Fi, porque evita instalar cables y es más cómodo.",
+                        "Ethernet, porque es más estable, tiene baja latencia y es adecuado para transferir archivos grandes.",
+                        "Wi-Fi, porque siempre es más rápido que Ethernet.",
+                        "Ethernet, porque no necesita router."
+                    ],
+                    correcta: 1,
+                    retroalimentacion: "Para un servidor que funciona continuamente y necesita transferir archivos grandes o transmitir video, Ethernet es la mejor opción: es estable, tiene baja latencia y no sufre interferencias. Wi-Fi puede ser suficiente para pruebas sencillas, pero no es ideal para cargas de trabajo intensivas."
+                }
+            ];
+
+            // Variables de estado
+            let preguntaActual = 0;
+            let puntuacion = 0;
+            let respondida = false;
+            let quizIniciado = false;
+
+            // Elementos del DOM
+            const quizContent = document.getElementById('quizContent');
+            const quizQuestion = document.getElementById('quizQuestion');
+            const quizOptions = document.getElementById('quizOptions');
+            const quizFeedback = document.getElementById('quizFeedback');
+            const quizNextBtn = document.getElementById('quizNextBtn');
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScoreEl = document.getElementById('quizScore');
+            const quizProgressFill = document.getElementById('quizProgressFill');
+            const quizResult = document.getElementById('quizResult');
+            const finalScore = document.getElementById('finalScore');
+            const finalPercentage = document.getElementById('finalPercentage');
+            const finalMessage = document.getElementById('finalMessage');
+            const quizRestartBtn = document.getElementById('quizRestartBtn');
+            const quizProgressBar = document.querySelector('.quiz-progress-bar');
+
+            /* ======================================== */
+            /* FUNCIONES DEL QUIZ                        */
+            /* ======================================== */
+
+            function iniciarQuiz() {
+                preguntaActual = 0;
+                puntuacion = 0;
+                respondida = false;
+                quizIniciado = true;
+
+                quizContent.style.display = 'block';
+                quizResult.classList.remove('show');
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = 'Siguiente pregunta →';
+
+                mostrarPregunta();
+                actualizarMarcadores();
+            }
+
+            function mostrarPregunta() {
+                const pregunta = preguntas[preguntaActual];
+                respondida = false;
+
+                // Pregunta
+                quizQuestion.textContent = pregunta.pregunta;
+
+                // Opciones
+                quizOptions.innerHTML = '';
+                const letras = ['A', 'B', 'C', 'D'];
+
+                pregunta.opciones.forEach(function(opcion, index) {
+                    const boton = document.createElement('button');
+                    boton.type = 'button';
+                    boton.className = 'quiz-option';
+                    boton.setAttribute('data-index', index);
+                    boton.setAttribute('aria-label', 'Opción ' + letras[index] + ': ' + opcion);
+
+                    const letraSpan = document.createElement('span');
+                    letraSpan.className = 'option-letter';
+                    letraSpan.textContent = letras[index];
+                    letraSpan.setAttribute('aria-hidden', 'true');
+
+                    const textoSpan = document.createElement('span');
+                    textoSpan.textContent = opcion;
+
+                    boton.appendChild(letraSpan);
+                    boton.appendChild(textoSpan);
+
+                    boton.addEventListener('click', function() {
+                        seleccionarRespuesta(index, boton);
+                    });
+
+                    quizOptions.appendChild(boton);
+                });
+
+                // Reset feedback
+                quizFeedback.className = 'quiz-feedback';
+                quizFeedback.textContent = '';
+
+                // Reset botón siguiente
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = 'Siguiente pregunta →';
+
+                // Actualizar contador
+                quizCounter.textContent = 'Pregunta ' + (preguntaActual + 1) + ' de ' + preguntas.length;
+
+                // Actualizar barra de progreso
+                const progreso = (preguntaActual / preguntas.length) * 100;
+                quizProgressFill.style.width = progreso + '%';
+                quizProgressBar.setAttribute('aria-valuenow', Math.round(progreso));
+            }
+
+            function seleccionarRespuesta(index, boton) {
+                if (respondida) return;
+
+                const pregunta = preguntas[preguntaActual];
+                const esCorrecta = index === pregunta.correcta;
+
+                respondida = true;
+
+                // Deshabilitar todas las opciones
+                const todasOpciones = quizOptions.querySelectorAll('.quiz-option');
+                todasOpciones.forEach(function(opt) {
+                    opt.disabled = true;
+                    opt.style.cursor = 'default';
+                });
+
+                // Marcar la opción seleccionada
+                if (esCorrecta) {
+                    boton.classList.add('correct');
+                    puntuacion++;
+                    quizScoreEl.textContent = 'Puntuación: ' + puntuacion;
+                } else {
+                    boton.classList.add('incorrect');
+                    // Mostrar también la correcta
+                    todasOpciones[pregunta.correcta].classList.add('correct');
+                }
+
+                // Mostrar retroalimentación
+                quizFeedback.className = 'quiz-feedback show ' + (esCorrecta ? 'correct' : 'incorrect');
+
+                const feedbackStrong = document.createElement('strong');
+                feedbackStrong.textContent = esCorrecta ? '✅ ¡Correcto!' : '❌ Incorrecto';
+
+                const feedbackP = document.createElement('p');
+                feedbackP.textContent = pregunta.retroalimentacion;
+
+                quizFeedback.innerHTML = '';
+                quizFeedback.appendChild(feedbackStrong);
+                quizFeedback.appendChild(feedbackP);
+
+                // Habilitar botón siguiente
+                quizNextBtn.disabled = false;
+
+                // Actualizar barra de progreso
+                const progreso = ((preguntaActual + 1) / preguntas.length) * 100;
+                quizProgressFill.style.width = progreso + '%';
+                quizProgressBar.setAttribute('aria-valuenow', Math.round(progreso));
+            }
+
+            function siguientePregunta() {
+                if (!respondida) return;
+
+                preguntaActual++;
+
+                if (preguntaActual < preguntas.length) {
+                    mostrarPregunta();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizContent.style.display = 'none';
+                quizResult.classList.add('show');
+
+                const total = preguntas.length;
+                const porcentaje = Math.round((puntuacion / total) * 100);
+
+                finalScore.textContent = puntuacion + '/' + total;
+                finalPercentage.textContent = porcentaje + '%';
+
+                // Mensaje personalizado
+                let mensaje = '';
+                if (porcentaje === 100) {
+                    mensaje = '🏆 ¡Excelente! Dominas completamente los conceptos de redes y servidores. Estás listo para montar tu propio servidor.';
+                } else if (porcentaje >= 80) {
+                    mensaje = '🎉 ¡Muy bien! Tienes una comprensión sólida de los conceptos. Repasa los detalles para perfeccionar.';
+                } else if (porcentaje >= 60) {
+                    mensaje = '👍 Buen trabajo. Has comprendido lo esencial, pero conviene repasar algunos conceptos clave.';
+                } else if (porcentaje >= 40) {
+                    mensaje = '📚 Vas por buen camino. Te recomendamos repasar el contenido del taller, especialmente los conceptos de IP, puertos y DNS.';
+                } else {
+                    mensaje = '💪 No te desanimes. Este tema tiene muchos detalles. Vuelve a leer el desarrollo del taller y prueba de nuevo.';
+                }
+
+                finalMessage.textContent = mensaje;
+
+                // Actualizar barra de progreso al 100%
+                quizProgressFill.style.width = '100%';
+                quizProgressBar.setAttribute('aria-valuenow', 100);
+
+                // Actualizar contador
+                quizCounter.textContent = 'Cuestionario completado';
+            }
+
+            function reiniciarQuiz() {
+                quizResult.classList.remove('show');
+                quizContent.style.display = 'block';
+                iniciarQuiz();
+            }
+
+            function actualizarMarcadores() {
+                quizScoreEl.textContent = 'Puntuación: ' + puntuacion;
+                quizCounter.textContent = 'Pregunta ' + (preguntaActual + 1) + ' de ' + preguntas.length;
+            }
+
+            /* ======================================== */
+            /* EVENT LISTENERS                           */
+            /* ======================================== */
+
+            quizNextBtn.addEventListener('click', siguientePregunta);
+            quizRestartBtn.addEventListener('click', reiniciarQuiz);
+
+            /* ======================================== */
+            /* INICIALIZACIÓN                            */
+            /* ======================================== */
+
+            // Iniciar quiz al cargar
+            iniciarQuiz();
+
+            // Soporte de teclado para opciones (Enter/Space ya funciona en <button>)
+            // Los botones son accesibles por defecto.
+
+        })();
+    </script>
+</body>
+</html>

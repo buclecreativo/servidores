@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo | Tipos de Servidores</title>
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --color-primary: #0a192f;
+            --color-secondary: #112240;
+            --color-accent: #f59e0b;
+            --color-accent-hover: #d97706;
+            --color-background: #f8fafc;
+            --color-surface: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #64748b;
+            --color-text-lighter: #94a3b8;
+            --color-border: #e2e8f0;
+            --color-success: #10b981;
+            --color-success-bg: #ecfdf5;
+            --color-error: #ef4444;
+            --color-error-bg: #fef2f2;
+            --color-warning: #f59e0b;
+            --color-warning-bg: #fffbeb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+        }
+
+        /* ===== RESET ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ===== BASE ===== */
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 1rem;
+            overflow-x: hidden;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            line-height: 1.3;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.35rem;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 0.15em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--color-primary);
+            color: #e2e8f0;
+            padding: 1.2rem 1.5rem;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* ===== HEADER ===== */
+        .main-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1a365d 50%, var(--color-secondary) 100%);
+            color: #ffffff;
+            padding: 3rem 1.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            animation: headerGlow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes headerGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(2%, -2%) scale(1.05); }
+        }
+
+        .main-header h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            position: relative;
+            letter-spacing: -0.02em;
+        }
+
+        .main-header h1 span {
+            color: var(--color-accent);
+        }
+
+        .main-header .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.35rem);
+            color: #cbd5e1;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .main-header .description {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--color-accent);
+            padding: 0.35rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        /* ===== NAVEGACIÓN ===== */
+        .main-nav {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .main-nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            list-style: none;
+            padding: 0.6rem 1rem;
+            margin: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            color: var(--color-text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .main-nav a:hover,
+        .main-nav a:focus {
+            background: #f1f5f9;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .main-nav a:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* ===== MAIN ===== */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* ===== SECCIONES ===== */
+        .section {
+            margin-bottom: 3.5rem;
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--color-accent);
+        }
+
+        .section-title .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: var(--color-accent);
+            border-radius: var(--radius-sm);
+            color: #ffffff;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .section-title h2 {
+            margin-bottom: 0;
+        }
+
+        /* ===== TARJETAS ===== */
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition-base), transform var(--transition-base);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-accent {
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h3 .badge {
+            font-size: 0.7rem;
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 0.15rem 0.6rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        /* ===== GRIDS ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ===== BLOQUES ESPECIALES ===== */
+        .info-block {
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+            border-left: 4px solid;
+        }
+
+        .info-block.analogy {
+            background: #f0f9ff;
+            border-color: #0ea5e9;
+        }
+
+        .info-block.example {
+            background: #f0fdf4;
+            border-color: var(--color-success);
+        }
+
+        .info-block.recommendation {
+            background: var(--color-warning-bg);
+            border-color: var(--color-warning);
+        }
+
+        .info-block.warning {
+            background: var(--color-error-bg);
+            border-color: var(--color-error);
+        }
+
+        .info-block.reflection {
+            background: #faf5ff;
+            border-color: #a855f7;
+        }
+
+        .info-block.explore {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .info-block strong {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-block.analogy strong { color: #0284c7; }
+        .info-block.example strong { color: #059669; }
+        .info-block.recommendation strong { color: #d97706; }
+        .info-block.warning strong { color: #dc2626; }
+        .info-block.reflection strong { color: #9333ea; }
+        .info-block.explore strong { color: #2563eb; }
+
+        /* ===== TABLA ===== */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: var(--color-primary);
+            color: #ffffff;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== RETO ===== */
+        .challenge-box {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1a365d 100%);
+            color: #ffffff;
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .challenge-box::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .challenge-box h3 {
+            color: #ffffff;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .challenge-box p,
+        .challenge-box li {
+            color: #cbd5e1;
+            position: relative;
+        }
+
+        .challenge-box ul {
+            margin-bottom: 1rem;
+        }
+
+        .challenge-box .criteria {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .challenge-box .criteria h4 {
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-box .criteria li {
+            color: #e2e8f0;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-counter {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            background: #f1f5f9;
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+        }
+
+        .quiz-score {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            background: var(--color-warning-bg);
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #fbbf24);
+            border-radius: 50px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            color: var(--color-primary);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            background: var(--color-surface);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-size: 0.95rem;
+            text-align: left;
+            width: 100%;
+            font-family: inherit;
+            color: var(--color-text);
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            border-color: var(--color-accent);
+            background: #fffbeb;
+        }
+
+        .quiz-option:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz-option.selected {
+            border-color: var(--color-accent);
+            background: #fffbeb;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--color-success);
+            background: var(--color-success-bg);
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--color-error);
+            background: var(--color-error-bg);
+        }
+
+        .quiz-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .quiz-option .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            color: var(--color-text-light);
+        }
+
+        .quiz-option.correct .option-letter {
+            background: var(--color-success);
+            color: #ffffff;
+        }
+
+        .quiz-option.incorrect .option-letter {
+            background: var(--color-error);
+            color: #ffffff;
+        }
+
+        .quiz-feedback {
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct-fb {
+            background: var(--color-success-bg);
+            border-left: 4px solid var(--color-success);
+            color: #065f46;
+        }
+
+        .quiz-feedback.incorrect-fb {
+            background: var(--color-error-bg);
+            border-left: 4px solid var(--color-error);
+            color: #991b1b;
+        }
+
+        .quiz-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .quiz-btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz-btn.primary {
+            background: var(--color-accent);
+            color: #ffffff;
+        }
+
+        .quiz-btn.primary:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quiz-btn.secondary {
+            background: #f1f5f9;
+            color: var(--color-text);
+        }
+
+        .quiz-btn.secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 2rem 1rem;
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-result .result-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-result .result-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .quiz-result .result-percentage {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .quiz-result .result-message {
+            font-size: 1rem;
+            color: var(--color-text);
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* ===== REFLEXIÓN ===== */
+        .reflection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .reflection-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            transition: box-shadow var(--transition-base);
+        }
+
+        .reflection-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .reflection-card h4 {
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .reflection-card p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            margin-bottom: 0;
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background: var(--color-primary);
+            color: #94a3b8;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .main-footer p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .main-footer .heart {
+            color: var(--color-accent);
+        }
+
+        .main-footer .author {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        /* ===== UTILIDADES ===== */
+        .text-accent { color: var(--color-accent); }
+        .text-small { font-size: 0.85rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+
+        .icon-inline {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.3rem;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .tag-blue { background: #dbeafe; color: #1e40af; }
+        .tag-green { background: #d1fae5; color: #065f46; }
+        .tag-orange { background: #ffedd5; color: #9a3412; }
+        .tag-purple { background: #ede9fe; color: #5b21b6; }
+        .tag-red { background: #fee2e2; color: #991b1b; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 2.5rem 1rem 2rem;
+            }
+
+            main {
+                padding: 1.5rem 1rem 3rem;
+            }
+
+            .main-nav ul {
+                justify-content: flex-start;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+                padding: 0.5rem;
+                gap: 0.15rem;
+            }
+
+            .main-nav a {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.75rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .quiz-container {
+                padding: 1.25rem;
+            }
+
+            .challenge-box {
+                padding: 1.5rem;
+            }
+
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 0.95rem;
+            }
+
+            .main-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .main-header .subtitle {
+                font-size: 0.95rem;
+            }
+
+            .quiz-option {
+                font-size: 0.9rem;
+                padding: 0.7rem 0.85rem;
+            }
+
+            .quiz-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ===== ACCESIBILIDAD ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="main-header">
+        <div class="header-badge">Capítulo 2 · Taller Interactivo</div>
+        <h1>Bucle <span>Creativo</span></h1>
+        <p class="subtitle">Tipos de Servidores: el corazón de la infraestructura digital</p>
+        <p class="description">Explora, comprende y aplica los conceptos fundamentales sobre servidores web, archivos, multimedia, juegos, bases de datos y correo electrónico.</p>
+    </header>
+
+    <!-- ===== NAVEGACIÓN ===== -->
+    <nav class="main-nav" aria-label="Navegación principal del taller">
+        <ul>
+            <li><a href="#objetivo">Objetivo</a></li>
+            <li><a href="#activacion">Activación</a></li>
+            <li><a href="#desarrollo">Desarrollo</a></li>
+            <li><a href="#reto">Reto</a></li>
+            <li><a href="#evaluacion">Evaluación</a></li>
+            <li><a href="#reflexion">Reflexión</a></li>
+        </ul>
+    </nav>
+
+    <!-- ===== MAIN ===== -->
+    <main>
+
+        <!-- ===== OBJETIVO ===== -->
+        <section id="objetivo" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">🎯</span>
+                <h2>Objetivo de Aprendizaje</h2>
+            </div>
+            <div class="card card-accent">
+                <p class="mb-0">
+                    <strong>Identificar y diferenciar</strong> los principales tipos de servidores según su función —web, archivos, multimedia, juegos, bases de datos y correo electrónico—, <strong>analizando</strong> sus características, protocolos y programas representativos, para <strong>aplicar</strong> estos conocimientos en la selección y configuración de soluciones tecnológicas en entornos locales o accesibles desde Internet, desarrollando <strong>pensamiento crítico, responsabilidad digital y curiosidad tecnológica</strong> a través de la exploración guiada, el análisis de casos prácticos y la resolución de problemas contextualizados.
+                </p>
+            </div>
+        </section>
+
+        <!-- ===== ACTIVACIÓN ===== -->
+        <section id="activacion" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">💡</span>
+                <h2>Activación</h2>
+            </div>
+            <div class="card">
+                <h3>📖 Una historia cotidiana</h3>
+                <p>
+                    Imagina que estás en tu casa un viernes por la noche. Decides ver una película con tu familia, pero el archivo está en la laptop de tu hermano, que está en otra habitación. Tu hermana quiere escuchar música desde su celular, pero las canciones están en el computador de la sala. Mientras tanto, tu primo quiere jugar Minecraft con sus amigos, pero no sabe cómo hacer que se conecten a su partida.
+                </p>
+                <p>
+                    De repente, tu papá dice: <em>"¿Y si tuviéramos un computador que guarde todo y lo comparta con todos los dispositivos de la casa?"</em>. Tú, que acabas de aprender sobre servidores, sonríes y piensas: <strong>"Eso es exactamente lo que hace un servidor"</strong>.
+                </p>
+                <div class="info-block reflection">
+                    <strong>🤔 Piensa y responde</strong>
+                    ¿Alguna vez has tenido un problema similar en tu casa o colegio? ¿Qué archivos o servicios te gustaría compartir entre varios dispositivos sin depender de memorias USB o correos electrónicos?
+                </div>
+                <p class="mb-0">
+                    En este taller descubrirás que un mismo equipo puede convertirse en el centro de operaciones digital de tu hogar, colegio o emprendimiento. Pero no todos los servidores son iguales: cada uno tiene una función específica, programas especializados y consideraciones técnicas que debes conocer. <strong>¿Te atreves a explorarlos?</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- ===== DESARROLLO ===== -->
+        <section id="desarrollo" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">📚</span>
+                <h2>Desarrollo del Contenido</h2>
+            </div>
+
+            <!-- NIVEL 1: FUNDAMENTOS -->
+            <article class="card">
+                <h3>🔹 Nivel 1 — Fundamentos: ¿Qué es un servidor?</h3>
+                <p>
+                    Un <strong>servidor</strong> es un sistema informático que proporciona recursos, datos o servicios a otros equipos llamados <strong>clientes</strong>, a través de una red. Puede ser un computador dedicado, una máquina virtual o incluso tu propia PC configurada para tal fin.
+                </p>
+                <p>
+                    Existen diferentes tipos de servidores según la función que desempeñan y los servicios que ofrecen. Algunos permiten alojar páginas web, otros almacenan archivos y otros facilitan la reproducción de contenido multimedia o la conexión entre jugadores.
+                </p>
+                <div class="info-block analogy">
+                    <strong>🔗 Analogía</strong>
+                    Un servidor es como una biblioteca: los libros (datos) están organizados y disponibles para que muchas personas (clientes) los consulten al mismo tiempo. El bibliotecario (software del servidor) gestiona quién puede acceder a qué y cómo.
+                </div>
+                <div class="info-block recommendation">
+                    <strong>💡 Recomendación</strong>
+                    Un mismo ordenador puede funcionar como varios tipos de servidores al mismo tiempo, siempre que tenga los recursos necesarios (CPU, RAM, almacenamiento) y el software adecuado. Empieza con un solo servicio y ve agregando otros según tus necesidades.
+                </div>
+            </article>
+
+            <!-- NIVEL 2: COMPRENSIÓN - SERVICIOS -->
+            <h3 class="mt-2 mb-1" style="color: var(--color-primary);">🔹 Nivel 2 — Comprensión: Tipos de servidores</h3>
+
+            <!-- 2.1 Servidor Web -->
+            <article class="card card-accent">
+                <h3>🌐 2.1. Servidor Web <span class="tag tag-blue">HTTP/HTTPS</span></h3>
+                <p>
+                    Un <strong>servidor web</strong> es un sistema que almacena, procesa y entrega páginas web a los navegadores de los usuarios. Cuando una persona introduce una dirección en su navegador, este solicita los recursos necesarios al servidor web, que responde enviando el contenido solicitado.
+                </p>
+                <p>
+                    Los servidores web utilizan principalmente los protocolos <strong>HTTP</strong> (HyperText Transfer Protocol) y <strong>HTTPS</strong> (HTTP Secure) para comunicarse con los navegadores.
+                </p>
+                <h4>Usos más comunes:</h4>
+                <ul>
+                    <li>Alojar páginas web personales o empresariales.</li>
+                    <li>Ejecutar aplicaciones web.</li>
+                    <li>Crear sitios de prueba durante el desarrollo de software.</li>
+                    <li>Publicar blogs, portafolios y tiendas en línea.</li>
+                </ul>
+                <h4>Programas populares:</h4>
+                <div class="grid-2">
+                    <div><strong>Apache HTTP Server:</strong> servidor web ampliamente utilizado y configurable.</div>
+                    <div><strong>Nginx:</strong> conocido por su eficiencia y su uso como proxy inverso.</div>
+                    <div><strong>Caddy:</strong> facilita la configuración de HTTPS.</div>
+                    <div><strong>XAMPP:</strong> paquete que incluye Apache y otras herramientas para desarrollo local.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Puedes instalar Apache en tu PC y utilizarlo para mostrar una página web a otros dispositivos conectados a tu red doméstica. Por ejemplo, podrías crear el sitio web del club de ciencias de tu colegio y compartirlo con tus compañeros sin necesidad de internet.
+                </div>
+                <div class="info-block reflection">
+                    <strong>🤔 Piensa y responde</strong>
+                    ¿Qué diferencias crees que existen entre HTTP y HTTPS? ¿Por qué es importante que los sitios web que visitas usen HTTPS?
+                </div>
+            </article>
+
+            <!-- 2.2 Servidor de Archivos -->
+            <article class="card card-accent">
+                <h3>📁 2.2. Servidor de Archivos <span class="tag tag-green">NAS</span></h3>
+                <p>
+                    Un <strong>servidor de archivos</strong> permite almacenar, organizar y compartir documentos, imágenes, vídeos y otros archivos entre diferentes dispositivos. En lugar de guardar todos los documentos en cada ordenador, los usuarios pueden acceder a una ubicación centralizada.
+                </p>
+                <h4>Principales ventajas:</h4>
+                <ul>
+                    <li>Compartir archivos entre ordenadores.</li>
+                    <li>Centralizar documentos importantes.</li>
+                    <li>Administrar permisos de lectura y escritura.</li>
+                    <li>Facilitar las copias de seguridad.</li>
+                    <li>Acceder a los archivos desde diferentes dispositivos de la red.</li>
+                </ul>
+                <h4>Programas y tecnologías populares:</h4>
+                <div class="grid-2">
+                    <div><strong>Samba:</strong> permite compartir archivos e impresoras con equipos Windows, Linux y otros sistemas compatibles.</div>
+                    <div><strong>File Browser:</strong> ofrece una interfaz web para administrar archivos.</div>
+                    <div><strong>OpenMediaVault:</strong> sistema basado en Debian orientado al almacenamiento conectado a la red (NAS).</div>
+                    <div><strong>Nextcloud:</strong> permite crear una plataforma personal para sincronizar y compartir archivos.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Puedes convertir un PC antiguo en un servidor de archivos para guardar fotografías, documentos y copias de seguridad de los equipos de tu hogar. Imagina que tu familia tiene un negocio de venta de artesanías: podrías centralizar los diseños, facturas y fotos de los productos en un solo lugar accesible desde la tablet del local y el celular de tu mamá.
+                </div>
+                <div class="info-block recommendation">
+                    <strong>💡 Recomendación</strong>
+                    Establece una política de nombres y carpetas desde el inicio. Un servidor de archivos desordenado se vuelve inútil rápidamente. Usa fechas, nombres descriptivos y separa por categorías.
+                </div>
+            </article>
+
+            <!-- 2.3 Servidor Multimedia -->
+            <article class="card card-accent">
+                <h3>🎬 2.3. Servidor Multimedia <span class="tag tag-purple">Streaming</span></h3>
+                <p>
+                    Un <strong>servidor multimedia</strong> organiza y distribuye contenido audiovisual —películas, series, música y fotografías— a dispositivos compatibles. Puede utilizarse para reproducir contenido almacenado localmente sin tener que copiarlo a cada televisor, teléfono u ordenador.
+                </p>
+                <h4>Funciones habituales:</h4>
+                <ul>
+                    <li>Organizar bibliotecas multimedia.</li>
+                    <li>Transmitir vídeos y música por la red.</li>
+                    <li>Administrar usuarios y bibliotecas.</li>
+                    <li>Reproducir contenido en diferentes dispositivos.</li>
+                    <li>Convertir vídeos a formatos compatibles cuando el software y el hardware lo permiten.</li>
+                </ul>
+                <h4>Programas populares:</h4>
+                <div class="grid-2">
+                    <div><strong>Jellyfin:</strong> solución gratuita y de código abierto para gestionar y transmitir contenido multimedia.</div>
+                    <div><strong>Plex Media Server:</strong> organiza bibliotecas multimedia y facilita su reproducción en dispositivos compatibles.</div>
+                    <div><strong>Emby:</strong> plataforma para administrar y transmitir contenido multimedia personal.</div>
+                    <div><strong>Kodi:</strong> centro multimedia que reproduce contenido local y de red; por sí solo no cumple exactamente la misma función de servidor central que Jellyfin o Plex.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Puedes instalar Jellyfin en tu PC y ver tus películas desde un televisor inteligente o un teléfono conectado a tu red. Si organizas una noche de cine en casa, todos podrán elegir qué ver desde sus propios dispositivos sin necesidad de pasar un cable HDMI.
+                </div>
+                <div class="info-block analogy">
+                    <strong>🔗 Analogía</strong>
+                    Un servidor multimedia es como un cine en casa: la película está en un solo lugar (el proyector/servidor), pero todos pueden verla desde diferentes asientos (dispositivos) sin necesidad de tener una copia individual.
+                </div>
+            </article>
+
+            <!-- 2.4 Servidor de Juegos -->
+            <article class="card card-accent">
+                <h3>🎮 2.4. Servidor de Juegos <span class="tag tag-orange">Multiplayer</span></h3>
+                <p>
+                    Un <strong>servidor de juegos</strong> permite que varios jugadores se conecten a una misma partida o entorno de juego. Según el título, el servidor puede gestionar el estado de la partida, los movimientos de los jugadores, las reglas y la comunicación entre participantes. Estos servidores pueden funcionar en Internet o en una red local.
+                </p>
+                <h4>Principales usos:</h4>
+                <ul>
+                    <li>Crear partidas privadas con amigos.</li>
+                    <li>Administrar mundos persistentes.</li>
+                    <li>Configurar reglas y complementos.</li>
+                    <li>Controlar quién puede conectarse.</li>
+                    <li>Mantener una partida disponible mientras el servidor está encendido.</li>
+                </ul>
+                <h4>Ejemplos de servidores y herramientas:</h4>
+                <div class="grid-2">
+                    <div><strong>Minecraft Java Server:</strong> permite alojar mundos multijugador de Minecraft Java Edition.</div>
+                    <div><strong>Paper:</strong> implementación de servidor compatible con Minecraft Java, con opciones de optimización y complementos.</div>
+                    <div><strong>Dedicated Servers:</strong> algunos videojuegos ofrecen programas específicos para alojar partidas.</div>
+                    <div><strong>SteamCMD:</strong> herramienta utilizada para instalar y actualizar determinados servidores dedicados de juegos distribuidos mediante Steam.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Puedes instalar un servidor de Minecraft en un PC y permitir que otros jugadores se conecten, siempre que sus versiones, la configuración de red y los requisitos del juego sean compatibles. ¿Te imaginas crear un mundo persistente con tus compañeros de clase donde cada uno tenga su propia base y construyan una ciudad juntos?
+                </div>
+                <div class="info-block warning">
+                    <strong>⚠️ Error frecuente</strong>
+                    No verificar la compatibilidad de versiones entre el servidor y los clientes. Si el servidor es 1.20 y un amigo tiene 1.19, no podrá conectarse. Siempre acuerden una versión común antes de empezar.
+                </div>
+            </article>
+
+            <!-- 2.5 Servidor de Bases de Datos -->
+            <article class="card card-accent">
+                <h3>🗄️ 2.5. Servidor de Bases de Datos <span class="tag tag-red">SQL</span></h3>
+                <p>
+                    Un <strong>servidor de bases de datos</strong> administra información estructurada para que las aplicaciones puedan almacenarla, consultarla, modificarla y eliminarla de manera controlada. Se utiliza en páginas web, aplicaciones móviles, sistemas de inventario y programas empresariales.
+                </p>
+                <h4>Funciones principales:</h4>
+                <ul>
+                    <li>Guardar información organizada.</li>
+                    <li>Ejecutar consultas para buscar datos.</li>
+                    <li>Gestionar usuarios y permisos.</li>
+                    <li>Mantener la integridad de la información.</li>
+                    <li>Facilitar las copias de seguridad y la recuperación de datos.</li>
+                </ul>
+                <h4>Programas populares:</h4>
+                <div class="grid-2">
+                    <div><strong>MySQL:</strong> sistema de gestión de bases de datos relacionales.</div>
+                    <div><strong>MariaDB:</strong> alternativa de código abierto compatible con numerosos entornos que utilizan MySQL.</div>
+                    <div><strong>PostgreSQL:</strong> sistema relacional conocido por sus capacidades avanzadas.</div>
+                    <div><strong>Microsoft SQL Server:</strong> plataforma de bases de datos de Microsoft.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Una tienda en línea puede utilizar una base de datos para almacenar los productos, los pedidos y la información de sus clientes. Si tu colegio organiza una feria de emprendimiento, podrías crear una base de datos para registrar los pedidos de los clientes y controlar el inventario de tu puesto.
+                </div>
+                <div class="info-block warning">
+                    <strong>⚠️ Advertencia de seguridad</strong>
+                    Es importante proteger este tipo de servidores y evitar que sus puertos estén expuestos directamente a Internet sin una configuración de seguridad adecuada. Una base de datos mal configurada puede ser accedida por personas no autorizadas.
+                </div>
+                <div class="info-block reflection">
+                    <strong>🤔 Piensa y responde</strong>
+                    ¿Qué tipo de información de tu vida diaria crees que está almacenada en bases de datos? ¿Cómo protegerías esa información si estuviera en tus manos?
+                </div>
+            </article>
+
+            <!-- 2.6 Servidor de Correo Electrónico -->
+            <article class="card card-accent">
+                <h3>📧 2.6. Servidor de Correo Electrónico <span class="tag tag-blue">SMTP/IMAP/POP3</span></h3>
+                <p>
+                    Un <strong>servidor de correo electrónico</strong> permite enviar, recibir, almacenar y gestionar mensajes entre usuarios. Normalmente, el servicio de correo electrónico combina varios componentes y protocolos:
+                </p>
+                <ul>
+                    <li><strong>SMTP:</strong> se utiliza para enviar mensajes y transferirlos entre servidores.</li>
+                    <li><strong>IMAP:</strong> permite consultar y sincronizar los mensajes almacenados en el servidor.</li>
+                    <li><strong>POP3:</strong> permite descargar mensajes mediante un cliente de correo compatible.</li>
+                </ul>
+                <h4>Programas y soluciones relacionadas:</h4>
+                <div class="grid-2">
+                    <div><strong>Postfix:</strong> agente de transferencia de correo utilizado para enviar y recibir mensajes.</div>
+                    <div><strong>Dovecot:</strong> proporciona servicios de acceso a correo mediante protocolos como IMAP y POP3.</div>
+                    <div><strong>Mailcow:</strong> conjunto de componentes para desplegar una plataforma de correo electrónico.</div>
+                    <div><strong>Microsoft Exchange:</strong> plataforma empresarial para correo y colaboración.</div>
+                </div>
+                <div class="info-block example">
+                    <strong>💻 Ejemplo práctico</strong>
+                    Una organización puede disponer de un servidor de correo para gestionar direcciones con su propio dominio. Por ejemplo, tu colegio podría tener correos como <code>nombre.apellido@colegio.edu.ec</code> en lugar de usar servicios gratuitos externos.
+                </div>
+                <div class="info-block warning">
+                    <strong>⚠️ Advertencia</strong>
+                    Montar un servidor de correo accesible desde Internet puede ser complicado. Es necesario configurar correctamente el DNS, los certificados, la autenticación y las medidas contra el correo no deseado. Además, la reputación de la dirección IP puede afectar a la entrega de mensajes.
+                </div>
+            </article>
+
+            <!-- 2.7 Servidores locales vs Internet -->
+            <article class="card">
+                <h3>🌍 2.7. Servidores locales y servidores accesibles desde Internet</h3>
+                <p>
+                    Además de clasificarse por su función, los servidores pueden distinguirse por el lugar desde el que se puede acceder a ellos.
+                </p>
+                <div class="grid-2">
+                    <div class="card" style="border-left: 4px solid #3b82f6;">
+                        <h4>🏠 Servidor local</h4>
+                        <p>Está disponible dentro de un equipo o una red local, según su configuración. Puede utilizarse para pruebas, compartir archivos o reproducir contenido en casa.</p>
+                        <p class="text-small mb-0"><strong>Ejemplo:</strong> un servidor web accesible únicamente desde los dispositivos conectados al Wi-Fi doméstico.</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid var(--color-accent);">
+                        <h4>🌐 Servidor accesible desde Internet</h4>
+                        <p>Puede recibir conexiones desde redes externas, siempre que existan conectividad, rutas y reglas de acceso adecuadas.</p>
+                        <p class="text-small mb-0"><strong>Ejemplo:</strong> un sitio web público que puede visitarse desde cualquier lugar con conexión a Internet.</p>
+                    </div>
+                </div>
+                <h4>Para permitir el acceso externo a un servidor doméstico, pueden ser necesarios:</h4>
+                <ul>
+                    <li>Una configuración adecuada del router y del firewall.</li>
+                    <li>Una dirección IP pública accesible o una alternativa compatible con la red del proveedor.</li>
+                    <li>Reglas de redirección de puertos, cuando corresponda.</li>
+                    <li>Un dominio o servicio DNS dinámico, si resulta útil.</li>
+                    <li>Conexiones cifradas, autenticación y actualizaciones de seguridad.</li>
+                </ul>
+                <div class="info-block warning">
+                    <strong>⚠️ Importante</strong>
+                    No todos los servidores necesitan estar conectados a Internet. Para muchos usos domésticos, una red local es suficiente y reduce la exposición a riesgos externos. Si no necesitas acceso remoto, no expongas tu servidor a Internet.
+                </div>
+            </article>
+
+            <!-- 2.8 Comparación -->
+            <article class="card">
+                <h3>📊 2.8. Comparación de los principales tipos de servidores</h3>
+                <p>La siguiente tabla resume las características de cada tipo y algunas herramientas que puedes utilizar para comenzar.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo de servidor</th>
+                                <th>Función principal</th>
+                                <th>Software de ejemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Web</strong></td>
+                                <td>Alojar páginas y aplicaciones web</td>
+                                <td>Apache, Nginx</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Archivos</strong></td>
+                                <td>Compartir y almacenar documentos</td>
+                                <td>Samba, OpenMediaVault</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Multimedia</strong></td>
+                                <td>Transmitir películas y música</td>
+                                <td>Jellyfin, Plex</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Juegos</strong></td>
+                                <td>Alojar partidas multijugador</td>
+                                <td>Minecraft Java Server, Paper</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bases de datos</strong></td>
+                                <td>Administrar información estructurada</td>
+                                <td>PostgreSQL, MariaDB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Correo electrónico</strong></td>
+                                <td>Enviar y recibir mensajes</td>
+                                <td>Postfix, Dovecot</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-small mb-0">
+                    La elección depende del objetivo del proyecto, los recursos disponibles y los conocimientos técnicos del usuario.
+                </p>
+            </article>
+
+            <!-- NIVEL 3: APLICACIÓN -->
+            <article class="card card-accent">
+                <h3>🔹 Nivel 3 — Aplicación: ¿Cómo elegir el servidor adecuado?</h3>
+                <p>
+                    Imagina que tu curso quiere crear un sistema para gestionar el préstamo de libros de la biblioteca del colegio. Necesitan:
+                </p>
+                <ul>
+                    <li>Una página web donde los estudiantes consulten disponibilidad.</li>
+                    <li>Un lugar donde guardar las portadas de los libros y documentos PDF.</li>
+                    <li>Una base de datos con la información de cada libro y cada préstamo.</li>
+                    <li>Un correo electrónico para enviar recordatorios de devolución.</li>
+                </ul>
+                <p>
+                    ¿Qué tipos de servidores necesitarían? <strong>Al menos cuatro:</strong> web, archivos, base de datos y correo. Y si además quieren ver películas basadas en los libros, podrían añadir un servidor multimedia. Un solo equipo con suficientes recursos podría ejecutar todos estos servicios simultáneamente.
+                </p>
+                <div class="info-block explore">
+                    <strong>🔍 Explora</strong>
+                    Piensa en un proyecto de tu colegio o comunidad. ¿Qué tipos de servidores necesitarías para hacerlo realidad? Escribe una lista y justifica cada elección.
+                </div>
+            </article>
+
+            <!-- NIVEL 4: ANÁLISIS -->
+            <article class="card">
+                <h3>🔹 Nivel 4 — Análisis: Decisiones y errores frecuentes</h3>
+                <div class="grid-2">
+                    <div class="info-block warning">
+                        <strong>⚠️ Error frecuente #1</strong>
+                        Exponer todos los servicios a Internet sin necesidad. Si un servidor de archivos solo se usa en casa, no necesita ser accesible desde fuera. Cada servicio expuesto es una puerta potencial para atacantes.
+                    </div>
+                    <div class="info-block warning">
+                        <strong>⚠️ Error frecuente #2</strong>
+                        No actualizar el software del servidor. Las actualizaciones corrigen vulnerabilidades de seguridad. Un servidor desactualizado es un servidor vulnerable.
+                    </div>
+                    <div class="info-block warning">
+                        <strong>⚠️ Error frecuente #3</strong>
+                        Ignorar los permisos de usuario. No todos deben tener acceso a todo. En un servidor de archivos, por ejemplo, cada usuario debe tener permisos de lectura y escritura solo sobre lo que necesita.
+                    </div>
+                    <div class="info-block warning">
+                        <strong>⚠️ Error frecuente #4</strong>
+                        Sobrecargar un solo equipo. Si un PC viejo ejecuta servidor web, base de datos, multimedia y juegos al mismo tiempo, el rendimiento se degradará. Evalúa los recursos antes de agregar servicios.
+                    </div>
+                </div>
+                <div class="info-block recommendation">
+                    <strong>💡 Buena práctica</strong>
+                    Documenta la configuración de tu servidor: qué servicios ejecuta, qué puertos usa, qué usuarios tiene y qué medidas de seguridad aplicaste. Esto facilita el mantenimiento y la resolución de problemas.
+                </div>
+            </article>
+
+            <!-- NIVEL 5: TRANSFERENCIA -->
+            <article class="card card-accent">
+                <h3>🔹 Nivel 5 — Transferencia: Un servidor para tu emprendimiento</h3>
+                <p>
+                    Supón que tienes un pequeño emprendimiento de venta de postres. Quieres:
+                </p>
+                <ul>
+                    <li>Mostrar tu catálogo en una página web.</li>
+                    <li>Guardar las fotos de tus productos en un solo lugar.</li>
+                    <li>Registrar los pedidos de tus clientes.</li>
+                    <li>Enviar correos de confirmación.</li>
+                    <li>Compartir música ambiental en tu local desde una tablet.</li>
+                </ul>
+                <p>
+                    ¿Qué servidores necesitarías? ¿Podrías usar un solo computador? ¿Qué consideraciones de seguridad aplicarías? ¿Qué programas elegirías y por qué?
+                </p>
+                <div class="info-block reflection">
+                    <strong>🤔 Piensa y responde</strong>
+                    ¿Cómo cambiaría tu elección si tu emprendimiento creciera y tuvieras cientos de clientes? ¿Seguirías usando el mismo equipo o migrarías a servidores en la nube? Justifica tu respuesta.
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ===== RETO INTEGRADOR ===== -->
+        <section id="reto" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">🏆</span>
+                <h2>Reto Integrador</h2>
+            </div>
+            <div class="challenge-box">
+                <h3>🚀 Misión: Diseña la infraestructura digital de tu colegio</h3>
+                <p>
+                    Tu colegio ha decidido modernizar su infraestructura tecnológica. Te han contratado como asesor técnico para diseñar una propuesta de servidores que cubra las necesidades de la comunidad educativa.
+                </p>
+                <p><strong>Contexto:</strong></p>
+                <ul>
+                    <li>El colegio tiene 500 estudiantes y 30 docentes.</li>
+                    <li>Necesitan una página web institucional.</li>
+                    <li>Los docentes comparten material didáctico (PDF, videos, presentaciones).</li>
+                    <li>La biblioteca quiere digitalizar su catálogo.</li>
+                    <li>Se quiere crear un correo institucional para docentes.</li>
+                    <li>El club de informática quiere alojar un servidor de Minecraft para sus miembros.</li>
+                    <li>Hay un presupuesto limitado y un solo equipo servidor disponible.</li>
+                </ul>
+                <p><strong>¿Qué debes lograr?</strong></p>
+                <ul>
+                    <li>Identificar todos los tipos de servidores que se necesitan.</li>
+                    <li>Justificar la elección de cada tipo de servidor.</li>
+                    <li>Proponer un programa o tecnología para cada servicio.</li>
+                    <li>Explicar cómo se organizarían los servicios en un solo equipo (o si se necesitan más).</li>
+                    <li>Incluir al menos tres medidas de seguridad.</li>
+                    <li>Presentar tu propuesta en un documento de máximo dos páginas o una presentación de 5 diapositivas.</li>
+                </ul>
+                <div class="criteria">
+                    <h4>📋 Criterios de éxito</h4>
+                    <ul>
+                        <li><strong>Comprensión:</strong> identificas correctamente los tipos de servidores necesarios.</li>
+                        <li><strong>Aplicación:</strong> asocias cada necesidad con el servidor y programa adecuado.</li>
+                        <li><strong>Funcionalidad:</strong> tu propuesta es técnicamente viable con los recursos disponibles.</li>
+                        <li><strong>Creatividad:</strong> propones soluciones originales o complementarias.</li>
+                        <li><strong>Calidad técnica:</strong> incluyes medidas de seguridad y buenas prácticas.</li>
+                        <li><strong>Argumentación:</strong> justificas cada decisión con base en el contenido estudiado.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EVALUACIÓN ===== -->
+        <section id="evaluacion" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">📝</span>
+                <h2>Evaluación Lúdica</h2>
+            </div>
+            <div class="quiz-container" id="quizContainer">
+                <div class="quiz-header">
+                    <span class="quiz-counter" id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz-score" id="quizScore">Puntuación: 0/5</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1" aria-label="Progreso del cuestionario">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <div id="quizContent">
+                    <p class="quiz-question" id="quizQuestion"></p>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                    <button class="quiz-btn primary" id="quizNextBtn" disabled>Siguiente pregunta →</button>
+                </div>
+
+                <div class="quiz-result" id="quizResult">
+                    <div class="result-icon" id="resultIcon">🎉</div>
+                    <div class="result-score" id="resultScore">0/5</div>
+                    <div class="result-percentage" id="resultPercentage">0%</div>
+                    <p class="result-message" id="resultMessage"></p>
+                    <button class="quiz-btn primary" id="quizRestartBtn">🔄 Reiniciar cuestionario</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== REFLEXIÓN ===== -->
+        <section id="reflexion" class="section">
+            <div class="section-title">
+                <span class="icon" aria-hidden="true">🧠</span>
+                <h2>Cierre y Reflexión</h2>
+            </div>
+            <div class="card">
+                <h3>Antes de terminar...</h3>
+                <p>Tómate un momento para reflexionar sobre tu aprendizaje. No hay respuestas incorrectas; se trata de identificar qué te llevas de este taller.</p>
+                <div class="reflection-grid">
+                    <div class="reflection-card">
+                        <h4>📚 ¿Qué aprendí?</h4>
+                        <p>Escribe los tres conceptos más importantes que descubriste sobre los tipos de servidores.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>🔧 ¿Qué puedo aplicar?</h4>
+                        <p>Menciona una situación real en tu casa, colegio o comunidad donde podrías usar lo aprendido.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>📈 ¿Qué necesito seguir practicando?</h4>
+                        <p>Identifica un tema que te resultó confuso o que te gustaría explorar con más profundidad.</p>
+                    </div>
+                    <div class="reflection-card">
+                        <h4>💡 ¿Cómo lo usaría en un proyecto?</h4>
+                        <p>Imagina un proyecto propio. ¿Qué tipo de servidor implementarías primero y por qué?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-2">
+                <h3>📌 Resumen del capítulo</h3>
+                <p>
+                    Los servidores se clasifican principalmente según el servicio que ofrecen. Los <strong>servidores web</strong> publican páginas; los de <strong>archivos</strong> centralizan documentos; los <strong>multimedia</strong> distribuyen contenido audiovisual; los de <strong>juegos</strong> permiten partidas multijugador; los de <strong>bases de datos</strong> gestionan información, y los de <strong>correo electrónico</strong> procesan mensajes.
+                </p>
+                <p class="mb-0">
+                    Un mismo PC puede ejecutar varios servicios simultáneamente. Por ejemplo, puede funcionar como servidor de archivos y multimedia, siempre que disponga de suficientes recursos y esté configurado correctamente. Para una persona que comienza, lo más recomendable es elegir un objetivo concreto y experimentar primero dentro de una red local.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="main-footer">
+        <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+        <p class="author">Diseñado por: Edwin Méndez J.</p>
+    </footer>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== DATOS DEL CUESTIONARIO =====
+            const preguntas = [
+                {
+                    pregunta: "¿Cuál es la función principal de un servidor web?",
+                    opciones: [
+                        "Almacenar y compartir archivos entre dispositivos de una red.",
+                        "Almacenar, procesar y entregar páginas web a los navegadores.",
+                        "Administrar información estructurada para aplicaciones.",
+                        "Permitir que varios jugadores se conecten a una misma partida."
+                    ],
+                    correcta: 1,
+                    explicacion: "Un servidor web almacena, procesa y entrega páginas web a los navegadores utilizando protocolos como HTTP y HTTPS. Las otras opciones corresponden a servidores de archivos, bases de datos y juegos, respectivamente."
+                },
+                {
+                    pregunta: "María quiere convertir un PC antiguo en un servidor para guardar las fotos y documentos de su familia, y que todos puedan acceder desde sus celulares y laptops. ¿Qué tipo de servidor necesita principalmente?",
+                    opciones: [
+                        "Servidor de correo electrónico.",
+                        "Servidor de juegos.",
+                        "Servidor de archivos.",
+                        "Servidor de bases de datos."
+                    ],
+                    correcta: 2,
+                    explicacion: "Un servidor de archivos permite almacenar, organizar y compartir documentos, imágenes y otros archivos entre diferentes dispositivos. Programas como Samba, OpenMediaVault o Nextcloud son ideales para este propósito."
+                },
+                {
+                    pregunta: "Un estudiante configura un servidor de Minecraft en su PC. Su amigo intenta conectarse pero no puede, aunque ambos tienen conexión a Internet. ¿Cuál es la causa más probable?",
+                    opciones: [
+                        "El servidor de Minecraft no es compatible con Internet.",
+                        "Las versiones del servidor y del cliente no coinciden o la configuración de red no es adecuada.",
+                        "Minecraft solo funciona en redes locales, nunca en Internet.",
+                        "El amigo necesita instalar un servidor web para conectarse."
+                    ],
+                    correcta: 1,
+                    explicacion: "Para que varios jugadores se conecten a un servidor de Minecraft, deben coincidir las versiones del servidor y del cliente, y la configuración de red (puertos, firewall, IP) debe ser correcta. Los servidores de juegos pueden funcionar tanto en Internet como en redes locales."
+                },
+                {
+                    pregunta: "Una tienda en línea necesita almacenar productos, pedidos y datos de clientes, y que las aplicaciones puedan consultarlos y modificarlos de forma controlada. ¿Qué tipo de servidor es el más adecuado?",
+                    opciones: [
+                        "Servidor multimedia.",
+                        "Servidor web.",
+                        "Servidor de bases de datos.",
+                        "Servidor de archivos."
+                    ],
+                    correcta: 2,
+                    explicacion: "Un servidor de bases de datos administra información estructurada para que las aplicaciones puedan almacenarla, consultarla, modificarla y eliminarla de manera controlada. MySQL, MariaDB y PostgreSQL son ejemplos de programas para este tipo de servidor."
+                },
+                {
+                    pregunta: "Tu colegio quiere implementar un correo institucional para docentes con su propio dominio. ¿Qué combinación de protocolos y programas sería la más adecuada?",
+                    opciones: [
+                        "HTTP y HTTPS con Apache y Nginx.",
+                        "SMTP para enviar, IMAP/POP3 para recibir, con Postfix y Dovecot.",
+                        "Samba y OpenMediaVault para gestionar los mensajes.",
+                        "Jellyfin y Plex para transmitir los correos."
+                    ],
+                    correcta: 1,
+                    explicacion: "Un servidor de correo electrónico utiliza SMTP para enviar mensajes y transferirlos entre servidores, e IMAP o POP3 para que los usuarios consulten o descarguen sus mensajes. Postfix y Dovecot son programas populares para implementar estos servicios."
+                }
+            ];
+
+            // ===== ESTADO DEL QUIZ =====
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = null;
+            let preguntaRespondida = false;
+
+            // ===== REFERENCIAS DOM =====
+            const quizContent = document.getElementById('quizContent');
+            const quizQuestion = document.getElementById('quizQuestion');
+            const quizOptions = document.getElementById('quizOptions');
+            const quizFeedback = document.getElementById('quizFeedback');
+            const quizNextBtn = document.getElementById('quizNextBtn');
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScore = document.getElementById('quizScore');
+            const progressFill = document.getElementById('progressFill');
+            const quizResult = document.getElementById('quizResult');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultScore = document.getElementById('resultScore');
+            const resultPercentage = document.getElementById('resultPercentage');
+            const resultMessage = document.getElementById('resultMessage');
+            const quizRestartBtn = document.getElementById('quizRestartBtn');
+            const quizContainer = document.getElementById('quizContainer');
+
+            // ===== FUNCIONES =====
+
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = null;
+                preguntaRespondida = false;
+
+                quizContent.style.display = 'block';
+                quizResult.classList.remove('show');
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = 'Siguiente pregunta →';
+
+                mostrarPregunta();
+                actualizarMarcadores();
+            }
+
+            function mostrarPregunta() {
+                const pregunta = preguntas[indiceActual];
+                preguntaRespondida = false;
+                respuestaSeleccionada = null;
+
+                quizQuestion.textContent = pregunta.pregunta;
+                quizFeedback.classList.remove('show', 'correct-fb', 'incorrect-fb');
+                quizFeedback.textContent = '';
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = indiceActual === preguntas.length - 1 ? 'Ver resultado →' : 'Siguiente pregunta →';
+
+                quizOptions.innerHTML = '';
+                const letras = ['A', 'B', 'C', 'D'];
+
+                pregunta.opciones.forEach(function(opcion, index) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'quiz-option';
+                    btn.setAttribute('aria-label', 'Opción ' + letras[index] + ': ' + opcion);
+                    btn.innerHTML = '<span class="option-letter">' + letras[index] + '</span><span>' + opcion + '</span>';
+                    btn.dataset.index = index;
+                    btn.addEventListener('click', function() {
+                        seleccionarRespuesta(index, btn);
+                    });
+                    quizOptions.appendChild(btn);
+                });
+
+                actualizarMarcadores();
+                progressFill.style.width = ((indiceActual) / preguntas.length * 100) + '%';
+            }
+
+            function seleccionarRespuesta(index, btn) {
+                if (preguntaRespondida) return;
+
+                const pregunta = preguntas[indiceActual];
+                const opciones = quizOptions.querySelectorAll('.quiz-option');
+
+                // Marcar seleccionada
+                opciones.forEach(function(o) {
+                    o.classList.remove('selected');
+                });
+                btn.classList.add('selected');
+                respuestaSeleccionada = index;
+
+                // Bloquear opciones
+                opciones.forEach(function(o) {
+                    o.classList.add('disabled');
+                    o.disabled = true;
+                });
+
+                // Evaluar
+                const esCorrecta = index === pregunta.correcta;
+
+                if (esCorrecta) {
+                    puntuacion++;
+                    btn.classList.add('correct');
+                    quizFeedback.className = 'quiz-feedback show correct-fb';
+                    quizFeedback.innerHTML = '<strong>✅ ¡Correcto!</strong> ' + pregunta.explicacion;
+                } else {
+                    btn.classList.add('incorrect');
+                    // Mostrar cuál era la correcta
+                    opciones[pregunta.correcta].classList.add('correct');
+                    quizFeedback.className = 'quiz-feedback show incorrect-fb';
+                    quizFeedback.innerHTML = '<strong>❌ Incorrecto.</strong> La respuesta correcta es la opción ' +
+                        ['A', 'B', 'C', 'D'][pregunta.correcta] + '. ' + pregunta.explicacion;
+                }
+
+                // Marcar la correcta visualmente
+                opciones[pregunta.correcta].classList.add('correct');
+
+                preguntaRespondida = true;
+                quizNextBtn.disabled = false;
+                actualizarMarcadores();
+            }
+
+            function siguientePregunta() {
+                if (!preguntaRespondida) return;
+
+                indiceActual++;
+
+                if (indiceActual < preguntas.length) {
+                    mostrarPregunta();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizContent.style.display = 'none';
+                quizResult.classList.add('show');
+
+                const porcentaje = Math.round((puntuacion / preguntas.length) * 100);
+                resultScore.textContent = puntuacion + '/' + preguntas.length;
+                resultPercentage.textContent = porcentaje + '%';
+
+                let icono = '🎉';
+                let mensaje = '';
+
+                if (porcentaje === 100) {
+                    icono = '🏆';
+                    mensaje = '¡Excelente! Has dominado completamente los tipos de servidores. Estás listo para diseñar infraestructuras digitales.';
+                } else if (porcentaje >= 80) {
+                    icono = '🌟';
+                    mensaje = '¡Muy bien! Tienes una comprensión sólida. Repasa los detalles que fallaron para alcanzar la perfección.';
+                } else if (porcentaje >= 60) {
+                    icono = '📚';
+                    mensaje = 'Buen trabajo. Tienes una base importante, pero te recomendamos repasar algunos conceptos clave.';
+                } else if (porcentaje >= 40) {
+                    icono = '💪';
+                    mensaje = 'No te desanimes. Revisa el contenido del taller y vuelve a intentarlo. Cada intento te acerca más al dominio del tema.';
+                } else {
+                    icono = '🔄';
+                    mensaje = 'Es momento de repasar. Lee nuevamente las secciones del taller y presta atención a los ejemplos prácticos. ¡Puedes hacerlo!';
+                }
+
+                resultIcon.textContent = icono;
+                resultMessage.textContent = mensaje;
+
+                progressFill.style.width = '100%';
+                actualizarMarcadores();
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+            }
+
+            function actualizarMarcadores() {
+                quizCounter.textContent = 'Pregunta ' + (indiceActual + 1) + ' de ' + preguntas.length;
+                quizScore.textContent = 'Puntuación: ' + puntuacion + '/' + preguntas.length;
+
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.setAttribute('aria-valuenow', indiceActual + 1);
+                }
+            }
+
+            // ===== EVENT LISTENERS =====
+            quizNextBtn.addEventListener('click', siguientePregunta);
+            quizRestartBtn.addEventListener('click', reiniciarQuiz);
+
+            // ===== INICIALIZAR =====
+            iniciarQuiz();
+
+        })();
+    </script>
+
+</body>
+</html>
