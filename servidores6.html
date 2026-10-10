@@ -1,2471 +1,1989 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bucle Creativo — Sistemas Operativos y Programas para Servidores</title>
-<style>
-/* ===== VARIABLES ===== */
-:root {
-  --color-primary: #0b2545;
-  --color-primary-light: #13315c;
-  --color-secondary: #1d6fb8;
-  --color-accent: #f58a1f;
-  --color-accent-dark: #d9720a;
-  --color-background: #f2f5f9;
-  --color-surface: #ffffff;
-  --color-text: #1f2a37;
-  --color-text-soft: #4b5563;
-  --color-gray-light: #e5eaf1;
-  --color-success: #1e9e6a;
-  --color-error: #d64545;
-  --radius: 14px;
-  --radius-sm: 9px;
-  --shadow-sm: 0 2px 8px rgba(11, 37, 69, 0.08);
-  --shadow-md: 0 8px 24px rgba(11, 37, 69, 0.12);
-  --shadow-lg: 0 16px 40px rgba(11, 37, 69, 0.18);
-  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --font-main: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Consolas", "Monaco", "Courier New", monospace;
-}
-
-/* ===== RESET ===== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-main);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  line-height: 1.65;
-  font-size: 16px;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-a {
-  color: var(--color-secondary);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* ===== BASE ===== */
-h1, h2, h3, h4 {
-  line-height: 1.25;
-  color: var(--color-primary);
-  font-weight: 700;
-}
-
-h2 {
-  font-size: 1.85rem;
-  margin-bottom: 0.5rem;
-}
-
-h3 {
-  font-size: 1.3rem;
-  margin-bottom: 0.4rem;
-}
-
-h4 {
-  font-size: 1.05rem;
-}
-
-p {
-  margin-bottom: 0.85rem;
-  color: var(--color-text-soft);
-}
-
-ul {
-  padding-left: 1.4rem;
-  margin-bottom: 0.85rem;
-}
-
-li {
-  margin-bottom: 0.35rem;
-  color: var(--color-text-soft);
-}
-
-strong {
-  color: var(--color-text);
-}
-
-.container {
-  width: min(1150px, 92%);
-  margin: 0 auto;
-}
-
-/* ===== SKIP LINK ===== */
-.skip-link {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  background: var(--color-accent);
-  color: #fff;
-  padding: 0.6rem 1rem;
-  z-index: 2000;
-  border-radius: 0 0 var(--radius-sm) 0;
-  font-weight: 600;
-}
-
-.skip-link:focus {
-  left: 0;
-}
-
-/* ===== HEADER ===== */
-.hero {
-  background: linear-gradient(135deg, #0b2545 0%, #13315c 55%, #1d6fb8 100%);
-  color: #fff;
-  padding: 4rem 0 3.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: "";
-  position: absolute;
-  top: -60px;
-  right: -80px;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(245,138,31,0.35) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: float 9s ease-in-out infinite;
-}
-
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: -100px;
-  left: -60px;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(29,111,184,0.4) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: float 12s ease-in-out infinite reverse;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-18px) scale(1.05); }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-}
-
-.hero-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #ffd8ae;
-  margin-bottom: 1.2rem;
-}
-
-.hero-brand svg {
-  width: 18px;
-  height: 18px;
-}
-
-.hero h1 {
-  color: #fff;
-  font-size: clamp(2.4rem, 6vw, 3.8rem);
-  letter-spacing: -0.02em;
-  margin-bottom: 0.6rem;
-}
-
-.hero h1 .accent-text {
-  color: var(--color-accent);
-}
-
-.hero-subtitle {
-  font-size: clamp(1.05rem, 2.4vw, 1.4rem);
-  color: #e0ecf8;
-  font-weight: 400;
-  max-width: 750px;
-  margin: 0 auto 1.4rem;
-}
-
-.hero-desc {
-  max-width: 720px;
-  margin: 0 auto;
-  color: #c3d7ec;
-  font-size: 0.98rem;
-}
-
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.hero-stat {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--radius-sm);
-  padding: 0.7rem 1.3rem;
-  backdrop-filter: blur(6px);
-  text-align: center;
-  min-width: 130px;
-}
-
-.hero-stat strong {
-  display: block;
-  color: var(--color-accent);
-  font-size: 1.5rem;
-}
-
-.hero-stat span {
-  font-size: 0.78rem;
-  color: #c3d7ec;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ===== NAVEGACIÓN ===== */
-.main-nav {
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.nav-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-list a {
-  display: block;
-  padding: 0.95rem 1.15rem;
-  color: var(--color-primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-bottom: 3px solid transparent;
-  transition: var(--transition);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.nav-list a:hover,
-.nav-list a:focus {
-  color: var(--color-accent-dark);
-  border-bottom-color: var(--color-accent);
-  background: #f8fafc;
-  text-decoration: none;
-}
-
-/* ===== SECCIONES ===== */
-.section {
-  padding: 3.5rem 0;
-}
-
-.section-alt {
-  background: var(--color-surface);
-}
-
-.section-header {
-  text-align: center;
-  max-width: 780px;
-  margin: 0 auto 2.4rem;
-}
-
-.section-label {
-  display: inline-block;
-  background: rgba(245, 138, 31, 0.14);
-  color: var(--color-accent-dark);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.9rem;
-  border-radius: 999px;
-  margin-bottom: 0.8rem;
-}
-
-.section-header p {
-  font-size: 1.02rem;
-}
-
-/* ===== TARJETAS ===== */
-.card {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  padding: 1.6rem;
-  border: 1px solid var(--color-gray-light);
-  transition: var(--transition);
-  height: 100%;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(29, 111, 184, 0.3);
-}
-
-.card-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.card-icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.card-icon.accent {
-  background: linear-gradient(135deg, var(--color-accent), #ffb45e);
-}
-
-.grid {
-  display: grid;
-  gap: 1.4rem;
-}
-
-.grid-2 {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-}
-
-/* ===== OBJETIVO ===== */
-.objective-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f4f8fd 100%);
-  border-left: 6px solid var(--color-accent);
-  border-radius: var(--radius);
-  padding: 1.8rem 2rem;
-  box-shadow: var(--shadow-md);
-  max-width: 900px;
-  margin: 0 auto;
-  font-size: 1.05rem;
-}
-
-.objective-card p {
-  color: var(--color-text);
-  margin: 0;
-  line-height: 1.8;
-}
-
-/* ===== ACTIVACIÓN ===== */
-.story-box {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 2rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-gray-light);
-  max-width: 900px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.story-box::before {
-  content: "“";
-  position: absolute;
-  top: -10px;
-  left: 20px;
-  font-size: 5rem;
-  color: rgba(29, 111, 184, 0.15);
-  font-family: Georgia, serif;
-  line-height: 1;
-}
-
-.story-box p {
-  font-size: 1.05rem;
-  color: var(--color-text);
-}
-
-.reflection-question {
-  background: rgba(245, 138, 31, 0.08);
-  border-left: 4px solid var(--color-accent);
-  padding: 1rem 1.3rem;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  margin-top: 1.2rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
-}
-
-.reflection-question svg {
-  flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  color: var(--color-accent);
-  margin-top: 2px;
-}
-
-/* ===== NIVELES DE DESARROLLO ===== */
-.level-block {
-  margin-bottom: 2.5rem;
-}
-
-.level-header {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1.2rem;
-}
-
-.level-badge {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.level-badge.accent {
-  background: var(--color-accent);
-}
-
-.level-header h3 {
-  margin: 0;
-  font-size: 1.35rem;
-}
-
-.level-header p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--color-text-soft);
-}
-
-/* ===== CONCEPTOS DESPLEGABLES ===== */
-.concept {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--color-gray-light);
-  margin-bottom: 1rem;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-
-.concept:hover {
-  border-color: rgba(29, 111, 184, 0.35);
-}
-
-.concept-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.1rem 1.4rem;
-  cursor: pointer;
-  gap: 1rem;
-  user-select: none;
-}
-
-.concept-header h4 {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 1.05rem;
-}
-
-.concept-header .tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  background: rgba(29, 111, 184, 0.12);
-  color: var(--color-secondary);
-}
-
-.concept-header .tag.orange {
-  background: rgba(245, 138, 31, 0.15);
-  color: var(--color-accent-dark);
-}
-
-.toggle-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--color-gray-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: var(--transition);
-  color: var(--color-primary);
-  font-weight: 700;
-}
-
-.concept.open .toggle-icon {
-  background: var(--color-accent);
-  color: #fff;
-  transform: rotate(45deg);
-}
-
-.concept-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-
-.concept.open .concept-body {
-  max-height: 2600px;
-}
-
-.concept-inner {
-  padding: 0 1.4rem 1.4rem;
-  border-top: 1px solid var(--color-gray-light);
-  padding-top: 1.2rem;
-}
-
-.concept-inner h5 {
-  font-size: 0.92rem;
-  color: var(--color-secondary);
-  margin: 1rem 0 0.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.concept-inner h5:first-child {
-  margin-top: 0;
-}
-
-.concept-inner h5 svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* ===== TABLAS ===== */
-.table-wrap {
-  overflow-x: auto;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-  margin: 1rem 0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--color-surface);
-  font-size: 0.9rem;
-  min-width: 560px;
-}
-
-th {
-  background: var(--color-primary);
-  color: #fff;
-  padding: 0.8rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-gray-light);
-  color: var(--color-text-soft);
-  vertical-align: top;
-}
-
-tbody tr:hover {
-  background: #f8fafc;
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* ===== CÓDIGO ===== */
-.code-block {
-  background: #0d1b2a;
-  color: #e2e8f0;
-  border-radius: var(--radius-sm);
-  padding: 1.2rem 1.3rem;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  line-height: 1.7;
-  overflow-x: auto;
-  margin: 1rem 0;
-  border-left: 4px solid var(--color-accent);
-}
-
-.code-block .comment { color: #7dd3a0; }
-.code-block .keyword { color: #ff9d5c; }
-.code-block .string { color: #ffd580; }
-.code-block .directive { color: #6fb8ff; }
-.code-block .variable { color: #c4b5fd; }
-
-/* ===== RECOMENDACIÓN / ERROR ===== */
-.callout {
-  border-radius: var(--radius-sm);
-  padding: 0.9rem 1.1rem;
-  margin: 0.8rem 0;
-  font-size: 0.92rem;
-  display: flex;
-  gap: 0.7rem;
-  align-items: flex-start;
-}
-
-.callout svg {
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
-}
-
-.callout-tip {
-  background: rgba(30, 158, 106, 0.1);
-  border-left: 4px solid var(--color-success);
-}
-
-.callout-tip svg { color: var(--color-success); }
-
-.callout-warn {
-  background: rgba(214, 69, 69, 0.08);
-  border-left: 4px solid var(--color-error);
-}
-
-.callout-warn svg { color: var(--color-error); }
-
-.callout-info {
-  background: rgba(29, 111, 184, 0.08);
-  border-left: 4px solid var(--color-secondary);
-}
-
-.callout-info svg { color: var(--color-secondary); }
-
-.callout strong {
-  display: block;
-  margin-bottom: 0.15rem;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* ===== RETO ===== */
-.challenge-card {
-  background: linear-gradient(135deg, #0b2545 0%, #13315c 100%);
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 2.2rem;
-  box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
-}
-
-.challenge-card::before {
-  content: "";
-  position: absolute;
-  top: -70px;
-  right: -70px;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(245,138,31,0.3) 0%, transparent 70%);
-  border-radius: 50%;
-}
-
-.challenge-card h3 {
-  color: #fff;
-  font-size: 1.5rem;
-  position: relative;
-}
-
-.challenge-card p {
-  color: #c3d7ec;
-  position: relative;
-}
-
-.challenge-card h4 {
-  color: var(--color-accent);
-  margin: 1.3rem 0 0.6rem;
-  position: relative;
-}
-
-.challenge-card ul {
-  position: relative;
-}
-
-.challenge-card li {
-  color: #dbe7f3;
-  margin-bottom: 0.5rem;
-}
-
-.challenge-card li::marker {
-  color: var(--color-accent);
-}
-
-.challenge-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1.4rem;
-  position: relative;
-}
-
-.challenge-item {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-sm);
-  padding: 1rem;
-}
-
-.challenge-item h5 {
-  color: var(--color-accent);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.4rem;
-}
-
-.challenge-item p {
-  font-size: 0.88rem;
-  margin: 0;
-  color: #c3d7ec;
-}
-
-/* ===== QUIZ ===== */
-.quiz-container {
-  max-width: 780px;
-  margin: 0 auto;
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
-  padding: 2rem;
-  border: 1px solid var(--color-gray-light);
-}
-
-.quiz-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.8rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.quiz-counter {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  background: var(--color-gray-light);
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-}
-
-.quiz-score {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-accent-dark);
-  background: rgba(245, 138, 31, 0.12);
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-}
-
-.progress-track {
-  width: 100%;
-  height: 10px;
-  background: var(--color-gray-light);
-  border-radius: 999px;
-  overflow: hidden;
-  margin-bottom: 1.6rem;
-}
-
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
-  border-radius: 999px;
-  transition: width 0.4s ease;
-}
-
-.question-text {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin-bottom: 1.2rem;
-  line-height: 1.5;
-}
-
-.options-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.option-btn {
-  width: 100%;
-  text-align: left;
-  padding: 0.95rem 1.1rem;
-  border-radius: var(--radius-sm);
-  border: 2px solid var(--color-gray-light);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 0.96rem;
-  font-weight: 500;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.option-btn:hover:not(:disabled) {
-  border-color: var(--color-secondary);
-  background: #f4f9ff;
-}
-
-.option-btn:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.option-letter {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--color-gray-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--color-primary);
-  transition: var(--transition);
-}
-
-.option-btn.correct {
-  border-color: var(--color-success);
-  background: rgba(30, 158, 106, 0.1);
-}
-
-.option-btn.correct .option-letter {
-  background: var(--color-success);
-  color: #fff;
-}
-
-.option-btn.incorrect {
-  border-color: var(--color-error);
-  background: rgba(214, 69, 69, 0.08);
-}
-
-.option-btn.incorrect .option-letter {
-  background: var(--color-error);
-  color: #fff;
-}
-
-.option-btn:disabled {
-  cursor: default;
-}
-
-.feedback {
-  border-radius: var(--radius-sm);
-  padding: 1rem 1.1rem;
-  margin-bottom: 1.2rem;
-  font-size: 0.94rem;
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-
-.feedback.show {
-  display: block;
-}
-
-.feedback.success {
-  background: rgba(30, 158, 106, 0.1);
-  border-left: 4px solid var(--color-success);
-}
-
-.feedback.error {
-  background: rgba(214, 69, 69, 0.08);
-  border-left: 4px solid var(--color-error);
-}
-
-.feedback strong {
-  display: block;
-  margin-bottom: 0.3rem;
-}
-
-.feedback.success strong { color: var(--color-success); }
-.feedback.error strong { color: var(--color-error); }
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.8rem 1.6rem;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 0.95rem;
-  transition: var(--transition);
-  border: 2px solid transparent;
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(245, 138, 31, 0.35);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--color-accent-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 138, 31, 0.45);
-}
-
-.btn-primary:disabled {
-  background: #cbd5e1;
-  box-shadow: none;
-  cursor: not-allowed;
-  color: #64748b;
-}
-
-.btn-secondary {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-.btn-secondary:hover {
-  background: var(--color-primary-light);
-  transform: translateY(-2px);
-}
-
-.btn:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.quiz-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-}
-
-.quiz-result {
-  text-align: center;
-  display: none;
-  animation: fadeIn 0.4s ease;
-}
-
-.quiz-result.show {
-  display: block;
-}
-
-.result-circle {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  margin: 0 auto 1.2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  color: #fff;
-  box-shadow: var(--shadow-md);
-}
-
-.result-circle .score-big {
-  font-size: 2.4rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.result-circle .score-small {
-  font-size: 0.8rem;
-  opacity: 0.85;
-}
-
-.result-message {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 0.5rem;
-}
-
-.result-detail {
-  color: var(--color-text-soft);
-  margin-bottom: 1.5rem;
-}
-
-/* ===== REFLEXIÓN ===== */
-.reflection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.2rem;
-}
-
-.reflection-card {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 1.4rem;
-  box-shadow: var(--shadow-sm);
-  border-top: 4px solid var(--color-accent);
-  transition: var(--transition);
-}
-
-.reflection-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-}
-
-.reflection-card h4 {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.6rem;
-}
-
-.reflection-card svg {
-  width: 20px;
-  height: 20px;
-  color: var(--color-accent);
-}
-
-.reflection-card p {
-  font-size: 0.92rem;
-  margin: 0;
-}
-
-/* ===== FOOTER ===== */
-.site-footer {
-  background: var(--color-primary);
-  color: #c3d7ec;
-  padding: 2.5rem 0 1.5rem;
-  text-align: center;
-}
-
-.footer-line {
-  font-size: 0.95rem;
-  margin-bottom: 0.5rem;
-  color: #dbe7f3;
-}
-
-.footer-author {
-  font-size: 0.9rem;
-  color: var(--color-accent);
-  font-weight: 600;
-  margin: 0;
-}
-
-.footer-divider {
-  width: 80px;
-  height: 3px;
-  background: var(--color-accent);
-  border-radius: 999px;
-  margin: 0 auto 1.2rem;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .hero {
-    padding: 3rem 0 2.5rem;
-  }
-
-  .hero h1 {
-    font-size: 2.2rem;
-  }
-
-  .section {
-    padding: 2.5rem 0;
-  }
-
-  h2 {
-    font-size: 1.55rem;
-  }
-
-  .nav-list {
-    overflow-x: auto;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    padding: 0 0.5rem;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .nav-list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-list a {
-    padding: 0.85rem 0.9rem;
-    font-size: 0.85rem;
-  }
-
-  .quiz-container {
-    padding: 1.4rem;
-  }
-
-  .challenge-card {
-    padding: 1.5rem;
-  }
-
-  .objective-card {
-    padding: 1.3rem 1.4rem;
-  }
-
-  .story-box {
-    padding: 1.4rem;
-  }
-
-  .concept-header {
-    padding: 1rem 1.1rem;
-  }
-
-  .concept-inner {
-    padding: 0 1.1rem 1.2rem;
-  }
-
-  .hero-stats {
-    gap: 0.7rem;
-  }
-
-  .hero-stat {
-    min-width: 100px;
-    padding: 0.6rem 1rem;
-  }
-
-  .hero-stat strong {
-    font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.85rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-
-  .question-text {
-    font-size: 1.02rem;
-  }
-
-  .option-btn {
-    font-size: 0.9rem;
-    padding: 0.85rem 0.9rem;
-  }
-
-  .result-circle {
-    width: 110px;
-    height: 110px;
-  }
-
-  .result-circle .score-big {
-    font-size: 2rem;
-  }
-}
-
-/* ===== ACCESIBILIDAD ===== */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bucle Creativo | Servidores y Software de Servidor</title>
+    <style>
+        /* =============================================
+           VARIABLES
+           ============================================= */
+        :root {
+            --color-primary: #0b1e3a;
+            --color-secondary: #1a3a6b;
+            --color-accent: #f97316;
+            --color-accent-hover: #ea580c;
+            --color-background: #f1f5f9;
+            --color-surface: #ffffff;
+            --color-text: #1e293b;
+            --color-text-light: #475569;
+            --color-border: #cbd5e1;
+            --color-success: #16a34a;
+            --color-error: #dc2626;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.25s ease;
+            --font-base: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        /* =============================================
+           RESET
+           ============================================= */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: var(--font-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* =============================================
+           BASE
+           ============================================= */
+        h1, h2, h3, h4 {
+            line-height: 1.25;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            color: var(--color-text-light);
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+            transition: color var(--transition);
+        }
+
+        a:hover {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--color-text-light);
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+        }
+
+        strong {
+            color: var(--color-text);
+        }
+
+        code {
+            font-family: var(--font-mono);
+            background: #e2e8f0;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-primary);
+        }
+
+        pre {
+            background: var(--color-primary);
+            color: #e2e8f0;
+            padding: 1rem 1.2rem;
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+            border-left: 4px solid var(--color-accent);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        /* =============================================
+           HEADER
+           ============================================= */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            padding: 3rem 1.5rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header__brand {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__brand span {
+            color: var(--color-accent);
+        }
+
+        .header__subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #cbd5e1;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header__description {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =============================================
+           NAVEGACIÓN
+           ============================================= */
+        .nav {
+            background: var(--color-surface);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .nav__list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.2rem;
+            list-style: none;
+            padding: 0.5rem 1rem;
+            margin: 0;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .nav__link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+            transition: all var(--transition);
+            text-decoration: none;
+        }
+
+        .nav__link:hover,
+        .nav__link:focus {
+            background: var(--color-background);
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav__link.active {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        /* =============================================
+           SECCIONES
+           ============================================= */
+        .section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .section--alt {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 2.5rem 2rem;
+        }
+
+        .section__label {
+            display: inline-block;
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            margin-bottom: 0.8rem;
+        }
+
+        .section__title {
+            font-size: 1.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .section__divider {
+            width: 60px;
+            height: 4px;
+            background: var(--color-accent);
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* =============================================
+           TARJETAS
+           ============================================= */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card__icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: #fff7ed;
+            color: var(--color-accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .card__title {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            color: var(--color-primary);
+        }
+
+        .card__text {
+            font-size: 0.92rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .card__tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            background: #e0f2fe;
+            color: #0369a1;
+            margin-top: 0.4rem;
+        }
+
+        .card__tag--accent {
+            background: #fff7ed;
+            color: var(--color-accent);
+        }
+
+        /* =============================================
+           BLOQUES DE CONCEPTO
+           ============================================= */
+        .concept-block {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-left: 5px solid var(--color-accent);
+        }
+
+        .concept-block h3 {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-block h3 .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .concept-block__sub {
+            margin-top: 1rem;
+        }
+
+        .concept-block__sub h4 {
+            color: var(--color-secondary);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.3rem;
+        }
+
+        .concept-block__sub p,
+        .concept-block__sub ul {
+            font-size: 0.93rem;
+        }
+
+        .highlight-box {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin: 0.8rem 0;
+            font-size: 0.92rem;
+            color: var(--color-text);
+        }
+
+        .highlight-box strong {
+            color: var(--color-accent);
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin: 0.8rem 0;
+            font-size: 0.92rem;
+            color: var(--color-text);
+        }
+
+        .warning-box strong {
+            color: var(--color-error);
+        }
+
+        /* =============================================
+           TABLA COMPARATIVA
+           ============================================= */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.2rem 0;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            background: var(--color-surface);
+        }
+
+        th {
+            background: var(--color-primary);
+            color: #fff;
+            padding: 0.8rem 0.8rem;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.7rem 0.8rem;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-light);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        /* =============================================
+           RETO
+           ============================================= */
+        .reto {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reto::after {
+            content: '';
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .reto h3 {
+            color: #fff;
+            font-size: 1.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .reto p,
+        .reto li {
+            color: #cbd5e1;
+        }
+
+        .reto ul {
+            margin-bottom: 1rem;
+        }
+
+        .reto .highlight-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            color: #e2e8f0;
+        }
+
+        .reto .highlight-box strong {
+            color: var(--color-accent);
+        }
+
+        /* =============================================
+           QUIZ
+           ============================================= */
+        .quiz-container {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            margin-top: 1.5rem;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-counter {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-light);
+        }
+
+        .quiz-score {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--color-accent);
+            background: #fff7ed;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar__fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), #fb923c);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .quiz-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            background: var(--color-surface);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 0.95rem;
+            color: var(--color-text);
+            text-align: left;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--color-accent);
+            background: #fff7ed;
+        }
+
+        .quiz-option:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz-option:disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--color-success);
+            background: #f0fdf4;
+        }
+
+        .quiz-option.correct .quiz-option__marker {
+            background: var(--color-success);
+            color: #fff;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--color-error);
+            background: #fef2f2;
+        }
+
+        .quiz-option.incorrect .quiz-option__marker {
+            background: var(--color-error);
+            color: #fff;
+        }
+
+        .quiz-option__marker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .quiz-feedback {
+            padding: 1rem 1.2rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .quiz-feedback.error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .quiz-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--color-accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+
+        .quiz-btn:hover:not(:disabled) {
+            background: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-btn:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .quiz-btn--outline {
+            background: transparent;
+            color: var(--color-accent);
+            border: 2px solid var(--color-accent);
+        }
+
+        .quiz-btn--outline:hover:not(:disabled) {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 1.5rem 0;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-result__score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+        }
+
+        .quiz-result__label {
+            font-size: 1rem;
+            color: var(--color-text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-result__message {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin: 1rem 0 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* =============================================
+           REFLEXIÓN
+           ============================================= */
+        .reflection {
+            background: var(--color-surface);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            margin-top: 1.5rem;
+        }
+
+        .reflection__item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .reflection__item:last-child {
+            border-bottom: none;
+        }
+
+        .reflection__icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff7ed;
+            border-radius: 10px;
+        }
+
+        .reflection__text h4 {
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+            color: var(--color-primary);
+        }
+
+        .reflection__text p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* =============================================
+           FOOTER
+           ============================================= */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background: var(--color-primary);
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            margin-bottom: 0.3rem;
+        }
+
+        .footer p:last-child {
+            margin-bottom: 0;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* =============================================
+           ANIMACIONES
+           ============================================= */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease both;
+        }
+
+        /* =============================================
+           RESPONSIVE
+           ============================================= */
+        @media (max-width: 768px) {
+            .header__brand {
+                font-size: 2rem;
+            }
+
+            .header__subtitle {
+                font-size: 1rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section--alt {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .section__title {
+                font-size: 1.5rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .concept-block {
+                padding: 1.2rem;
+            }
+
+            .quiz-container {
+                padding: 1.2rem;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav__list {
+                gap: 0.1rem;
+                padding: 0.4rem 0.5rem;
+            }
+
+            .nav__link {
+                font-size: 0.78rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .reto {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .reto h3 {
+                font-size: 1.3rem;
+            }
+
+            .reflection {
+                padding: 1.2rem;
+            }
+
+            .reflection__item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .header__brand {
+                font-size: 1.6rem;
+            }
+
+            .section__title {
+                font-size: 1.3rem;
+            }
+
+            .quiz-result__score {
+                font-size: 2.5rem;
+            }
+
+            .quiz-option {
+                font-size: 0.88rem;
+                padding: 0.7rem 0.8rem;
+            }
+        }
+
+        /* =============================================
+           ACCESIBILIDAD
+           ============================================= */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
 </head>
 <body>
 
-<a href="#main" class="skip-link">Saltar al contenido principal</a>
-
-<!-- ===== HEADER ===== -->
-<header class="hero">
-  <div class="container hero-content">
-    <span class="hero-brand">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-        <path d="M2 17l10 5 10-5"/>
-        <path d="M2 12l10 5 10-5"/>
-      </svg>
-      Taller interactivo
-    </span>
-    <h1>Bucle <span class="accent-text">Creativo</span></h1>
-    <p class="hero-subtitle">Sistemas operativos y programas para convertir tu PC en servidor</p>
-    <p class="hero-desc">
-      Aprende a elegir entre Windows y Linux, descubre las distribuciones recomendadas
-      y explora las mejores herramientas para montar tu propio servidor doméstico,
-      web o multimedia.
-    </p>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <strong>2</strong>
-        <span>Sistemas base</span>
-      </div>
-      <div class="hero-stat">
-        <strong>10+</strong>
-        <span>Programas</span>
-      </div>
-      <div class="hero-stat">
-        <strong>5</strong>
-        <span>Retos de evaluación</span>
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- ===== NAVEGACIÓN ===== -->
-<nav class="main-nav" aria-label="Navegación del taller">
-  <div class="container">
-    <ul class="nav-list">
-      <li><a href="#objetivo">Objetivo</a></li>
-      <li><a href="#activacion">Activación</a></li>
-      <li><a href="#desarrollo">Desarrollo</a></li>
-      <li><a href="#reto">Reto integrador</a></li>
-      <li><a href="#evaluacion">Evaluación</a></li>
-      <li><a href="#reflexion">Reflexión</a></li>
-    </ul>
-  </div>
-</nav>
-
-<main id="main">
-
-  <!-- ===== OBJETIVO ===== -->
-  <section class="section" id="objetivo">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Objetivo de aprendizaje</span>
-        <h2>¿Qué lograrás en este taller?</h2>
-      </div>
-      <article class="objective-card">
-        <p>
-          <strong>Analizar y seleccionar</strong> sistemas operativos y programas para servidores,
-          <strong>comparando</strong> alternativas como Windows Server, Ubuntu Server, Debian, Rocky Linux,
-          CasaOS, Proxmox VE, XAMPP, Docker, Jellyfin, Plex, Samba, Apache, Nginx y VirtualBox,
-          <strong>aplicando</strong> criterios técnicos, de licencia, recursos y seguridad, para
-          <strong>diseñar</strong> una propuesta de servidor doméstico o educativo que responda a una
-          necesidad real, <strong>demostrando</strong> responsabilidad, pensamiento crítico y buenas
-          prácticas de administración.
+    <!-- =============================================
+         HEADER
+         ============================================= -->
+    <header class="header">
+        <div class="header__brand">Bucle <span>Creativo</span></div>
+        <p class="header__subtitle">Servidores y Software de Servidor</p>
+        <p class="header__description">
+            Transforma tu ordenador en un servidor funcional. Descubre XAMPP, CasaOS, Docker, Jellyfin, Samba, Apache, Nginx, Plex y VirtualBox para crear soluciones reales.
         </p>
-      </article>
-    </div>
-  </section>
+    </header>
 
-  <!-- ===== ACTIVACIÓN ===== -->
-  <section class="section section-alt" id="activacion">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Activación</span>
-        <h2>Un computador olvidado en el aula</h2>
-      </div>
-      <div class="story-box">
-        <p>
-          En tu colegio hay un computador de escritorio que ya nadie usa porque es "lento".
-          Tu docente de Informática te comenta que podría servir para algo más que para abrir
-          un navegador: <strong>podría convertirse en un servidor</strong> para compartir archivos,
-          alojar la página web del curso o transmitir videos educativos a los celulares de tus
-          compañeros.
-        </p>
-        <p>
-          El problema es que no sabes por dónde empezar: ¿Windows o Linux? ¿Qué programa instalar?
-          ¿Será seguro? ¿Y si daña el computador? Mientras lo piensas, recuerdas que en internet
-          hay decenas de tutoriales que dicen cosas diferentes.
-        </p>
-        <div class="reflection-question">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          <span>
-            ¿Qué decisión tomarías tú para transformar ese computador en un servidor útil
-            sin gastar dinero y sin arriesgar la información del colegio?
-          </span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== DESARROLLO ===== -->
-  <section class="section" id="desarrollo">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Desarrollo del contenido</span>
-        <h2>De los fundamentos a la transferencia</h2>
-        <p>
-          Explora los conceptos organizados por niveles. Haz clic en cada tarjeta para
-          desplegar la explicación, ejemplos, analogías y recomendaciones.
-        </p>
-      </div>
-
-      <!-- NIVEL 1 -->
-      <div class="level-block">
-        <div class="level-header">
-          <span class="level-badge">1</span>
-          <div>
-            <h3>Fundamentos</h3>
-            <p>Conceptos básicos y conocimientos previos</p>
-          </div>
-        </div>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              ¿Qué es un sistema operativo de servidor?
-              <span class="tag">Concepto base</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                Un sistema operativo es el software que administra los recursos de un ordenador
-                y permite ejecutar programas. En un servidor, gestiona el procesador, la memoria,
-                el almacenamiento, la red y los servicios que utilizan otros dispositivos.
-              </p>
-              <h5>¿Cómo funciona?</h5>
-              <p>
-                Actúa como intermediario entre el hardware y las aplicaciones. Cuando otro equipo
-                solicita un archivo o una página web, el sistema operativo del servidor recibe la
-                petición, la procesa y devuelve la respuesta.
-              </p>
-              <h5>Analogía</h5>
-              <p>
-                Es como el director de una biblioteca: no escribe los libros, pero organiza los
-                recursos, controla quién entra y asegura que cada visitante encuentre lo que busca.
-              </p>
-              <div class="callout callout-tip">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
-                </svg>
-                <div>
-                  <strong>Recomendación</strong>
-                  Antes de instalar un sistema operativo de servidor, verifica la compatibilidad
-                  del hardware y descarga la imagen desde la fuente oficial.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Diferencia entre sistema operativo, software de servidor y plataforma de administración
-              <span class="tag orange">Distinción clave</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                <strong>Sistema operativo:</strong> administra el ordenador y permite ejecutar programas
-                (Windows Server, Ubuntu Server, Debian).<br>
-                <strong>Software de servidor:</strong> proporciona un servicio específico, como alojar
-                páginas web o compartir archivos (Apache, Samba, Jellyfin).<br>
-                <strong>Plataforma de administración:</strong> facilita la instalación y gestión de varios
-                servicios, a menudo mediante interfaz gráfica o web (CasaOS, Proxmox VE).
-              </p>
-              <h5>Ejemplo</h5>
-              <p>
-                Puedes instalar Ubuntu Server en tu PC, utilizar Docker para ejecutar aplicaciones
-                y administrar algunos servicios mediante CasaOS. Cada pieza cumple un rol diferente.
-              </p>
-              <div class="callout callout-warn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                <div>
-                  <strong>Error frecuente</strong>
-                  Confundir una plataforma de administración como CasaOS con un sistema operativo
-                  completo. CasaOS se instala sobre una distribución Linux compatible.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- NIVEL 2 -->
-      <div class="level-block">
-        <div class="level-header">
-          <span class="level-badge">2</span>
-          <div>
-            <h3>Comprensión</h3>
-            <p>Relaciones entre conceptos y funcionamiento</p>
-          </div>
-        </div>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Windows como servidor: Windows Server y Windows de escritorio
-              <span class="tag">Sistema operativo</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                Windows es una familia de sistemas operativos desarrollada por Microsoft.
-                Existen versiones para ordenadores personales y ediciones específicas para
-                servidores. Windows Server está orientado a administrar servicios de red,
-                usuarios, aplicaciones y recursos compartidos.
-              </p>
-              <h5>Características principales</h5>
-              <ul>
-                <li>Administración de usuarios y permisos.</li>
-                <li>Compartición de archivos e impresoras.</li>
-                <li>Integración con Active Directory Domain Services.</li>
-                <li>Compatibilidad con virtualización Hyper-V, según la edición.</li>
-                <li>Administración mediante herramientas gráficas y PowerShell.</li>
-                <li>Funciones de seguridad y gestión para entornos empresariales.</li>
-              </ul>
-              <h5>Windows de escritorio</h5>
-              <p>
-                También puedes utilizar un PC con Windows para crear servidores web, compartir
-                archivos, transmitir multimedia o ejecutar un servidor de juegos. Sin embargo,
-                no sustituye todas las funciones de Windows Server y las condiciones de licencia
-                pueden limitar su uso.
-              </p>
-              <h5>Ventajas</h5>
-              <ul>
-                <li>Interfaz gráfica familiar para muchos usuarios.</li>
-                <li>Compatibilidad con numerosos programas comerciales.</li>
-                <li>Administración relativamente sencilla para tareas habituales.</li>
-                <li>Integración con herramientas y servicios de Microsoft.</li>
-              </ul>
-              <h5>Desventajas</h5>
-              <ul>
-                <li>Las licencias de algunas ediciones y funciones pueden tener costes.</li>
-                <li>Puede consumir más recursos que una instalación Linux ligera.</li>
-                <li>Las actualizaciones pueden requerir reinicios.</li>
-                <li>Algunas herramientas avanzadas están vinculadas a ediciones concretas.</li>
-              </ul>
-              <div class="callout callout-info">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="16" x2="12" y2="12"/>
-                  <line x1="12" y1="8" x2="12.01" y2="8"/>
-                </svg>
-                <div>
-                  <strong>¿Cuándo elegir Windows?</strong>
-                  Si necesitas ejecutar aplicaciones que dependen de Windows, administrar una red
-                  basada en tecnologías Microsoft o trabajar en un entorno que ya utiliza este sistema.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Linux como servidor: distribuciones y características
-              <span class="tag">Sistema operativo</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                Linux es una familia de sistemas operativos basados en el kernel Linux.
-                Se distribuye mediante diferentes distribuciones que incorporan herramientas,
-                gestores de paquetes y configuraciones específicas. Es muy utilizado en
-                servidores web, servicios de red, infraestructura en la nube y almacenamiento.
-              </p>
-              <h5>Características principales</h5>
-              <ul>
-                <li>Puede utilizarse sin coste de licencia en numerosas distribuciones.</li>
-                <li>Ofrece herramientas de administración mediante terminal.</li>
-                <li>Dispone de una amplia variedad de programas para servidores.</li>
-                <li>Permite automatizar tareas mediante scripts.</li>
-                <li>Facilita la configuración de servicios y permisos.</li>
-                <li>Cuenta con una gran comunidad y abundante documentación.</li>
-              </ul>
-              <h5>Desventajas</h5>
-              <ul>
-                <li>Algunas tareas requieren aprender comandos de terminal.</li>
-                <li>Ciertos programas comerciales solo están disponibles para Windows.</li>
-                <li>La configuración de servicios puede exigir conocimientos de redes y permisos.</li>
-                <li>Las instrucciones varían entre distribuciones y versiones.</li>
-              </ul>
-              <div class="callout callout-info">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="16" x2="12" y2="12"/>
-                  <line x1="12" y1="8" x2="12.01" y2="8"/>
-                </svg>
-                <div>
-                  <strong>¿Cuándo elegir Linux?</strong>
-                  Si quieres aprender administración de servidores, reutilizar un PC antiguo,
-                  ejecutar aplicaciones de código abierto o construir un servidor doméstico
-                  con control sobre los servicios instalados.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Distribuciones Linux recomendadas para principiantes
-              <span class="tag orange">Aplicación</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>Ubuntu Server</h5>
-              <p>
-                Opción popular para principiantes y administradores. Cuenta con documentación amplia
-                y permite instalar servicios como Apache, Nginx, Samba y Docker. Ideal para servidores
-                web, aplicaciones y aprendizaje de administración Linux.
-              </p>
-              <h5>Debian</h5>
-              <p>
-                Distribución conocida por su estabilidad y por ofrecer un amplio repositorio de paquetes.
-                Ideal para servidores domésticos, servicios de red y equipos que deben funcionar durante
-                largos periodos.
-              </p>
-              <h5>Rocky Linux</h5>
-              <p>
-                Distribución orientada a entornos empresariales y compatible con el ecosistema de
-                Red Hat Enterprise Linux. Ideal para aprender administración de servidores y trabajar
-                con software habitual en entornos empresariales.
-              </p>
-              <h5>Linux Mint</h5>
-              <p>
-                Distribución de escritorio útil si deseas conservar una interfaz gráfica familiar
-                mientras aprendes Linux. No es una distribución especializada en servidores.
-              </p>
-              <h5>CasaOS y Proxmox VE</h5>
-              <p>
-                <strong>CasaOS</strong> es una plataforma de administración para servidores domésticos
-                que facilita la instalación y gestión de aplicaciones mediante una interfaz web.
-                <strong>Proxmox VE</strong> es una plataforma basada en Debian que permite administrar
-                máquinas virtuales y contenedores desde una interfaz web.
-              </p>
-              <div class="table-wrap">
-                <table>
-                  <caption class="visually-hidden">Comparativa de distribuciones Linux</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Distribución</th>
-                      <th scope="col">Ideal para</th>
-                      <th scope="col">Nivel</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>Ubuntu Server</td><td>Servidores web y aprendizaje</td><td>Principiante</td></tr>
-                    <tr><td>Debian</td><td>Servidores domésticos y estabilidad</td><td>Principiante-intermedio</td></tr>
-                    <tr><td>Rocky Linux</td><td>Entornos empresariales</td><td>Intermedio</td></tr>
-                    <tr><td>Linux Mint</td><td>Escritorio con interfaz gráfica</td><td>Principiante</td></tr>
-                    <tr><td>CasaOS</td><td>Administración web doméstica</td><td>Principiante</td></tr>
-                    <tr><td>Proxmox VE</td><td>Virtualización y contenedores</td><td>Intermedio</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- NIVEL 3 -->
-      <div class="level-block">
-        <div class="level-header">
-          <span class="level-badge">3</span>
-          <div>
-            <h3>Aplicación</h3>
-            <p>Ejemplos y procedimientos</p>
-          </div>
-        </div>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              XAMPP: crear un servidor web local
-              <span class="tag">Programa</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                XAMPP es un paquete de software que facilita la instalación de un entorno de
-                desarrollo web. Incluye Apache, MariaDB, PHP y otras herramientas. Es útil para
-                aprender cómo funciona un servidor web sin instalar cada componente por separado.
-              </p>
-              <h5>¿Qué puedes hacer?</h5>
-              <ul>
-                <li>Crear páginas web y probarlas desde el navegador.</li>
-                <li>Desarrollar aplicaciones con PHP.</li>
-                <li>Utilizar bases de datos MariaDB.</li>
-                <li>Probar proyectos web antes de publicarlos.</li>
-                <li>Permitir acceso desde otros dispositivos de tu red.</li>
-              </ul>
-              <h5>Ejemplo práctico</h5>
-              <p>
-                Instala XAMPP en Windows, inicia Apache y coloca los archivos de tu página en el
-                directorio <code>htdocs</code>. Después, abre <code>http://localhost/</code> en el
-                navegador para probarla.
-              </p>
-              <div class="callout callout-warn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                <div>
-                  <strong>Desventaja</strong>
-                  No es la mejor opción como plataforma predeterminada para un servidor público de
-                  producción. Una configuración insegura puede exponer bases de datos y herramientas
-                  administrativas.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Docker: ejecutar aplicaciones en contenedores
-              <span class="tag">Programa</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                Docker es una plataforma que permite empaquetar y ejecutar aplicaciones en
-                contenedores. Un contenedor incluye la aplicación y sus dependencias, lo que
-                facilita su instalación y despliegue en entornos compatibles. A diferencia de una
-                máquina virtual tradicional, comparte el kernel del sistema operativo anfitrión.
-              </p>
-              <h5>¿Qué puedes hacer?</h5>
-              <ul>
-                <li>Ejecutar varias aplicaciones en un mismo servidor.</li>
-                <li>Separar los entornos de diferentes servicios.</li>
-                <li>Reproducir configuraciones de forma más consistente.</li>
-                <li>Actualizar o sustituir aplicaciones con mayor facilidad.</li>
-                <li>Ejecutar servicios como Jellyfin, servidores web y bases de datos.</li>
-              </ul>
-              <h5>Ventajas y desventajas</h5>
-              <p>
-                <strong>Ventajas:</strong> facilita la instalación y administración, permite aislar
-                servicios, favorece la portabilidad y cuenta con un amplio ecosistema de imágenes.<br>
-                <strong>Desventajas:</strong> requiere aprender conceptos como imágenes, contenedores,
-                volúmenes y redes; los datos importantes deben almacenarse de forma persistente;
-                una configuración incorrecta puede exponer servicios.
-              </p>
-              <h5>Ejemplo práctico</h5>
-              <p>
-                Puedes utilizar Docker Compose para definir una aplicación y sus servicios
-                relacionados en un archivo de configuración, y después iniciarlos conjuntamente.
-              </p>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Jellyfin y Plex: servidores multimedia personales
-              <span class="tag">Programa</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>Jellyfin</h5>
-              <p>
-                Sistema multimedia gratuito y de código abierto que permite organizar y transmitir
-                contenido personal desde un servidor a diferentes dispositivos. Puedes organizar
-                una biblioteca, reproducir contenido desde un navegador o aplicación, crear usuarios
-                y administrar el acceso.
-              </p>
-              <h5>Plex Media Server</h5>
-              <p>
-                Plataforma para organizar y transmitir contenido multimedia personal a dispositivos
-                compatibles. Su objetivo es similar al de Jellyfin: centralizar la biblioteca
-                audiovisual y facilitar su reproducción desde diferentes lugares.
-              </p>
-              <h5>Comparación</h5>
-              <div class="table-wrap">
-                <table>
-                  <caption class="visually-hidden">Comparación entre Jellyfin y Plex</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Aspecto</th>
-                      <th scope="col">Jellyfin</th>
-                      <th scope="col">Plex</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>Licencia</td><td>Gratuito y de código abierto</td><td>Gratuito con funciones de pago</td></tr>
-                    <tr><td>Interfaz</td><td>Sencilla y funcional</td><td>Visualmente cuidada</td></tr>
-                    <tr><td>Aplicaciones</td><td>Comunidad</td><td>Ecosistema amplio</td></tr>
-                    <tr><td>Transcodificación</td><td>Puede exigir recursos</td><td>Puede consumir bastantes recursos</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="callout callout-tip">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
-                </svg>
-                <div>
-                  <strong>Recomendación</strong>
-                  Necesitas suficiente almacenamiento para la biblioteca multimedia. La configuración
-                  de acceso remoto requiere medidas de seguridad adicionales.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              File Browser, Samba, Apache y Nginx
-              <span class="tag">Programa</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>File Browser</h5>
-              <p>
-                Proporciona una interfaz web para navegar por carpetas y administrar archivos.
-                Útil si quieres acceder a documentos desde distintos dispositivos utilizando
-                un navegador.
-              </p>
-              <h5>Samba</h5>
-              <p>
-                Implementa servicios de archivos e impresión compatibles con SMB, lo que facilita
-                compartir recursos entre sistemas Linux y equipos Windows. Es adecuado cuando
-                quieres que las carpetas aparezcan como recursos de red en el explorador de archivos.
-              </p>
-              <h5>Apache HTTP Server</h5>
-              <p>
-                Servidor web ampliamente utilizado que permite entregar páginas y ejecutar
-                configuraciones para diferentes tipos de sitios web. Resulta útil para aprender
-                alojamiento web y desplegar aplicaciones compatibles.
-              </p>
-              <h5>Nginx</h5>
-              <p>
-                Servidor web y proxy inverso. Permite alojar páginas web y distribuir solicitudes
-                entre varios servidores. Es gratuito en su edición de código abierto.
-              </p>
-              <div class="code-block">
-                <span class="comment"># Ejemplo de configuración de Apache</span><br>
-                <span class="directive">ServerName</span> <span class="string">www.ejemplo.com</span><br>
-                <span class="directive">ServerAdmin</span> <span class="string">webmaster@ejemplo.com</span><br>
-                <span class="directive">DocumentRoot</span> <span class="string">/var/www/miSitio</span><br>
-                <span class="directive">ErrorLog</span> <span class="string">${APACHE_LOG_DIR}/error.log</span><br>
-                <span class="directive">CustomLog</span> <span class="string">${APACHE_LOG_DIR}/access.log combined</span>
-              </div>
-              <div class="callout callout-info">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="16" x2="12" y2="12"/>
-                  <line x1="12" y1="8" x2="12.01" y2="8"/>
-                </svg>
-                <div>
-                  <strong>¿Cuál conviene utilizar?</strong>
-                  File Browser es buena alternativa cuando prefieres administrar archivos desde
-                  una interfaz web. Samba resulta más adecuado cuando quieres que las carpetas
-                  aparezcan como recursos de red en el explorador de archivos.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              VirtualBox: crear máquinas virtuales para experimentar
-              <span class="tag">Programa</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>¿Qué es?</h5>
-              <p>
-                Programa de virtualización que permite ejecutar máquinas virtuales dentro de un
-                ordenador físico. Una máquina virtual funciona como un ordenador independiente,
-                con su propio sistema operativo y aplicaciones, aunque comparte los recursos
-                físicos del equipo anfitrión.
-              </p>
-              <h5>¿Qué puedes hacer?</h5>
-              <ul>
-                <li>Instalar Linux sin eliminar Windows.</li>
-                <li>Probar diferentes sistemas operativos.</li>
-                <li>Experimentar con configuraciones de red.</li>
-                <li>Aprender a administrar servidores en un entorno de pruebas.</li>
-                <li>Crear laboratorios para practicar antes de modificar un servidor real.</li>
-              </ul>
-              <h5>Ejemplo práctico</h5>
-              <p>
-                Si tienes un PC con Windows, puedes crear una máquina virtual con Ubuntu Server
-                y utilizarla para practicar la instalación de Apache o Samba sin modificar el
-                sistema principal.
-              </p>
-              <div class="callout callout-warn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                <div>
-                  <strong>Desventaja</strong>
-                  Las máquinas virtuales consumen RAM, procesador y almacenamiento. El rendimiento
-                  depende del hardware disponible y una máquina virtual no sustituye a las copias
-                  de seguridad.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- NIVEL 4 -->
-      <div class="level-block">
-        <div class="level-header">
-          <span class="level-badge accent">4</span>
-          <div>
-            <h3>Análisis</h3>
-            <p>Errores, decisiones y comparación de alternativas</p>
-          </div>
-        </div>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Diferencias entre Windows Server y Linux
-              <span class="tag orange">Comparación</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <div class="table-wrap">
-                <table>
-                  <caption class="visually-hidden">Comparación entre Windows Server y Linux</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Característica</th>
-                      <th scope="col">Windows Server</th>
-                      <th scope="col">Linux</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>Licencia</td><td>Generalmente comercial</td><td>Muchas distribuciones son gratuitas y de código abierto</td></tr>
-                    <tr><td>Administración</td><td>Interfaz gráfica, herramientas administrativas y PowerShell</td><td>Terminal, herramientas gráficas y scripts</td></tr>
-                    <tr><td>Facilidad inicial</td><td>Familiar para usuarios de Windows</td><td>Depende de la distribución y la experiencia</td></tr>
-                    <tr><td>Consumo de recursos</td><td>Depende de la instalación y los servicios</td><td>Puede ser bajo con una instalación mínima</td></tr>
-                    <tr><td>Aplicaciones</td><td>Excelente compatibilidad con software del ecosistema Microsoft</td><td>Amplia disponibilidad de software para servidores</td></tr>
-                    <tr><td>Personalización</td><td>Amplia, según las funciones disponibles</td><td>Muy flexible</td></tr>
-                    <tr><td>Uso habitual</td><td>Redes empresariales y servicios Microsoft</td><td>Servidores web, infraestructura, aplicaciones y redes</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="reflection-question">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-                <span>
-                  No existe un ganador universal. ¿Qué factores pesarían más en tu decisión:
-                  el costo, la facilidad de uso, la compatibilidad o el control sobre el servidor?
-                </span>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              Recomendaciones antes de instalar cualquier programa
-              <span class="tag">Buenas prácticas</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <ul>
-                <li><strong>Descarga el software desde su sitio oficial.</strong> Evita instaladores de procedencia desconocida.</li>
-                <li><strong>Comprueba los requisitos.</strong> Verifica la compatibilidad con tu sistema operativo y arquitectura.</li>
-                <li><strong>Empieza en una red local.</strong> Es más sencillo probar el funcionamiento antes de permitir conexiones desde Internet.</li>
-                <li><strong>Protege los datos.</strong> Conserva copias de seguridad de los archivos importantes.</li>
-                <li><strong>Configura los permisos.</strong> Cada usuario debe tener únicamente el acceso que necesita.</li>
-                <li><strong>Mantén el sistema actualizado.</strong> Instala las actualizaciones de seguridad del sistema operativo y las aplicaciones.</li>
-                <li><strong>No abras puertos innecesarios.</strong> Publicar un servicio en Internet requiere evaluar riesgos y configurar el acceso de forma segura.</li>
-              </ul>
-              <div class="callout callout-tip">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                  <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>
-                </svg>
-                <div>
-                  <strong>Recomendación</strong>
-                  Si tienes un ordenador antiguo y quieres crear un servidor doméstico, instala
-                  una distribución Linux compatible y comienza con un solo servicio.
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <!-- NIVEL 5 -->
-      <div class="level-block">
-        <div class="level-header">
-          <span class="level-badge">5</span>
-          <div>
-            <h3>Transferencia</h3>
-            <p>Aplicación del conocimiento a situaciones nuevas</p>
-          </div>
-        </div>
-
-        <article class="concept" data-concept>
-          <div class="concept-header" role="button" tabindex="0" aria-expanded="false">
-            <h4>
-              ¿Qué sistema operativo y programa elegir según tus necesidades?
-              <span class="tag orange">Toma de decisiones</span>
-            </h4>
-            <span class="toggle-icon" aria-hidden="true">+</span>
-          </div>
-          <div class="concept-body">
-            <div class="concept-inner">
-              <h5>Guía rápida</h5>
-              <ul>
-                <li><strong>Quiero alojar una página web:</strong> XAMPP para aprender desarrollo local, o Apache/Nginx para un servidor web más configurable.</li>
-                <li><strong>Quiero compartir archivos:</strong> Samba para la red local, o File Browser para administrarlos desde un navegador.</li>
-                <li><strong>Quiero ver películas y series:</strong> Jellyfin si buscas una solución gratuita y de código abierto, o Plex si prefieres su ecosistema.</li>
-                <li><strong>Quiero ejecutar varias aplicaciones:</strong> Docker para gestionar contenedores. CasaOS puede facilitar su administración web.</li>
-                <li><strong>Quiero aprender sin modificar mi PC principal:</strong> VirtualBox para instalar un sistema operativo de servidor en una máquina virtual.</li>
-              </ul>
-              <div class="table-wrap">
-                <table>
-                  <caption class="visually-hidden">Comparativa de programas</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Programa</th>
-                      <th scope="col">Uso principal</th>
-                      <th scope="col">Facilidad inicial</th>
-                      <th scope="col">Coste</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>XAMPP</td><td>Desarrollo web local</td><td>Alta</td><td>Gratuito</td></tr>
-                    <tr><td>CasaOS</td><td>Administración doméstica</td><td>Alta</td><td>Gratuito</td></tr>
-                    <tr><td>Docker</td><td>Contenedores</td><td>Media</td><td>Depende del producto</td></tr>
-                    <tr><td>Jellyfin</td><td>Servidor multimedia</td><td>Alta-media</td><td>Gratuito</td></tr>
-                    <tr><td>File Browser</td><td>Administración web de archivos</td><td>Alta-media</td><td>Gratuito</td></tr>
-                    <tr><td>Samba</td><td>Compartir archivos en red</td><td>Media</td><td>Gratuito</td></tr>
-                    <tr><td>Apache</td><td>Alojamiento web</td><td>Media</td><td>Gratuito</td></tr>
-                    <tr><td>Nginx</td><td>Alojamiento web y proxy inverso</td><td>Media</td><td>Gratuito (edición código abierto)</td></tr>
-                    <tr><td>Plex</td><td>Servidor multimedia</td><td>Alta</td><td>Gratuito con funciones de pago</td></tr>
-                    <tr><td>VirtualBox</td><td>Virtualización y aprendizaje</td><td>Media</td><td>Gratuito</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== RETO INTEGRADOR ===== -->
-  <section class="section section-alt" id="reto">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Reto integrador</span>
-        <h2>Diseña el servidor del aula</h2>
-      </div>
-      <article class="challenge-card">
-        <h3>Contexto</h3>
-        <p>
-          Tu colegio tiene un computador antiguo con 4 GB de RAM y un disco duro de 500 GB.
-          El docente de Informática quiere convertirlo en un servidor para el aula. Los estudiantes
-          necesitan:
-        </p>
-        <ul>
-          <li>Compartir archivos de proyectos entre compañeros.</li>
-          <li>Alojar la página web del curso.</li>
-          <li>Ver videos educativos desde sus celulares.</li>
+    <!-- =============================================
+         NAVEGACIÓN
+         ============================================= -->
+    <nav class="nav" aria-label="Navegación principal">
+        <ul class="nav__list">
+            <li><a href="#objetivo" class="nav__link">Objetivo</a></li>
+            <li><a href="#activacion" class="nav__link">Activación</a></li>
+            <li><a href="#desarrollo" class="nav__link">Desarrollo</a></li>
+            <li><a href="#reto" class="nav__link">Reto</a></li>
+            <li><a href="#evaluacion" class="nav__link">Evaluación</a></li>
+            <li><a href="#reflexion" class="nav__link">Reflexión</a></li>
         </ul>
+    </nav>
 
-        <h4>¿Qué debes lograr?</h4>
-        <div class="challenge-grid">
-          <div class="challenge-item">
-            <h5>1. Elige el sistema operativo</h5>
-            <p>Justifica si usarás Windows Server, Ubuntu Server, Debian u otra opción.</p>
-          </div>
-          <div class="challenge-item">
-            <h5>2. Selecciona los programas</h5>
-            <p>Elige al menos tres herramientas para cubrir las necesidades del aula.</p>
-          </div>
-          <div class="challenge-item">
-            <h5>3. Define la seguridad</h5>
-            <p>Indica cómo protegerás los archivos y evitarás accesos no autorizados.</p>
-          </div>
-          <div class="challenge-item">
-            <h5>4. Explica la instalación</h5>
-            <p>Describe los pasos generales para poner en marcha el servidor.</p>
-          </div>
-        </div>
+    <main>
 
-        <h4>Criterios de éxito</h4>
-        <ul>
-          <li>Coherencia entre las necesidades y las herramientas elegidas.</li>
-          <li>Justificación técnica basada en el contenido del taller.</li>
-          <li>Consideración de licencias, recursos y seguridad.</li>
-          <li>Claridad en la explicación de los pasos.</li>
-          <li>Creatividad en la solución propuesta.</li>
-        </ul>
-      </article>
-    </div>
-  </section>
+        <!-- =============================================
+             OBJETIVO
+             ============================================= -->
+        <section id="objetivo" class="section">
+            <span class="section__label">Objetivo de aprendizaje</span>
+            <h2 class="section__title">¿Qué vas a lograr?</h2>
+            <div class="section__divider"></div>
+            <p style="font-size:1.05rem; line-height:1.7;">
+                <strong>Analizar, seleccionar e implementar</strong> diferentes programas y plataformas para convertir un ordenador en servidor, 
+                comprendiendo sus fundamentos técnicos, comparando alternativas según necesidades reales y aplicando buenas prácticas de seguridad y administración, 
+                mediante el estudio de casos, la experimentación guiada y la resolución de un reto integrador, 
+                para desarrollar competencias digitales que te permitan crear soluciones tecnológicas funcionales en tu entorno escolar, personal o emprendedor.
+            </p>
+        </section>
 
-  <!-- ===== EVALUACIÓN ===== -->
-  <section class="section" id="evaluacion">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Evaluación lúdica</span>
-        <h2>Pon a prueba lo que aprendiste</h2>
-        <p>Responde las 5 preguntas. Recibirás retroalimentación inmediata.</p>
-      </div>
+        <!-- =============================================
+             ACTIVACIÓN
+             ============================================= -->
+        <section id="activacion" class="section">
+            <span class="section__label">Activación</span>
+            <h2 class="section__title">Un problema cotidiano</h2>
+            <div class="section__divider"></div>
+            <div class="card" style="border-left: 5px solid var(--color-accent);">
+                <p>
+                    Imagina que tienes un ordenador antiguo en casa. Ya no lo usas para estudiar ni para jugar, pero sigue funcionando. 
+                    Un día piensas: <em>«¿Y si lo convierto en algo útil?»</em>. Quieres compartir archivos con tus compañeros de clase, 
+                    ver películas desde el televisor del salón, alojar la página web del emprendimiento de tu familia o simplemente aprender 
+                    cómo funciona un servidor real.
+                </p>
+                <p>
+                    El problema es que no sabes por dónde empezar. <strong>¿Qué programa instalar? ¿Cuál es más fácil? ¿Cuál es más seguro? 
+                    ¿Sirve para lo que necesito?</strong> Existen decenas de herramientas, y cada una tiene ventajas, limitaciones y 
+                    casos de uso específicos.
+                </p>
+                <p>
+                    En este taller vas a descubrir que convertir un ordenador en servidor es más sencillo de lo que parece, 
+                    pero requiere tomar decisiones informadas. <strong>¿Te atreves a descubrir qué servidor puedes crear con lo que ya tienes?</strong>
+                </p>
+            </div>
+        </section>
 
-      <div class="quiz-container">
-        <div class="quiz-topbar">
-          <span class="quiz-counter" id="quizCounter">Pregunta 1 de 5</span>
-          <span class="quiz-score" id="quizScore">Puntuación: 0</span>
-        </div>
-        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progreso del cuestionario">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
+        <!-- =============================================
+             DESARROLLO
+             ============================================= -->
+        <section id="desarrollo" class="section">
+            <span class="section__label">Desarrollo</span>
+            <h2 class="section__title">Guía completa de software para servidores</h2>
+            <div class="section__divider"></div>
 
-        <div id="quizContent">
-          <p class="question-text" id="questionText"></p>
-          <ul class="options-list" id="optionsList"></ul>
-          <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
-          <div class="quiz-footer">
-            <button class="btn btn-primary" id="nextBtn" disabled>Siguiente pregunta</button>
-          </div>
-        </div>
+            <!-- NIVEL 1: FUNDAMENTOS -->
+            <h3 style="margin-top:1.5rem; color:var(--color-secondary);">Nivel 1 — Fundamentos</h3>
 
-        <div class="quiz-result" id="quizResult" role="status" aria-live="polite">
-          <div class="result-circle">
-            <span class="score-big" id="finalScore">0</span>
-            <span class="score-small">de 5</span>
-          </div>
-          <p class="result-message" id="resultMessage"></p>
-          <p class="result-detail" id="resultDetail"></p>
-          <button class="btn btn-secondary" id="restartBtn">Reiniciar cuestionario</button>
-        </div>
-      </div>
-    </div>
-  </section>
+            <div class="concept-block">
+                <h3><span class="badge">1</span> Tres conceptos clave antes de empezar</h3>
+                <p>
+                    Antes de elegir un programa, es importante distinguir tres conceptos fundamentales:
+                </p>
+                <div class="concept-block__sub">
+                    <h4>Sistema operativo</h4>
+                    <p>Administra el ordenador y permite ejecutar los programas. Ejemplos: Windows Server, Ubuntu Server y Debian.</p>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Software de servidor</h4>
+                    <p>Proporciona un servicio específico, como alojar páginas web o compartir archivos.</p>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Plataforma de administración</h4>
+                    <p>Facilita la instalación y gestión de varios servicios, a menudo mediante una interfaz gráfica o web.</p>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo:</strong> Puedes instalar Ubuntu Server en tu PC, utilizar Docker para ejecutar aplicaciones y administrar algunos servicios mediante una interfaz web. También puedes utilizar Windows e instalar un servidor web compatible con ese sistema operativo. La elección depende de lo que quieras hacer, de los recursos de tu equipo y de tu experiencia.
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Piensa y responde</h4>
+                    <p>¿Qué diferencia hay entre un sistema operativo y un software de servidor? ¿Puedes tener uno sin el otro?</p>
+                </div>
+            </div>
 
-  <!-- ===== REFLEXIÓN ===== -->
-  <section class="section section-alt" id="reflexion">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-label">Cierre reflexivo</span>
-        <h2>Antes de terminar...</h2>
-        <p>Tómate un momento para pensar en tu proceso de aprendizaje.</p>
-      </div>
-      <div class="reflection-grid">
-        <article class="reflection-card">
-          <h4>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            ¿Qué aprendí?
-          </h4>
-          <p>Identifica los tres conceptos más importantes que descubriste en este taller.</p>
-        </article>
-        <article class="reflection-card">
-          <h4>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-              <path d="M2 17l10 5 10-5"/>
-              <path d="M2 12l10 5 10-5"/>
-            </svg>
-            ¿Qué puedo aplicar?
-          </h4>
-          <p>Piensa en un proyecto real donde podrías usar lo aprendido.</p>
-        </article>
-        <article class="reflection-card">
-          <h4>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-            ¿Qué necesito practicar?
-          </h4>
-          <p>Reconoce qué tema necesitas repasar o practicar más.</p>
-        </article>
-        <article class="reflection-card">
-          <h4>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-            ¿Cómo lo usaría en un proyecto real?
-          </h4>
-          <p>Imagina que debes montar un servidor para tu emprendimiento o colegio.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+            <!-- NIVEL 2: COMPRENSIÓN -->
+            <h3 style="margin-top:2rem; color:var(--color-secondary);">Nivel 2 — Comprensión</h3>
 
-</main>
+            <!-- XAMPP -->
+            <div class="concept-block">
+                <h3><span class="badge">2</span> XAMPP: desarrollo web local</h3>
+                <p>
+                    <strong>¿Qué es?</strong> XAMPP es un paquete de software que facilita la instalación de un entorno de desarrollo web. Incluye Apache, MariaDB, PHP y otras herramientas.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Instalas un solo programa y obtienes todos los componentes necesarios para probar páginas web y aplicaciones PHP en tu propio ordenador, sin necesidad de configurar cada componente por separado.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> XAMPP es como un kit de herramientas completo para un electricista. En lugar de comprar cables, interruptores y enchufes por separado, abres la caja y tienes todo listo para empezar a trabajar.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con XAMPP?</h4>
+                    <ul>
+                        <li>Crear páginas web y probarlas desde el navegador.</li>
+                        <li>Desarrollar aplicaciones con PHP.</li>
+                        <li>Utilizar bases de datos MariaDB.</li>
+                        <li>Probar proyectos web antes de publicarlos.</li>
+                        <li>Permitir el acceso a una página de prueba desde otros dispositivos de tu red, si configuras correctamente el servicio.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Instalación relativamente sencilla.</li>
+                        <li>Panel de control gráfico.</li>
+                        <li>Incluye varias herramientas de desarrollo.</li>
+                        <li>Adecuado para aprender y realizar pruebas.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>No es la mejor opción como plataforma predeterminada para un servidor público de producción.</li>
+                        <li>Una configuración insegura puede exponer bases de datos y herramientas administrativas.</li>
+                        <li>Para proyectos profesionales conviene configurar los componentes individualmente o utilizar una plataforma de despliegue apropiada.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Instala XAMPP en Windows, inicia Apache y coloca los archivos de tu página en el directorio <code>htdocs</code>. Después, abre <code>http://localhost/</code> en el navegador para probarla.
+                </div>
+                <div class="warning-box">
+                    <strong>Error frecuente:</strong> Dejar XAMPP accesible desde Internet sin contraseñas ni configuraciones de seguridad. Esto puede exponer tu base de datos y permitir accesos no autorizados. Siempre configura permisos y contraseñas antes de exponer cualquier servicio.
+                </div>
+            </div>
 
-<!-- ===== FOOTER ===== -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-divider"></div>
-    <p class="footer-line">Taller diseñado con el corazón de un docente y la mente de un programador.</p>
-    <p class="footer-author">Diseñado por: Edwin Méndez J.</p>
-  </div>
-</footer>
+            <!-- CasaOS -->
+            <div class="concept-block">
+                <h3><span class="badge">3</span> CasaOS: administrar aplicaciones desde una interfaz web</h3>
+                <p>
+                    <strong>¿Qué es?</strong> CasaOS es una plataforma de administración orientada a servidores domésticos. Permite gestionar aplicaciones, almacenamiento y otros recursos mediante una interfaz web.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Instalas CasaOS en tu PC y accedes desde el navegador a un panel visual donde puedes instalar, configurar y administrar aplicaciones sin usar la terminal.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> CasaOS es como el escritorio de tu teléfono inteligente: tienes iconos para cada aplicación y las gestionas con toques, sin necesidad de escribir comandos.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con CasaOS?</h4>
+                    <ul>
+                        <li>Instalar aplicaciones compatibles.</li>
+                        <li>Administrar servicios domésticos desde el navegador.</li>
+                        <li>Organizar aplicaciones y almacenamiento.</li>
+                        <li>Crear un entorno para servicios multimedia y herramientas personales.</li>
+                        <li>Simplificar algunas tareas habituales de administración.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Interfaz visual intuitiva.</li>
+                        <li>Pensado para proyectos domésticos.</li>
+                        <li>Facilita la gestión de múltiples aplicaciones.</li>
+                        <li>Puede resultar más accesible para principiantes que una administración basada únicamente en comandos.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Necesitas comprobar la compatibilidad con el sistema operativo y el hardware.</li>
+                        <li>La instalación y el mantenimiento siguen requiriendo conocimientos básicos.</li>
+                        <li>No elimina la necesidad de configurar permisos, actualizaciones y medidas de seguridad.</li>
+                        <li>La disponibilidad de aplicaciones depende del catálogo y del método de instalación.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Puedes instalar CasaOS en un PC dedicado y utilizarlo como punto central para gestionar aplicaciones de tu red doméstica.
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Piensa y responde</h4>
+                    <p>¿Por qué CasaOS puede ser más accesible para un principiante que administrar servicios directamente desde la terminal?</p>
+                </div>
+            </div>
 
-<script>
-"use strict";
+            <!-- Docker -->
+            <div class="concept-block">
+                <h3><span class="badge">4</span> Docker: ejecutar aplicaciones en contenedores</h3>
+                <p>
+                    <strong>¿Qué es?</strong> Docker es una plataforma que permite empaquetar y ejecutar aplicaciones en contenedores. Un contenedor incluye la aplicación y sus dependencias, lo que facilita su instalación y despliegue en entornos compatibles.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> A diferencia de una máquina virtual tradicional, un contenedor normalmente comparte el kernel del sistema operativo anfitrión.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> Docker es como una caja de herramientas portátil: cada contenedor tiene todo lo necesario para funcionar, y puedes llevarlo a cualquier taller compatible sin preocuparte por las herramientas del lugar.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con Docker?</h4>
+                    <ul>
+                        <li>Ejecutar varias aplicaciones en un mismo servidor.</li>
+                        <li>Separar los entornos de diferentes servicios.</li>
+                        <li>Reproducir configuraciones de forma más consistente.</li>
+                        <li>Actualizar o sustituir aplicaciones con mayor facilidad.</li>
+                        <li>Ejecutar servicios como Jellyfin, servidores web y bases de datos mediante imágenes compatibles.</li>
+                        <li>Facilitar la instalación y administración de aplicaciones.</li>
+                        <li>Permitir aislar servicios entre sí, aunque no equivale a una garantía absoluta de seguridad.</li>
+                        <li>Favorecer la portabilidad entre entornos compatibles.</li>
+                        <li>Contar con un amplio ecosistema de imágenes y herramientas.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Facilita la instalación y administración de aplicaciones.</li>
+                        <li>Permite aislar servicios entre sí, aunque no equivale a una garantía absoluta de seguridad.</li>
+                        <li>Favorece la portabilidad entre entornos compatibles.</li>
+                        <li>Cuenta con un amplio ecosistema de imágenes y herramientas.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Requiere aprender conceptos como imágenes, contenedores, volúmenes y redes.</li>
+                        <li>Los datos importantes deben almacenarse de forma persistente.</li>
+                        <li>Una configuración incorrecta de permisos o puertos puede exponer servicios.</li>
+                        <li>La instalación y las condiciones de uso de Docker Desktop difieren de las de Docker Engine en Linux.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Puedes utilizar Docker Compose para definir una aplicación y sus servicios relacionados en un archivo de configuración, y después iniciarlos conjuntamente.
+                </div>
+                <div class="warning-box">
+                    <strong>Error frecuente:</strong> No almacenar datos de forma persistente. Si eliminas un contenedor sin volúmenes configurados, pierdes la información. Siempre utiliza volúmenes para datos importantes.
+                </div>
+            </div>
 
-/* ===== ACORDEONES ===== */
-const conceptos = document.querySelectorAll("[data-concept]");
+            <!-- Jellyfin -->
+            <div class="concept-block">
+                <h3><span class="badge">5</span> Jellyfin: servidor multimedia personal</h3>
+                <p>
+                    <strong>¿Qué es?</strong> Jellyfin es un sistema multimedia gratuito y de código abierto que permite organizar y transmitir contenido personal desde un servidor a diferentes dispositivos.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Instalas Jellyfin en tu PC, añades carpetas con tus películas, series, música y vídeos, y accedes desde cualquier dispositivo conectado a tu red mediante un navegador o una aplicación compatible.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> Jellyfin es como tener tu propio cine en casa: organizas tus películas en estanterías digitales y las reproduces en cualquier pantalla de tu hogar.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con Jellyfin?</h4>
+                    <ul>
+                        <li>Organizar una biblioteca multimedia.</li>
+                        <li>Reproducir contenido desde un navegador o una aplicación compatible.</li>
+                        <li>Crear usuarios y administrar el acceso a las bibliotecas.</li>
+                        <li>Consultar información y carátulas del contenido.</li>
+                        <li>Transmitir archivos a televisores, teléfonos y otros dispositivos compatibles.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Gratuito y de código abierto.</li>
+                        <li>Permite mantener el control sobre el servidor y la biblioteca.</li>
+                        <li>Cuenta con opciones de instalación para Windows, Linux y contenedores.</li>
+                        <li>No exige una suscripción premium para desbloquear funciones del servidor.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Necesita suficiente almacenamiento para la biblioteca multimedia.</li>
+                        <li>La transcodificación puede exigir recursos considerables.</li>
+                        <li>Algunos dispositivos pueden necesitar aplicaciones específicas o formatos compatibles.</li>
+                        <li>La configuración de acceso remoto requiere medidas de seguridad adicionales.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Instala Jellyfin en tu PC, añade una carpeta con tus vídeos y accede desde otro dispositivo conectado a tu red.
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Explora</h4>
+                    <p>Si tienes un ordenador con Linux, investiga cómo instalar Jellyfin desde la terminal. Si usas Windows, busca el instalador oficial. ¿Qué diferencia encuentras entre ambos métodos?</p>
+                </div>
+            </div>
 
-conceptos.forEach(function (concepto) {
-  const header = concepto.querySelector(".concept-header");
-  const toggle = function () {
-    const isOpen = concepto.classList.contains("open");
-    concepto.classList.toggle("open");
-    header.setAttribute("aria-expanded", String(!isOpen));
-  };
+            <!-- File Browser y Samba -->
+            <div class="concept-block">
+                <h3><span class="badge">6</span> File Browser y Samba: compartir y administrar archivos</h3>
+                <p>
+                    <strong>File Browser</strong> proporciona una interfaz web para navegar por carpetas y administrar archivos. Puede ser útil si quieres acceder a documentos desde distintos dispositivos utilizando un navegador.
+                </p>
+                <p>
+                    <strong>Samba</strong> implementa servicios de archivos e impresión compatibles con SMB, lo que facilita compartir recursos entre sistemas Linux y equipos Windows.
+                </p>
+                <p>
+                    <strong>¿Cuál conviene utilizar?</strong> File Browser es una buena alternativa cuando prefieres administrar archivos desde una interfaz web. Samba resulta más adecuado cuando quieres que las carpetas compartidas aparezcan como recursos de red en el explorador de archivos de tus ordenadores.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>Ventajas de estas soluciones</h4>
+                    <ul>
+                        <li>Permiten centralizar documentos.</li>
+                        <li>Facilitan el acceso desde varios dispositivos.</li>
+                        <li>Pueden aprovechar discos duros que ya tienes.</li>
+                        <li>Ayudan a organizar el almacenamiento doméstico.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Debes configurar correctamente los permisos de acceso.</li>
+                        <li>Es necesario evitar que usuarios no autorizados accedan a los archivos.</li>
+                        <li>El almacenamiento compartido no sustituye a una copia de seguridad.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Instala Samba en un PC con Linux y crea una carpeta compartida para que otros equipos de tu red puedan guardar y consultar documentos.
+                </div>
+                <div class="warning-box">
+                    <strong>Error frecuente:</strong> Compartir carpetas sin contraseñas ni permisos adecuados. Cualquier persona en la red podría acceder a tus archivos. Siempre configura usuarios y permisos específicos.
+                </div>
+            </div>
 
-  header.addEventListener("click", toggle);
-  header.addEventListener("keydown", function (e) {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggle();
-    }
-  });
-});
+            <!-- Apache y Nginx -->
+            <div class="concept-block">
+                <h3><span class="badge">7</span> Apache y Nginx: alojar páginas web</h3>
+                <p>
+                    <strong>Apache HTTP Server</strong> es un servidor web ampliamente utilizado que permite entregar páginas y ejecutar configuraciones para diferentes tipos de sitios web. Resulta útil para aprender alojamiento web y desplegar aplicaciones compatibles.
+                </p>
+                <p>
+                    <strong>Nginx</strong> es un servidor web y proxy inverso que también permite alojar páginas web, con un enfoque en el rendimiento y la eficiencia.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Instalas el servidor, configuras los archivos del sitio en el directorio correspondiente y accedes desde un navegador mediante la dirección IP o el dominio configurado.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> Apache y Nginx son como los recepcionistas de un edificio: reciben las solicitudes de los visitantes (usuarios) y les entregan la información que necesitan (páginas web).
+                </p>
+                <div class="highlight-box">
+                    <strong>Ejemplo de configuración en Apache:</strong>
+                    <pre><code>&lt;VirtualHost *:80&gt;
+    ServerName linux-ub
+    ServerAdmin webmaster@linux-ub
+    DocumentRoot /var/www/newWebsite
+    ErrorLog ${APACHE_LOG_DIR}/error newWebsite.log
+    CustomLog ${APACHE_LOG_DIR}/access newWebsite.log combined
+&lt;/VirtualHost&gt;</code></pre>
+                    Este fragmento define un host virtual en Apache, especificando el nombre del servidor, el directorio raíz del sitio y los archivos de registro.
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Piensa y responde</h4>
+                    <p>¿Qué diferencias crees que existen entre Apache y Nginx? ¿En qué casos elegirías uno u otro?</p>
+                </div>
+            </div>
 
-/* ===== CUESTIONARIO ===== */
-const preguntas = [
-  {
-    pregunta: "¿Cuál es la función principal de un sistema operativo en un servidor?",
-    opciones: [
-      "Diseñar páginas web automáticamente.",
-      "Administrar los recursos del ordenador y permitir ejecutar programas.",
-      "Reemplazar la necesidad de una red local.",
-      "Almacenar únicamente archivos multimedia."
-    ],
-    correcta: 1,
-    explicacion: "El sistema operativo administra procesador, memoria, almacenamiento, red y servicios. Las páginas web se crean con editores o lenguajes, no las genera el sistema operativo."
-  },
-  {
-    pregunta: "Un estudiante quiere aprender administración de servidores y reutilizar un PC antiguo sin gastar en licencias. ¿Qué opción le recomendarías?",
-    opciones: [
-      "Windows Server, porque siempre es gratuito.",
-      "Ubuntu Server o Debian, porque son distribuciones Linux gratuitas y versátiles.",
-      "Plex, porque es un sistema operativo completo.",
-      "XAMPP, porque reemplaza al sistema operativo."
-    ],
-    correcta: 1,
-    explicacion: "Ubuntu Server y Debian son distribuciones Linux recomendadas para principiantes, sin coste de licencia, y permiten reutilizar equipos antiguos. Plex y XAMPP son programas, no sistemas operativos."
-  },
-  {
-    pregunta: "¿Cuál es la diferencia clave entre un contenedor Docker y una máquina virtual tradicional?",
-    opciones: [
-      "El contenedor no puede ejecutar aplicaciones.",
-      "La máquina virtual comparte el kernel del sistema anfitrión y el contenedor no.",
-      "El contenedor comparte el kernel del sistema operativo anfitrión, mientras que la máquina virtual ejecuta un sistema operativo completo.",
-      "No existe ninguna diferencia técnica entre ambos."
-    ],
-    correcta: 2,
-    explicacion: "Un contenedor comparte el kernel del sistema anfitrión, lo que lo hace más ligero. Una máquina virtual ejecuta un sistema operativo completo de forma independiente, consumiendo más recursos."
-  },
-  {
-    pregunta: "Ana quiere compartir archivos entre computadoras Windows y Linux en la red de su colegio, de modo que aparezcan como carpetas de red. ¿Qué programa debería usar?",
-    opciones: [
-      "Samba, porque implementa servicios compatibles con SMB.",
-      "Jellyfin, porque organiza archivos multimedia.",
-      "Docker, porque empaqueta aplicaciones en contenedores.",
-      "Apache, porque entrega páginas web."
-    ],
-    correcta: 0,
-    explicacion: "Samba implementa servicios de archivos e impresión compatibles con SMB, lo que permite compartir recursos entre Linux y Windows. Jellyfin es multimedia, Docker es contenedores y Apache es servidor web."
-  },
-  {
-    pregunta: "Un emprendimiento local necesita alojar una página web, compartir archivos y transmitir videos educativos desde un solo computador. ¿Cuál sería la estrategia más completa y segura?",
-    opciones: [
-      "Instalar solo XAMPP y usarlo para todo, aunque no sea seguro para producción.",
-      "Usar Windows de escritorio sin configuración adicional y abrir todos los puertos.",
-      "Instalar Ubuntu Server, usar Apache o Nginx para la web, Samba o File Browser para archivos, Jellyfin para videos, y configurar permisos y copias de seguridad.",
-      "Instalar únicamente VirtualBox y crear máquinas virtuales sin servicios."
-    ],
-    correcta: 2,
-    explicacion: "La estrategia más completa combina un sistema operativo de servidor como Ubuntu Server con herramientas específicas para cada necesidad, aplicando buenas prácticas de permisos, actualizaciones y copias de seguridad."
-  }
-];
+            <!-- Plex -->
+            <div class="concept-block">
+                <h3><span class="badge">8</span> Plex Media Server: multimedia con ecosistema propio</h3>
+                <p>
+                    <strong>¿Qué es?</strong> Plex Media Server es una plataforma para organizar y transmitir contenido multimedia personal a dispositivos compatibles.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Su objetivo es similar al de Jellyfin: centralizar la biblioteca audiovisual y facilitar su reproducción desde diferentes lugares y dispositivos.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> Plex es como un servicio de streaming personal: organiza tu contenido y lo presenta con una interfaz cuidada, similar a la de las plataformas comerciales.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con Plex?</h4>
+                    <ul>
+                        <li>Organizar películas, series, música y fotografías.</li>
+                        <li>Mostrar carátulas e información del contenido.</li>
+                        <li>Acceder a la biblioteca desde aplicaciones compatibles.</li>
+                        <li>Compartir bibliotecas con otros usuarios, según la configuración y las funciones disponibles.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Interfaz visual cuidada.</li>
+                        <li>Aplicaciones para diferentes dispositivos.</li>
+                        <li>Administración centralizada del contenido.</li>
+                        <li>Configuración relativamente accesible para usuarios domésticos.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Algunas funciones dependen de un plan de pago o de condiciones comerciales que pueden cambiar.</li>
+                        <li>El acceso remoto puede requerir configuración adicional.</li>
+                        <li>La transcodificación puede consumir bastantes recursos del equipo.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Instala Plex Media Server en tu PC, selecciona las carpetas de películas y accede a la biblioteca desde un televisor o teléfono compatible.
+                </div>
+            </div>
 
-let indiceActual = 0;
-let puntuacion = 0;
-let respuestaSeleccionada = false;
+            <!-- VirtualBox -->
+            <div class="concept-block">
+                <h3><span class="badge">9</span> VirtualBox: crear máquinas virtuales para experimentar</h3>
+                <p>
+                    <strong>¿Qué es?</strong> VirtualBox es un programa de virtualización que permite ejecutar máquinas virtuales dentro de un ordenador físico.
+                </p>
+                <p>
+                    <strong>¿Cómo funciona?</strong> Una máquina virtual funciona como un ordenador independiente, con su propio sistema operativo y sus aplicaciones, aunque comparte los recursos físicos del equipo anfitrión.
+                </p>
+                <p>
+                    <strong>Analogía:</strong> VirtualBox es como tener varios ordenadores dentro de uno solo: puedes experimentar con diferentes sistemas operativos sin riesgo para tu equipo principal.
+                </p>
+                <div class="concept-block__sub">
+                    <h4>¿Qué puedes hacer con VirtualBox?</h4>
+                    <ul>
+                        <li>Instalar Linux sin eliminar Windows.</li>
+                        <li>Probar diferentes sistemas operativos.</li>
+                        <li>Experimentar con configuraciones de red.</li>
+                        <li>Aprender a administrar servidores en un entorno de pruebas.</li>
+                        <li>Crear laboratorios para practicar antes de modificar un servidor real.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Ventajas</h4>
+                    <ul>
+                        <li>Permite experimentar sin dedicar un ordenador físico a cada sistema.</li>
+                        <li>Facilita las pruebas de diferentes configuraciones.</li>
+                        <li>Es útil para aprender administración de sistemas.</li>
+                        <li>Permite utilizar instantáneas en determinadas configuraciones para regresar a estados anteriores.</li>
+                    </ul>
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Desventajas</h4>
+                    <ul>
+                        <li>Las máquinas virtuales consumen RAM, procesador y almacenamiento.</li>
+                        <li>El rendimiento depende del hardware disponible.</li>
+                        <li>La configuración de redes virtuales puede resultar compleja al principio.</li>
+                        <li>Una máquina virtual no sustituye a las copias de seguridad de los datos.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Ejemplo práctico:</strong> Si tienes un PC con Windows, puedes crear una máquina virtual con Ubuntu Server y utilizarla para practicar la instalación de Apache o Samba sin modificar el sistema principal.
+                </div>
+                <div class="concept-block__sub">
+                    <h4>Explora</h4>
+                    <p>Descarga VirtualBox e intenta crear una máquina virtual básica. ¿Qué sistema operativo te gustaría probar primero? ¿Por qué?</p>
+                </div>
+            </div>
 
-const questionText = document.getElementById("questionText");
-const optionsList = document.getElementById("optionsList");
-const feedback = document.getElementById("feedback");
-const nextBtn = document.getElementById("nextBtn");
-const quizCounter = document.getElementById("quizCounter");
-const quizScore = document.getElementById("quizScore");
-const progressFill = document.getElementById("progressFill");
-const quizContent = document.getElementById("quizContent");
-const quizResult = document.getElementById("quizResult");
-const finalScore = document.getElementById("finalScore");
-const resultMessage = document.getElementById("resultMessage");
-const resultDetail = document.getElementById("resultDetail");
-const restartBtn = document.getElementById("restartBtn");
+            <!-- NIVEL 3: APLICACIÓN -->
+            <h3 style="margin-top:2rem; color:var(--color-secondary);">Nivel 3 — Aplicación</h3>
 
-const letras = ["A", "B", "C", "D"];
+            <div class="concept-block">
+                <h3><span class="badge">10</span> Tabla comparativa de programas</h3>
+                <p>La siguiente tabla resume las características principales de cada programa:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Programa</th>
+                                <th>Uso principal</th>
+                                <th>Facilidad inicial</th>
+                                <th>Coste del software</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>XAMPP</td><td>Desarrollo web local</td><td>Alta</td><td>Gratuito</td></tr>
+                            <tr><td>CasaOS</td><td>Administración doméstica</td><td>Alta</td><td>Gratuito</td></tr>
+                            <tr><td>Docker</td><td>Ejecutar aplicaciones en contenedores</td><td>Media</td><td>Depende del producto y uso</td></tr>
+                            <tr><td>Jellyfin</td><td>Servidor multimedia</td><td>Alta-media</td><td>Gratuito</td></tr>
+                            <tr><td>File Browser</td><td>Administración web de archivos</td><td>Alta-media</td><td>Gratuito, según la edición y distribución</td></tr>
+                            <tr><td>Samba</td><td>Compartir archivos en red</td><td>Media</td><td>Gratuito</td></tr>
+                            <tr><td>Apache</td><td>Alojamiento web</td><td>Media</td><td>Gratuito</td></tr>
+                            <tr><td>Nginx</td><td>Alojamiento web y proxy inverso</td><td>Media</td><td>Gratuito en su edición de código abierto</td></tr>
+                            <tr><td>Plex</td><td>Servidor multimedia</td><td>Alta</td><td>Gratuito con funciones sujetas a condiciones comerciales</td></tr>
+                            <tr><td>VirtualBox</td><td>Virtualización y aprendizaje</td><td>Media</td><td>Gratuito para usos permitidos por su licencia</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><em>La facilidad de uso es orientativa: puede variar según el sistema operativo, la experiencia del usuario y la complejidad del proyecto.</em></p>
+            </div>
 
-function iniciarQuiz() {
-  indiceActual = 0;
-  puntuacion = 0;
-  respuestaSeleccionada = false;
-  quizContent.style.display = "block";
-  quizResult.classList.remove("show");
-  actualizarMarcadores();
-  mostrarPregunta();
-}
+            <!-- NIVEL 4: ANÁLISIS -->
+            <h3 style="margin-top:2rem; color:var(--color-secondary);">Nivel 4 — Análisis y decisiones</h3>
 
-function actualizarMarcadores() {
-  quizCounter.textContent = "Pregunta " + (indiceActual + 1) + " de " + preguntas.length;
-  quizScore.textContent = "Puntuación: " + puntuacion;
-  const progreso = (indiceActual / preguntas.length) * 100;
-  progressFill.style.width = progreso + "%";
-  progressFill.parentElement.setAttribute("aria-valuenow", String(Math.round(progreso)));
-}
+            <div class="concept-block">
+                <h3><span class="badge">11</span> ¿Qué programa elegir para cada tipo de servidor?</h3>
+                <p>Si todavía no sabes qué instalar, utiliza esta guía rápida:</p>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card__icon">🌐</div>
+                        <h4 class="card__title">Quiero alojar una página web</h4>
+                        <p class="card__text">Elige XAMPP para aprender desarrollo web local o Apache/Nginx para construir un servidor web más configurable.</p>
+                        <span class="card__tag card__tag--accent">Web</span>
+                    </div>
+                    <div class="card">
+                        <div class="card__icon">📁</div>
+                        <h4 class="card__title">Quiero compartir archivos</h4>
+                        <p class="card__text">Elige Samba para compartir carpetas en la red local o File Browser para administrarlas desde un navegador.</p>
+                        <span class="card__tag card__tag--accent">Archivos</span>
+                    </div>
+                    <div class="card">
+                        <div class="card__icon">🎬</div>
+                        <h4 class="card__title">Quiero ver películas y series</h4>
+                        <p class="card__text">Elige Jellyfin si buscas una solución gratuita y de código abierto, o Plex si prefieres su ecosistema de aplicaciones y funciones.</p>
+                        <span class="card__tag card__tag--accent">Multimedia</span>
+                    </div>
+                    <div class="card">
+                        <div class="card__icon">📦</div>
+                        <h4 class="card__title">Quiero ejecutar varias aplicaciones</h4>
+                        <p class="card__text">Considera Docker para gestionar servicios en contenedores. CasaOS puede facilitar su administración desde una interfaz web.</p>
+                        <span class="card__tag card__tag--accent">Contenedores</span>
+                    </div>
+                    <div class="card">
+                        <div class="card__icon">🧪</div>
+                        <h4 class="card__title">Quiero aprender sin modificar mi PC</h4>
+                        <p class="card__text">Utiliza VirtualBox para instalar un sistema operativo de servidor en una máquina virtual.</p>
+                        <span class="card__tag card__tag--accent">Virtualización</span>
+                    </div>
+                </div>
+            </div>
 
-function mostrarPregunta() {
-  const pregunta = preguntas[indiceActual];
-  respuestaSeleccionada = false;
-  nextBtn.disabled = true;
-  nextBtn.textContent = "Siguiente pregunta";
-  feedback.className = "feedback";
-  feedback.innerHTML = "";
+            <!-- NIVEL 5: TRANSFERENCIA -->
+            <h3 style="margin-top:2rem; color:var(--color-secondary);">Nivel 5 — Transferencia y buenas prácticas</h3>
 
-  questionText.textContent = pregunta.pregunta;
-  optionsList.innerHTML = "";
+            <div class="concept-block">
+                <h3><span class="badge">12</span> Recomendaciones antes de instalar cualquier programa</h3>
+                <p>Antes de convertir tu PC en servidor, conviene seguir estas recomendaciones:</p>
+                <ol>
+                    <li><strong>Descarga el software desde su sitio oficial.</strong> Evita instaladores de procedencia desconocida.</li>
+                    <li><strong>Comprueba los requisitos.</strong> Verifica la compatibilidad con tu sistema operativo y arquitectura.</li>
+                    <li><strong>Empieza en una red local.</strong> Es más sencillo probar el funcionamiento antes de permitir conexiones desde Internet.</li>
+                    <li><strong>Protege los datos.</strong> Conserva copias de seguridad de los archivos importantes.</li>
+                    <li><strong>Configura los permisos.</strong> Cada usuario debe tener únicamente el acceso que necesita.</li>
+                    <li><strong>Mantén el sistema actualizado.</strong> Instala las actualizaciones de seguridad del sistema operativo y de las aplicaciones.</li>
+                    <li><strong>No abras puertos innecesarios.</strong> Publicar un servicio en Internet requiere evaluar los riesgos y configurar el acceso de forma segura.</li>
+                </ol>
+                <div class="highlight-box">
+                    <strong>Resumen del capítulo:</strong> Existen muchas herramientas para convertir un PC en servidor, y cada una responde a una necesidad diferente.
+                    <ul style="margin-top:0.5rem;">
+                        <li>XAMPP facilita el desarrollo web local.</li>
+                        <li>CasaOS simplifica la administración de aplicaciones domésticas.</li>
+                        <li>Docker permite ejecutar aplicaciones en contenedores.</li>
+                        <li>Jellyfin y Plex sirven para gestionar bibliotecas multimedia.</li>
+                        <li>Samba y File Browser facilitan compartir y administrar archivos.</li>
+                        <li>Apache y Nginx permiten alojar páginas web.</li>
+                        <li>VirtualBox es útil para aprender y experimentar con sistemas operativos.</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <strong>Recomendación para empezar:</strong> Si tienes un ordenador antiguo y quieres crear un servidor doméstico, instala una distribución Linux compatible y comienza con un solo servicio. Si prefieres compartir películas, prueba Jellyfin; si quieres compartir documentos, considera Samba; y si quieres aprender a alojar páginas web, comienza con Apache o XAMPP en un entorno local.
+                </div>
+            </div>
+        </section>
 
-  pregunta.opciones.forEach(function (opcion, i) {
-    const li = document.createElement("li");
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "option-btn";
-    btn.setAttribute("aria-label", "Opción " + letras[i] + ": " + opcion);
+        <!-- =============================================
+             RETO INTEGRADOR
+             ============================================= -->
+        <section id="reto" class="section">
+            <span class="section__label">Reto integrador</span>
+            <h2 class="section__title">Diseña tu servidor ideal</h2>
+            <div class="section__divider"></div>
 
-    const letterSpan = document.createElement("span");
-    letterSpan.className = "option-letter";
-    letterSpan.textContent = letras[i];
+            <div class="reto">
+                <h3>🌐 Contexto</h3>
+                <p>
+                    Tu institución educativa ha recibido un ordenador antiguo pero funcional. El rector te ha pedido que lo conviertas en un servidor 
+                    para mejorar los servicios digitales del colegio. Tienes libertad para decidir qué servicios implementar, pero debes justificar 
+                    cada elección técnica, considerar la seguridad y presentar un plan de implementación.
+                </p>
 
-    const textSpan = document.createElement("span");
-    textSpan.textContent = opcion;
+                <h3>🎯 Objetivo</h3>
+                <p>
+                    Diseñar una propuesta completa para convertir ese ordenador en un servidor funcional que resuelva al menos <strong>dos necesidades reales</strong> 
+                    de tu institución (por ejemplo: compartir archivos, alojar una página web, transmitir contenido multimedia, etc.).
+                </p>
 
-    btn.appendChild(letterSpan);
-    btn.appendChild(textSpan);
-    btn.addEventListener("click", function () {
-      seleccionarRespuesta(i, btn);
-    });
+                <h3>📋 ¿Qué debes lograr?</h3>
+                <ul>
+                    <li><strong>Seleccionar</strong> al menos dos programas de los estudiados (XAMPP, CasaOS, Docker, Jellyfin, Samba, File Browser, Apache, Nginx, Plex, VirtualBox).</li>
+                    <li><strong>Justificar</strong> cada elección con argumentos técnicos, comparando ventajas y desventajas.</li>
+                    <li><strong>Diseñar</strong> un diagrama o esquema de cómo se integrarían los servicios en el servidor.</li>
+                    <li><strong>Definir</strong> un plan de seguridad básico: permisos, contraseñas, actualizaciones, copias de seguridad.</li>
+                    <li><strong>Estimar</strong> los recursos necesarios: almacenamiento, RAM, procesador.</li>
+                    <li><strong>Presentar</strong> una conclusión sobre la viabilidad del proyecto y los beneficios esperados.</li>
+                </ul>
 
-    li.appendChild(btn);
-    optionsList.appendChild(li);
-  });
+                <h3>⚠️ Restricciones</h3>
+                <ul>
+                    <li>No puedes usar más de tres programas diferentes.</li>
+                    <li>Debes considerar que el ordenador tiene recursos limitados (ejemplo: 4 GB de RAM, 500 GB de disco).</li>
+                    <li>El servidor debe funcionar en una red local escolar sin acceso a Internet inicialmente.</li>
+                    <li>Debes incluir al menos una medida de seguridad por cada servicio implementado.</li>
+                </ul>
 
-  actualizarMarcadores();
-}
+                <h3>✅ Criterios de éxito</h3>
+                <ul>
+                    <li><strong>Comprensión:</strong> Explicas correctamente qué hace cada programa y por qué lo elegiste.</li>
+                    <li><strong>Aplicación:</strong> Los servicios propuestos son coherentes con las necesidades planteadas.</li>
+                    <li><strong>Funcionalidad:</strong> El diseño es viable con los recursos disponibles.</li>
+                    <li><strong>Creatividad:</strong> Propones soluciones originales o combinaciones interesantes.</li>
+                    <li><strong>Calidad técnica:</strong> Los argumentos son precisos y están bien fundamentados.</li>
+                    <li><strong>Argumentación:</strong> Justificas cada decisión con razones técnicas claras.</li>
+                    <li><strong>Buenas prácticas:</strong> Incluyes medidas de seguridad, permisos y copias de seguridad.</li>
+                </ul>
+            </div>
+        </section>
 
-function seleccionarRespuesta(indice, boton) {
-  if (respuestaSeleccionada) return;
-  respuestaSeleccionada = true;
+        <!-- =============================================
+             EVALUACIÓN LÚDICA
+             ============================================= -->
+        <section id="evaluacion" class="section">
+            <span class="section__label">Evaluación lúdica</span>
+            <h2 class="section__title">Pon a prueba tus conocimientos</h2>
+            <div class="section__divider"></div>
+            <p>Responde las siguientes 5 preguntas. Cada una tiene una única respuesta correcta. Recibirás retroalimentación inmediata.</p>
 
-  const pregunta = preguntas[indiceActual];
-  const botones = optionsList.querySelectorAll(".option-btn");
+            <div class="quiz-container" id="quizContainer">
+                <div class="quiz-header">
+                    <span class="quiz-counter" id="quizCounter">Pregunta 1 de 5</span>
+                    <span class="quiz-score" id="quizScore">Puntuación: 0</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar__fill" id="progressFill"></div>
+                </div>
 
-  botones.forEach(function (b) {
-    b.disabled = true;
-  });
+                <div id="quizContent">
+                    <p class="quiz-question" id="quizQuestion"></p>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                    <button class="quiz-btn" id="quizNextBtn" disabled>Siguiente pregunta →</button>
+                </div>
 
-  if (indice === pregunta.correcta) {
-    boton.classList.add("correct");
-    puntuacion++;
-    feedback.className = "feedback success show";
-    feedback.innerHTML = "<strong>¡Correcto!</strong>" + pregunta.explicacion;
-  } else {
-    boton.classList.add("incorrect");
-    botones[pregunta.correcta].classList.add("correct");
-    feedback.className = "feedback error show";
-    feedback.innerHTML = "<strong>Incorrecto.</strong>" + pregunta.explicacion;
-  }
+                <div class="quiz-result" id="quizResult">
+                    <div class="quiz-result__score" id="resultScore">0/5</div>
+                    <p class="quiz-result__label">respuestas correctas</p>
+                    <p class="quiz-result__message" id="resultMessage"></p>
+                    <button class="quiz-btn quiz-btn--outline" id="quizRestartBtn">🔄 Reiniciar cuestionario</button>
+                </div>
+            </div>
+        </section>
 
-  quizScore.textContent = "Puntuación: " + puntuacion;
+        <!-- =============================================
+             CIERRE / REFLEXIÓN
+             ============================================= -->
+        <section id="reflexion" class="section">
+            <span class="section__label">Cierre reflexivo</span>
+            <h2 class="section__title">Antes de terminar...</h2>
+            <div class="section__divider"></div>
 
-  if (indiceActual === preguntas.length - 1) {
-    nextBtn.textContent = "Ver resultado";
-  }
+            <div class="reflection">
+                <div class="reflection__item">
+                    <div class="reflection__icon">🧠</div>
+                    <div class="reflection__text">
+                        <h4>¿Qué aprendí?</h4>
+                        <p>Reflexiona sobre los conceptos nuevos que comprendiste: diferencias entre sistema operativo, software de servidor y plataforma de administración; características de cada programa; criterios para elegir la herramienta adecuada.</p>
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">🛠️</div>
+                    <div class="reflection__text">
+                        <h4>¿Qué puedo aplicar?</h4>
+                        <p>Piensa en situaciones reales de tu entorno donde podrías implementar un servidor: compartir archivos con compañeros, alojar la web de un emprendimiento, crear una biblioteca multimedia familiar, practicar con máquinas virtuales.</p>
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">📚</div>
+                    <div class="reflection__text">
+                        <h4>¿Qué necesito seguir practicando?</h4>
+                        <p>Identifica las áreas donde necesitas más estudio: configuración de redes, seguridad informática, administración de servidores Linux, contenedores Docker, virtualización.</p>
+                    </div>
+                </div>
+                <div class="reflection__item">
+                    <div class="reflection__icon">🚀</div>
+                    <div class="reflection__text">
+                        <h4>¿Cómo utilizaría este conocimiento en un proyecto real?</h4>
+                        <p>Imagina un proyecto concreto: un servidor para tu colegio, un centro multimedia para tu casa, una nube personal para tus archivos, un laboratorio de pruebas para aprender. Describe cómo lo harías.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  nextBtn.disabled = false;
-}
+    </main>
 
-function siguientePregunta() {
-  if (!respuestaSeleccionada) return;
+    <!-- =============================================
+         FOOTER
+         ============================================= -->
+    <footer class="footer">
+        <p>Taller diseñado con el corazón de un docente y la mente de un programador.</p>
+        <p>Diseñado por: Edwin Méndez J.</p>
+    </footer>
 
-  if (indiceActual < preguntas.length - 1) {
-    indiceActual++;
-    mostrarPregunta();
-  } else {
-    mostrarResultado();
-  }
-}
+    <!-- =============================================
+         JAVASCRIPT
+         ============================================= -->
+    <script>
+        (function() {
+            'use strict';
 
-function mostrarResultado() {
-  quizContent.style.display = "none";
-  quizResult.classList.add("show");
+            /* =============================================
+               DATOS DEL QUIZ
+               ============================================= */
+            const preguntas = [
+                {
+                    pregunta: "¿Cuál es la función principal de un sistema operativo en el contexto de servidores?",
+                    opciones: [
+                        "Proporcionar un servicio específico como alojar páginas web.",
+                        "Administrar el ordenador y permitir ejecutar los programas.",
+                        "Facilitar la instalación y gestión de varios servicios mediante una interfaz gráfica.",
+                        "Compartir archivos entre sistemas Linux y Windows."
+                    ],
+                    correcta: 1,
+                    explicacion: "El sistema operativo administra el ordenador y permite ejecutar los programas. Ejemplos son Windows Server, Ubuntu Server y Debian. Las otras opciones corresponden a software de servidor o plataformas de administración."
+                },
+                {
+                    pregunta: "Un estudiante quiere aprender desarrollo web local sin configurar cada componente por separado. ¿Qué programa le recomendarías?",
+                    opciones: [
+                        "Samba",
+                        "Docker",
+                        "XAMPP",
+                        "VirtualBox"
+                    ],
+                    correcta: 2,
+                    explicacion: "XAMPP es un paquete que facilita la instalación de un entorno de desarrollo web, incluyendo Apache, MariaDB y PHP. Es ideal para aprender y realizar pruebas locales sin configurar cada componente individualmente."
+                },
+                {
+                    pregunta: "Analiza la siguiente situación: un usuario instala Docker para ejecutar varias aplicaciones, pero olvida configurar volúmenes persistentes. ¿Qué consecuencia tendría?",
+                    opciones: [
+                        "Las aplicaciones se ejecutarían más rápido.",
+                        "Los datos se perderían al eliminar o actualizar los contenedores.",
+                        "El servidor no podría conectarse a Internet.",
+                        "Los contenedores no podrían comunicarse entre sí."
+                    ],
+                    correcta: 1,
+                    explicacion: "Los datos importantes deben almacenarse de forma persistente mediante volúmenes. Si no se configuran, al eliminar o actualizar un contenedor se pierde la información almacenada en su interior."
+                },
+                {
+                    pregunta: "Un colegio necesita compartir documentos entre computadoras Windows y Linux en su red local, y quiere que las carpetas aparezcan como recursos de red. ¿Qué solución es más adecuada?",
+                    opciones: [
+                        "Jellyfin",
+                        "File Browser",
+                        "Samba",
+                        "Plex"
+                    ],
+                    correcta: 2,
+                    explicacion: "Samba implementa servicios de archivos e impresión compatibles con SMB, lo que facilita compartir recursos entre sistemas Linux y equipos Windows, y hace que las carpetas aparezcan como recursos de red en el explorador de archivos."
+                },
+                {
+                    pregunta: "Un estudiante quiere experimentar con Ubuntu Server sin modificar su PC principal con Windows. ¿Qué herramienta le permitiría hacerlo de forma segura?",
+                    opciones: [
+                        "XAMPP",
+                        "Docker",
+                        "VirtualBox",
+                        "CasaOS"
+                    ],
+                    correcta: 2,
+                    explicacion: "VirtualBox es un programa de virtualización que permite ejecutar máquinas virtuales dentro de un ordenador físico. Una máquina virtual funciona como un ordenador independiente, lo que permite instalar Ubuntu Server sin modificar el sistema principal."
+                }
+            ];
 
-  const progreso = (indiceActual / preguntas.length) * 100;
-  progressFill.style.width = "100%";
-  progressFill.parentElement.setAttribute("aria-valuenow", "100");
+            /* =============================================
+               ESTADO DEL QUIZ
+               ============================================= */
+            let indiceActual = 0;
+            let puntuacion = 0;
+            let respuestaSeleccionada = false;
+            let quizTerminado = false;
 
-  finalScore.textContent = puntuacion;
-  const porcentaje = Math.round((puntuacion / preguntas.length) * 100);
+            /* =============================================
+               REFERENCIAS DOM
+               ============================================= */
+            const quizContent = document.getElementById('quizContent');
+            const quizQuestion = document.getElementById('quizQuestion');
+            const quizOptions = document.getElementById('quizOptions');
+            const quizFeedback = document.getElementById('quizFeedback');
+            const quizNextBtn = document.getElementById('quizNextBtn');
+            const quizCounter = document.getElementById('quizCounter');
+            const quizScore = document.getElementById('quizScore');
+            const progressFill = document.getElementById('progressFill');
+            const quizResult = document.getElementById('quizResult');
+            const resultScore = document.getElementById('resultScore');
+            const resultMessage = document.getElementById('resultMessage');
+            const quizRestartBtn = document.getElementById('quizRestartBtn');
 
-  if (puntuacion === 5) {
-    resultMessage.textContent = "¡Excelente! Dominas el contenido.";
-    resultDetail.textContent = "Obtuviste " + puntuacion + " de 5 respuestas correctas (" + porcentaje + "%). Estás listo para diseñar tu propio servidor.";
-  } else if (puntuacion === 4) {
-    resultMessage.textContent = "¡Muy bien! Te falta poco.";
-    resultDetail.textContent = "Obtuviste " + puntuacion + " de 5 respuestas correctas (" + porcentaje + "%). Revisa los conceptos donde fallaste y vuelve a intentarlo.";
-  } else if (puntuacion === 3) {
-    resultMessage.textContent = "Buen intento, sigue practicando.";
-    resultDetail.textContent = "Obtuviste " + puntuacion + " de 5 respuestas correctas (" + porcentaje + "%). Te recomendamos repasar las secciones de desarrollo y el reto integrador.";
-  } else {
-    resultMessage.textContent = "No te desanimes, el aprendizaje es un proceso.";
-    resultDetail.textContent = "Obtuviste " + puntuacion + " de 5 respuestas correctas (" + porcentaje + "%). Vuelve a leer las tarjetas del taller y prueba de nuevo.";
-  }
-}
+            /* =============================================
+               FUNCIONES DEL QUIZ
+               ============================================= */
 
-function reiniciarQuiz() {
-  iniciarQuiz();
-}
+            function iniciarQuiz() {
+                indiceActual = 0;
+                puntuacion = 0;
+                respuestaSeleccionada = false;
+                quizTerminado = false;
+                quizContent.style.display = 'block';
+                quizResult.classList.remove('show');
+                quizNextBtn.disabled = true;
+                quizNextBtn.textContent = 'Siguiente pregunta →';
+                quizFeedback.classList.remove('show');
+                quizFeedback.className = 'quiz-feedback';
+                actualizarContador();
+                actualizarPuntuacion();
+                actualizarProgreso();
+                mostrarPregunta();
+            }
 
-nextBtn.addEventListener("click", siguientePregunta);
-restartBtn.addEventListener("click", reiniciarQuiz);
+            function mostrarPregunta() {
+                const pregunta = preguntas[indiceActual];
+                quizQuestion.textContent = pregunta.pregunta;
+                quizOptions.innerHTML = '';
+                quizFeedback.classList.remove('show');
+                quizFeedback.className = 'quiz-feedback';
+                respuestaSeleccionada = false;
+                quizNextBtn.disabled = true;
 
-/* ===== INICIO ===== */
-document.addEventListener("DOMContentLoaded", function () {
-  iniciarQuiz();
-});
-</script>
+                pregunta.opciones.forEach(function(opcion, index) {
+                    const boton = document.createElement('button');
+                    boton.className = 'quiz-option';
+                    boton.type = 'button';
+                    boton.setAttribute('aria-label', 'Opción ' + (index + 1) + ': ' + opcion);
+
+                    const marcador = document.createElement('span');
+                    marcador.className = 'quiz-option__marker';
+                    marcador.textContent = String.fromCharCode(65 + index);
+
+                    const texto = document.createElement('span');
+                    texto.textContent = opcion;
+
+                    boton.appendChild(marcador);
+                    boton.appendChild(texto);
+
+                    boton.addEventListener('click', function() {
+                        seleccionarRespuesta(index, boton);
+                    });
+
+                    quizOptions.appendChild(boton);
+                });
+
+                actualizarContador();
+                actualizarProgreso();
+            }
+
+            function seleccionarRespuesta(indiceSeleccionado, botonSeleccionado) {
+                if (respuestaSeleccionada) return;
+                respuestaSeleccionada = true;
+
+                const pregunta = preguntas[indiceActual];
+                const esCorrecta = indiceSeleccionado === pregunta.correcta;
+
+                // Bloquear todas las opciones
+                const todosLosBotones = quizOptions.querySelectorAll('.quiz-option');
+                todosLosBotones.forEach(function(btn) {
+                    btn.disabled = true;
+                });
+
+                // Marcar la opción seleccionada
+                if (esCorrecta) {
+                    botonSeleccionado.classList.add('correct');
+                    puntuacion++;
+                } else {
+                    botonSeleccionado.classList.add('incorrect');
+                    // Mostrar cuál era la correcta
+                    todosLosBotones[pregunta.correcta].classList.add('correct');
+                }
+
+                // Mostrar retroalimentación
+                quizFeedback.classList.add('show');
+                if (esCorrecta) {
+                    quizFeedback.classList.add('success');
+                    quizFeedback.innerHTML = '<strong>✅ ¡Correcto!</strong> ' + pregunta.explicacion;
+                } else {
+                    quizFeedback.classList.add('error');
+                    quizFeedback.innerHTML = '<strong>❌ Incorrecto.</strong> La respuesta correcta es la opción ' +
+                        String.fromCharCode(65 + pregunta.correcta) + '. ' + pregunta.explicacion;
+                }
+
+                // Actualizar puntuación
+                actualizarPuntuacion();
+
+                // Habilitar botón siguiente
+                quizNextBtn.disabled = false;
+
+                // Cambiar texto si es la última pregunta
+                if (indiceActual === preguntas.length - 1) {
+                    quizNextBtn.textContent = 'Ver resultados →';
+                }
+            }
+
+            function siguientePregunta() {
+                if (!respuestaSeleccionada) return;
+
+                if (indiceActual < preguntas.length - 1) {
+                    indiceActual++;
+                    mostrarPregunta();
+                    actualizarContador();
+                    actualizarProgreso();
+                } else {
+                    mostrarResultado();
+                }
+            }
+
+            function mostrarResultado() {
+                quizTerminado = true;
+                quizContent.style.display = 'none';
+                quizResult.classList.add('show');
+
+                const total = preguntas.length;
+                const porcentaje = Math.round((puntuacion / total) * 100);
+
+                resultScore.textContent = puntuacion + '/' + total;
+
+                let mensaje = '';
+                if (porcentaje === 100) {
+                    mensaje = '¡Excelente! Dominas completamente los conceptos sobre servidores y software de servidor. Estás listo para implementar tu propio servidor.';
+                } else if (porcentaje >= 80) {
+                    mensaje = '¡Muy bien! Tienes una comprensión sólida del tema. Repasa los conceptos donde fallaste y estarás listo para el siguiente nivel.';
+                } else if (porcentaje >= 60) {
+                    mensaje = 'Buen trabajo. Tienes una base correcta, pero conviene repasar algunos conceptos. Vuelve a la sección de desarrollo y profundiza en los temas que te resultaron más difíciles.';
+                } else if (porcentaje >= 40) {
+                    mensaje = 'Vas por buen camino, pero necesitas repasar más. Te recomendamos releer las secciones de XAMPP, Docker y VirtualBox, que son fundamentales.';
+                } else {
+                    mensaje = 'No te desanimes. Este tema tiene muchos conceptos nuevos. Revisa el desarrollo del taller con calma, toma notas y vuelve a intentarlo. ¡El aprendizaje es un proceso!';
+                }
+
+                resultMessage.textContent = mensaje;
+
+                // Enfocar el resultado para accesibilidad
+                quizResult.setAttribute('tabindex', '-1');
+                quizResult.focus();
+            }
+
+            function reiniciarQuiz() {
+                iniciarQuiz();
+                // Enfocar la primera pregunta
+                quizQuestion.setAttribute('tabindex', '-1');
+                quizQuestion.focus();
+            }
+
+            function actualizarContador() {
+                quizCounter.textContent = 'Pregunta ' + (indiceActual + 1) + ' de ' + preguntas.length;
+            }
+
+            function actualizarPuntuacion() {
+                quizScore.textContent = 'Puntuación: ' + puntuacion;
+            }
+
+            function actualizarProgreso() {
+                const progreso = ((indiceActual) / preguntas.length) * 100;
+                progressFill.style.width = progreso + '%';
+            }
+
+            /* =============================================
+               EVENTOS
+               ============================================= */
+            quizNextBtn.addEventListener('click', siguientePregunta);
+            quizRestartBtn.addEventListener('click', reiniciarQuiz);
+
+            /* =============================================
+               NAVEGACIÓN ACTIVA
+               ============================================= */
+            const navLinks = document.querySelectorAll('.nav__link');
+            const sections = document.querySelectorAll('section[id]');
+
+            function actualizarNavActiva() {
+                let scrollActual = window.scrollY + 100;
+
+                sections.forEach(function(section) {
+                    const top = section.offsetTop;
+                    const height = section.offsetHeight;
+                    const id = section.getAttribute('id');
+
+                    if (scrollActual >= top && scrollActual < top + height) {
+                        navLinks.forEach(function(link) {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === '#' + id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', actualizarNavActiva);
+            window.addEventListener('load', actualizarNavActiva);
+
+            /* =============================================
+               INICIALIZACIÓN
+               ============================================= */
+            iniciarQuiz();
+
+        })();
+    </script>
+
 </body>
 </html>
